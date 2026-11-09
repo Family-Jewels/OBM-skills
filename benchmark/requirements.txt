@@ -1,0 +1,5 @@
+# Tested with inspect_ai 0.3.288
+inspect_ai>=0.3.288
+datasets>=3.0.0
+anthropic>=0.40.0
+openai>=1.50.0

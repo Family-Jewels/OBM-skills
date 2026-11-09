@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.venv/
+benchmark/logs/
+benchmark/phase2/
+benchmark/*.md.bak
+.DS_Store
