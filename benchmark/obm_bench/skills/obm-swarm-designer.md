@@ -57,6 +57,15 @@ Each brief (`rules/<role>.v1.md`) contains:
 
 Job aids beat instructions. If a template or checklist would carry the knowledge, provide it instead of explaining.
 
+Match how prescriptive a brief is to the model tier that will read it:
+
+- **Fast tiers:** explicit procedures, templates and checklists. They follow steps reliably but generalize less from reasons.
+- **Strong tiers:** the purpose, the contingency and the reason, with room to choose the method. Rigid procedures can make strong models worse, because they follow the letter of a narrow rule in cases it did not anticipate.
+
+Either way, keep briefs short; long instruction files reduce how well agents follow them. Plan for the brief budget the diagnostician enforces, and put background in `framework/` or `examples/` rather than in the brief.
+
+Give every role `swarm/index.md` as its first input. The orchestrator writes and maintains it as a one-page map of the current state, so no role needs to read the whole workspace to orient.
+
 ### 5. Write the evals (the incentive cell)
 
 In a swarm the eval is the consequence, and agents drift toward whatever it scores. For each stage and for the final product:

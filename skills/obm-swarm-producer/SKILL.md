@@ -73,4 +73,13 @@ Training leaves tendencies that work against a swarm. Counter them deliberately:
 
 Write a handoff note (protocol 3.2) even if you finished nothing. The next agent should be able to continue from files alone.
 
+A handoff note exists so the next agent does not repeat your work or your mistakes. Record what the artifact cannot show:
+
+- what you were trying to do and why you chose this approach;
+- what you tried that failed, and why it failed;
+- what you suspect but did not verify;
+- what you would do next.
+
+Do not restate what the artifact, the diff or the logs already show. The next agent can read those, and copied facts go stale. A short note with the dead ends is worth more than a long one that narrates the work. Before finishing, ask: if the next agent read only this note and the artifact, what would it waste time rediscovering? Write that down.
+
 Report token use only if you can see a measured figure; otherwise write "unknown". Estimates tend to run far below measured usage, and the orchestrator compares the two.

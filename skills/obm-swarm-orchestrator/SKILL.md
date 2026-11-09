@@ -15,7 +15,7 @@ Read `references/protocol.md` before your first cycle. Malott's point about mana
 
 Whether this is the first cycle or the fortieth, resume from files, never from memory:
 
-1. Read `swarm/spec.md` (goal, done criteria, current milestone).
+1. Read `swarm/index.md`, the one-page map of the current state (see the milestone gate), then `swarm/spec.md` (goal, done criteria, current milestone).
 2. Read `swarm/metrics.md` and the last two lines of `log/progress.md`.
 3. Read the most recent handoff note in `log/handoffs/`.
 4. Read `queue/decisions.md` for anything answered since last session.
@@ -43,7 +43,7 @@ Then ask one question: is the current work the fastest honest path to the goal? 
 
 ### 3. Dispatch
 
-Give the producer only: its role brief, the task record, the listed inputs, and relevant worked examples. Context hygiene is both a quality and a cost lever; an agent given the whole history spends tokens reading it and gets distracted by it.
+Give the producer only: its role brief, `swarm/index.md`, the task record, the listed inputs, and relevant worked examples. Context hygiene is both a quality and a cost lever; an agent given the whole history spends tokens reading it and gets distracted by it.
 
 When producers work in parallel, give each its own isolated workspace (a separate branch, worktree or folder) and merge its work only after it passes. Two producers editing the same files at once produce versions that cannot be verified on their own, so the evidence stops matching any single artifact.
 
@@ -78,7 +78,11 @@ When every task in the milestone has passed:
 1. Send the milestone product to the checker for full review against the milestone's criteria.
 2. Re-anchor: does this milestone's result still lead toward the goal? If the work has revealed that the plan was wrong, say so and replan rather than continuing.
 3. Plan the next milestone's tasks in detail (rolling wave), using what this milestone taught you. For ambiguous goals, each milestone should reduce uncertainty for the next.
-4. Roll up older logs: summarize everything before the last two cycles into `log/progress.md` and leave detailed records in place only for the current milestone.
+4. Consolidate. This is offline work, like memory consolidation during sleep, and it pays for itself in orientation cost.
+    - Roll up older logs: summarize everything before the last two cycles into `log/progress.md`, and leave detailed records in place only for the current milestone.
+    - Rebuild `swarm/index.md`: one page, under about 500 words, with the goal, current milestone, what has passed, open decisions, active rules, known traps and links to the details.
+    - Check every fact you put in the index against the logs and artifacts, not against handoff notes. A wrong note copied into the index becomes a wrong antecedent for every agent that reads it.
+    - You are the index's only writer. Every other agent reads it first, so a new checker or producer orients from one page instead of the whole workspace.
 5. Trigger the auditor.
 
 ### 6. Pace spend

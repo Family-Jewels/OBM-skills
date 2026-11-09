@@ -71,6 +71,14 @@ python analyze.py logs/tiny --out tiny
 - **Spend is measured, never self-reported.** A producer estimated 25k tokens against 92k measured.
 - **Worthy performance, risk tiers, review-share targets and over-control audits.** The self-correction loop leaned toward caution, each failure producing a stricter rule, until review costs outran progress and a human had to rebalance it.
 
+**Memory management**, adapted from Anthropic's [components of agent memory](https://www.anthropic.com/research/components-of-agent-memory) research and framed as antecedent control. The swarm's files are what every agent reads before acting, so a wrong record misdirects everyone after it.
+
+- **A one-page index.** The orchestrator alone rebuilds `swarm/index.md` at each milestone gate, checking every fact against logs and artifacts rather than notes. Every role reads it first.
+- **Memory audits.** The auditor checks the index, handoff notes and rules against ground truth.
+- **A rule budget.** Briefs have a size cap, so a new rule replaces or merges with an old one. Rules state their purpose, not only a procedure.
+- **Leaner handoff notes.** They record approach, dead ends and unverified suspicions, never what the artifact already shows.
+- **Briefs scaled to model tier.** Procedures for fast models, purpose and reasons for strong ones.
+
 ## Foundations
 
 Gilbert (1978), *Human Competence* · Rummler & Brache, *Improving Performance* · Glenn (1988), metacontingencies · Kerr (1975), "On the folly of rewarding A, while hoping for B" · Daniels, *Performance Management* · Malott (1992), rule-governed behavior in OBM · Alvero, Bucklin & Austin (2001), performance feedback · Austin (2000), the Performance Diagnostic Checklist · Risley & Hart (1968), say-do correspondence · Lerman & Iwata (1995), extinction bursts · Ferster & Skinner (1957), *Schedules of Reinforcement* · Wheeler, *Understanding Variation* · Zhong, Raghunathan & Carlini (2025), ImpossibleBench.

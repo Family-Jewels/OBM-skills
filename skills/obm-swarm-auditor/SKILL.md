@@ -20,7 +20,7 @@ Audit in both directions. Under-control is drift, misreports and unchecked work.
 
 ## Audit procedure
 
-Run all six parts each time. Keep each part short; an audit should cost a small fraction of a cycle.
+Run all seven parts each time. Keep each part short; an audit should cost a small fraction of a cycle.
 
 ### A. Drift check
 
@@ -85,6 +85,16 @@ Managers' behavior needs contingencies too (Malott). Sample the orchestration lo
 - Was the core accomplishment kept moving, or did supporting work gate it?
 - Did review thin and checkers get reused where the stakes allowed, or did every task get maximum scrutiny?
 
+### G. Audit the swarm's memory
+
+Agents act on what the swarm has written down: the index, handoff notes, the spec and the rule files. A wrong record becomes a wrong antecedent for every agent that reads it, so check the records, not only the work. Logs and artifacts are the ground truth; notes are reports about them.
+
+- Does every fact in `swarm/index.md` match the logs and artifacts?
+- Do recent handoff notes claim anything the logs do not show?
+- Does each rule in the briefs still address a problem that occurs?
+- Is anything the next agent needs to know recorded only in a transcript?
+- Is the memory bloated? Notes that duplicate what the artifacts already show cost reading time and bury what matters.
+
 ## Audit report
 
 Write `audits/A-<n>.md`:
@@ -99,6 +109,7 @@ Spend: cost per accepted unit <trend>; rework share <x%>; review share <x%> vs t
 Progress: core accomplishment advanced yes/no; first end-to-end result <cycle, or not yet>
 Over-control: none | <gold-plating or excess review findings>
 Orchestrator: <consistent | findings>
+Memory: <accurate | findings>
 Red flags: <none | list, with "pause dispatch" if warranted>
 To diagnostician: <items>
 Final audit only: ready to ship yes/no, against which criteria

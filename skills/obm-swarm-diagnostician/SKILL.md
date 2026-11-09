@@ -105,4 +105,8 @@ At the review cycle, compare the measure with its baseline. Keep changes that wo
 
 ## Rule hygiene
 
-Rules accumulate. At each milestone, prune briefs: merge overlapping rules, delete rules whose problem no longer occurs, keep each brief short enough to read cheaply. A brief that grows without limit becomes its own Cell 1 problem.
+Rules accumulate, and long instruction files reduce how well agents follow them. Keep each brief within a budget (default about 1,500 words, or 15 local rules). Once a brief is at its cap, a new rule must replace or merge with an existing one.
+
+At each milestone, prune briefs: merge overlapping rules, delete rules whose problem no longer occurs, and keep each brief short enough to read cheaply. A brief that grows without limit becomes its own Cell 1 problem.
+
+State each rule's purpose, not only its procedure. Strong models follow a reason better than a rigid procedure, and a narrow rule can make them worse: in one study, telling strong models to record only failures cut most of the benefit of their memory. Fast-tier roles may need more explicit procedures; strong-tier roles need the purpose and the reason.

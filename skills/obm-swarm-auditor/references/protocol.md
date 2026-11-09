@@ -38,6 +38,7 @@ All state lives in files, never only in a context window. A fresh agent must be 
 
 ```
 swarm/
+  index.md                one-page map of current state; every role reads it first (section 2.1)
   spec.md                 goal, done-criteria, milestones, roles, contracts, budgets, decision rights
   board.jsonl             one task record per line (section 3.1)
   rules/                  role briefs, versioned (producer.v3.md); changed only via rule-change records
@@ -59,7 +60,23 @@ Paths may be adapted, but keep the separation: shared state in the board and log
 
 When producers work in parallel, each task gets its own isolated workspace (a branch, worktree or folder), merged only after the task passes. Evidence is produced on the exact version submitted.
 
-Context hygiene: no role reads the whole workspace. Each role reads its brief, the records its step needs, and the most recent summaries. Older logs are rolled up into summaries at each milestone (keep the last two cycles in full).
+Context hygiene: no role reads the whole workspace. Each role reads `index.md`, its brief, the records its step needs, and the most recent summaries. Older logs are rolled up into summaries at each milestone (keep the last two cycles in full).
+
+### 2.1 Memory: what the swarm writes down, and why
+
+The files are the swarm's memory, and agents act on what they read there. A wrong record becomes a wrong antecedent for every agent after it, so memory is managed like any other work product. It comes in layers, from raw to distilled:
+
+| Layer | Files | Written by | Purpose |
+| --- | --- | --- | --- |
+| Ground truth | artifacts, `log/runs.jsonl`, `log/reviews/`, `board.jsonl` | the role doing the work | What actually happened |
+| Notes | `log/handoffs/` | producers and other roles at session end | What the next agent cannot see in the artifact |
+| Rules | `rules/`, `examples/` | diagnostician, via rule-change records | What to do differently, and why |
+| Index | `index.md` | orchestrator only | Where things stand, on one page |
+
+- **One writer per file.** Each file has a single owner role (section 1 and the table above). Others read it and propose changes through their own records. This prevents conflicting edits and makes every record traceable.
+- **Consolidate at milestones.** At each milestone gate the orchestrator rolls up logs and rebuilds `index.md`: goal, current milestone, what has passed, open decisions, active rules, known traps, and links to the details, in under about 500 words. Every fact in the index is checked against ground truth, never copied from a note.
+- **Keep it lean.** Record what the next agent needs and cannot get from the artifact. Notes that restate the artifact go stale and bury what matters. Briefs stay within the diagnostician's rule budget, because long instruction files reduce how well agents follow them.
+- **Audit it.** The auditor checks the index, notes and rules against ground truth at every audit.
 
 ## 3. Record formats
 
@@ -97,15 +114,22 @@ Keep records short and structured. Structured records are cheaper to read than p
 
 ### 3.2 Handoff note (end of every session, 200 words or fewer)
 
+A handoff note exists so the next agent does not repeat your work or your mistakes. Record what the artifact cannot show. Do not restate what the artifact, diff or logs already show.
+
 ```
 Session: S-031  Role: producer  Cycle: C-17
 Tasks touched: T-0042 submitted; T-0043 blocked
 Evidence: log/evidence/T-0042.md
+Approach: <what you were trying to do and why you chose this way>
+Tried and failed: <dead ends, and why each failed>
+Unverified: <what you suspect but did not check>
 Next step: <the single most useful next action>
 Open questions: <only real ones>
 Blockers: <what, and what would unblock it>
 Tokens used this session: <measured figure, or "unknown"; never an estimate>
 ```
+
+Test before finishing: if the next agent read only this note and the artifact, what would it waste time rediscovering? That is what the note is for. Leave a field as "none" rather than padding it.
 
 ### 3.3 Evidence block (attached to every submission)
 
@@ -259,6 +283,7 @@ When only one AI runs the swarm, it plays each role in turn. Separation then dep
 - Run each role in a fresh context where possible, loading only that role's skill, brief and records.
 - Never check work in the same context that produced it.
 - Write every record to the files before switching roles; the next role reads the files, not memory.
+- Start each role by reading `index.md`, and rebuild it at each milestone gate as the orchestrator.
 - Keep the auditor's probe register out of the producer and checker contexts.
 
 This is weaker than separate agents. Lean harder on evidence requirements and the auditor's hidden sample.
@@ -287,3 +312,5 @@ This is weaker than separate agents. Lean harder on evidence requirements and th
 | Managing the managers (Malott) | The auditor audits the orchestrator |
 | Risk-based inspection (quality management) | Review depth set by risk tier |
 | Exemplary standard (Gilbert) | "Good enough for the goal," not the most achievable |
+| Antecedent control | The index, notes and briefs agents read before acting; audited because a wrong record misdirects everyone after it |
+| Rule-governed behavior (Malott) | Rules state purpose and contingency, within a budget, because long or bare rules are followed poorly |
