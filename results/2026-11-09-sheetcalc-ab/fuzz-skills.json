@@ -1,0 +1,1229 @@
+{
+ "n": 5000,
+ "disagree": 81,
+ "rate": 0.0162,
+ "raised": 0,
+ "by_head": [
+  [
+   "VLOOKUP",
+   23
+  ],
+  [
+   "COUNTIF",
+   12
+  ],
+  [
+   "MOD",
+   9
+  ],
+  [
+   "op -",
+   4
+  ],
+  [
+   "IFERROR",
+   4
+  ],
+  [
+   "IF",
+   4
+  ],
+  [
+   "LOWER",
+   2
+  ],
+  [
+   "op <>",
+   2
+  ],
+  [
+   "MAX",
+   2
+  ],
+  [
+   "ABS",
+   2
+  ],
+  [
+   "op &",
+   2
+  ],
+  [
+   "TRIM",
+   2
+  ],
+  [
+   "INT",
+   2
+  ],
+  [
+   "RIGHT",
+   1
+  ],
+  [
+   "MIN",
+   1
+  ],
+  [
+   "op =",
+   1
+  ],
+  [
+   "AND",
+   1
+  ],
+  [
+   "op *",
+   1
+  ],
+  [
+   "SUM",
+   1
+  ],
+  [
+   "MID",
+   1
+  ],
+  [
+   "op >",
+   1
+  ],
+  [
+   "op +",
+   1
+  ],
+  [
+   "LEFT",
+   1
+  ],
+  [
+   "COUNTA",
+   1
+  ]
+ ],
+ "by_kind": [
+  [
+   "ref err -> arm err",
+   53
+  ],
+  [
+   "ref num -> arm num",
+   14
+  ],
+  [
+   "ref str -> arm str",
+   8
+  ],
+  [
+   "ref bool -> arm bool",
+   3
+  ],
+  [
+   "ref num -> arm err",
+   2
+  ],
+  [
+   "ref str -> arm err",
+   1
+  ]
+ ],
+ "examples": {
+  "COUNTIF": [
+   {
+    "formula": "=COUNTIF(A1:A4,\"\")",
+    "cells": {
+     "A3": "=1/0",
+     "A4": "=NOPE()",
+     "B2": "-0.5",
+     "B3": "2.5",
+     "B4": "Apple",
+     "C2": "TRUE",
+     "C3": "=B2+1"
+    },
+    "reference": [
+     "num",
+     0.0
+    ],
+    "arm": [
+     "num",
+     2.0
+    ]
+   },
+   {
+    "formula": "=COUNTIF(A1:C4,\"\")",
+    "cells": {
+     "A2": "Apple",
+     "B1": "-3",
+     "B4": "1e3",
+     "C1": "-3",
+     "C2": " 4 ",
+     "C3": "#N/A",
+     "C4": " 4 "
+    },
+    "reference": [
+     "num",
+     0.0
+    ],
+    "arm": [
+     "num",
+     5.0
+    ]
+   },
+   {
+    "formula": "=COUNTIF(A1:C4,\"\")",
+    "cells": {
+     "A1": "Apple",
+     "A2": "=1/0",
+     "A4": " 4 ",
+     "B1": "-3",
+     "B2": "apple",
+     "B3": "APPLE ",
+     "B4": "=A1",
+     "C2": "'7",
+     "C3": "1e3",
+     "C4": "-3"
+    },
+    "reference": [
+     "num",
+     0.0
+    ],
+    "arm": [
+     "num",
+     2.0
+    ]
+   },
+   {
+    "formula": "=COUNTIF(A1:C4,\"\")",
+    "cells": {
+     "A1": "APPLE ",
+     "A2": "apple",
+     "B1": "=NOPE()",
+     "B3": "10",
+     "C1": "false",
+     "C2": "2.5"
+    },
+    "reference": [
+     "num",
+     0.0
+    ],
+    "arm": [
+     "num",
+     6.0
+    ]
+   }
+  ],
+  "VLOOKUP": [
+   {
+    "formula": "=VLOOKUP(1,A1:C4,1)",
+    "cells": {
+     "A1": "Apple",
+     "A2": "2.5",
+     "A3": "=NOPE()",
+     "A4": "false",
+     "B2": "=1/0",
+     "B4": "TRUE",
+     "C1": "=A1",
+     "C3": "2.5",
+     "C4": "TRUE"
+    },
+    "reference": [
+     "err",
+     "#N/A"
+    ],
+    "arm": [
+     "err",
+     "#NAME?"
+    ]
+   },
+   {
+    "formula": "=VLOOKUP(0,A1:C4,3)",
+    "cells": {
+     "A2": "#N/A",
+     "A3": "TRUE",
+     "A4": "=NOPE()",
+     "B2": " 4 ",
+     "B3": "1e3",
+     "B4": "=B2+1",
+     "C2": "#N/A",
+     "C3": "-0.5",
+     "C4": ""
+    },
+    "reference": [
+     "err",
+     "#N/A"
+    ],
+    "arm": [
+     "err",
+     "#NAME?"
+    ]
+   },
+   {
+    "formula": "=VLOOKUP(1,A1:C4,1)",
+    "cells": {
+     "A2": "=1/0",
+     "A3": "1",
+     "A4": "-0.5",
+     "B1": "=A1",
+     "B4": "=NOPE()",
+     "C2": "abc",
+     "C3": "-3"
+    },
+    "reference": [
+     "num",
+     1.0
+    ],
+    "arm": [
+     "err",
+     "#DIV/0!"
+    ]
+   },
+   {
+    "formula": "=VLOOKUP(2,A1:C4,2)",
+    "cells": {
+     "A1": "=1/0",
+     "A2": "10",
+     "A3": " 4 ",
+     "A4": "=1/0",
+     "B1": "=B2+1",
+     "B2": "2.5",
+     "B3": "1",
+     "B4": " 4 ",
+     "C1": "2",
+     "C2": "=A1",
+     "C3": "abc"
+    },
+    "reference": [
+     "err",
+     "#N/A"
+    ],
+    "arm": [
+     "err",
+     "#DIV/0!"
+    ]
+   }
+  ],
+  "op -": [
+   {
+    "formula": "=-COUNTIF(A1:C4,\"\")",
+    "cells": {
+     "A1": "2.5",
+     "A2": "Apple",
+     "A3": "",
+     "A4": "TRUE",
+     "B1": " 4 ",
+     "B2": "x",
+     "B3": "apple",
+     "B4": "Apple",
+     "C3": "apple"
+    },
+    "reference": [
+     "num",
+     -0.0
+    ],
+    "arm": [
+     "num",
+     -4.0
+    ]
+   },
+   {
+    "formula": "=-VLOOKUP(\"A\",A1:C4,1)",
+    "cells": {
+     "A2": "=1/0",
+     "A3": "-0.5",
+     "A4": "x",
+     "B1": "2.5",
+     "B2": "x",
+     "B3": "2",
+     "B4": "-0.5",
+     "C1": "=A1",
+     "C3": "apple",
+     "C4": "x"
+    },
+    "reference": [
+     "err",
+     "#N/A"
+    ],
+    "arm": [
+     "err",
+     "#DIV/0!"
+    ]
+   },
+   {
+    "formula": "=-AVERAGE(LEFT(A4,3),A1:A4)",
+    "cells": {
+     "A1": "-0.5",
+     "A3": "=1/0",
+     "A4": "apple",
+     "B1": "=1/0",
+     "B2": "10",
+     "B3": "TRUE",
+     "B4": "#N/A",
+     "C2": "=NOPE()",
+     "C3": "abc"
+    },
+    "reference": [
+     "err",
+     "#VALUE!"
+    ],
+    "arm": [
+     "err",
+     "#DIV/0!"
+    ]
+   },
+   {
+    "formula": "=-MAX(VLOOKUP(\"x y\",A1:C4,2))",
+    "cells": {
+     "A1": "0",
+     "A2": "10",
+     "A3": "=1/0",
+     "B1": "=1/0",
+     "B2": "=1/0",
+     "B4": "-0.5",
+     "C1": "2",
+     "C2": "=1/0",
+     "C4": "TRUE"
+    },
+    "reference": [
+     "err",
+     "#N/A"
+    ],
+    "arm": [
+     "err",
+     "#DIV/0!"
+    ]
+   }
+  ],
+  "MAX": [
+   {
+    "formula": "=MAX(B2:C3,C4:A1)&-B4",
+    "cells": {
+     "A1": "1e3",
+     "A2": "",
+     "A4": "2",
+     "B1": "=A1",
+     "B3": "10",
+     "B4": "0",
+     "C1": "2.5",
+     "C2": "1e3",
+     "C3": "false",
+     "C4": " 4 "
+    },
+    "reference": [
+     "str",
+     "1000-0"
+    ],
+    "arm": [
+     "str",
+     "10000"
+    ]
+   },
+   {
+    "formula": "=MAX(\"\"&\"\",C4:A1)^LEN(1)",
+    "cells": {
+     "A1": "2",
+     "A2": " 4 ",
+     "A4": "Apple",
+     "B2": "2.5",
+     "B4": "",
+     "C1": "2.5",
+     "C2": "=NOPE()",
+     "C4": "abc"
+    },
+    "reference": [
+     "err",
+     "#VALUE!"
+    ],
+    "arm": [
+     "err",
+     "#NAME?"
+    ]
+   }
+  ],
+  "op &": [
+   {
+    "formula": "=C3&COUNTIF(B1:B4,\"\")",
+    "cells": {
+     "A1": "apple",
+     "A2": "10",
+     "A4": "=1/0",
+     "B1": "-3",
+     "B4": "",
+     "C1": "2.5",
+     "C2": "-3",
+     "C3": "",
+     "C4": "false"
+    },
+    "reference": [
+     "str",
+     "0"
+    ],
+    "arm": [
+     "str",
+     "3"
+    ]
+   },
+   {
+    "formula": "=-IFERROR(B3,A2)&COUNT(0.5,B2:C3,B2:C3)",
+    "cells": {
+     "A2": "2.5",
+     "A4": "=A1",
+     "B1": "=1/0",
+     "B2": "1",
+     "B4": "Apple",
+     "C1": "false",
+     "C2": " 4 ",
+     "C3": "1e3",
+     "C4": "2.5"
+    },
+    "reference": [
+     "str",
+     "-07"
+    ],
+    "arm": [
+     "str",
+     "07"
+    ]
+   }
+  ],
+  "op <>": [
+   {
+    "formula": "=-INT(B2)&B3<>LOWER(B2)",
+    "cells": {
+     "A1": "0",
+     "A2": "false",
+     "A4": "1",
+     "B2": "=A1",
+     "B4": "2",
+     "C1": "=NOPE()",
+     "C2": "=B2+1",
+     "C3": "x",
+     "C4": "#N/A"
+    },
+    "reference": [
+     "bool",
+     true
+    ],
+    "arm": [
+     "bool",
+     false
+    ]
+   },
+   {
+    "formula": "=-FALSE&\"apple\"<RIGHT(SUMIF(B1:B4,\"<>\"),1)",
+    "cells": {
+     "A1": "0",
+     "A2": "#N/A",
+     "A3": "=B2+1",
+     "A4": "2.5",
+     "C1": "-3",
+     "C3": "Apple"
+    },
+    "reference": [
+     "bool",
+     true
+    ],
+    "arm": [
+     "bool",
+     false
+    ]
+   }
+  ],
+  "INT": [
+   {
+    "formula": "=INT(COUNTIF(A1:A4,\"\"))",
+    "cells": {
+     "A2": "x",
+     "A3": "'7",
+     "A4": "1",
+     "B2": "10",
+     "C1": "abc",
+     "C2": "0",
+     "C4": "false"
+    },
+    "reference": [
+     "num",
+     0.0
+    ],
+    "arm": [
+     "num",
+     1.0
+    ]
+   },
+   {
+    "formula": "=INT(VLOOKUP(-1,A1:C4,2))^2<=B4<=0.5",
+    "cells": {
+     "A1": "=A1",
+     "A2": "abc",
+     "A3": "",
+     "A4": "=1/0",
+     "B2": "2.5",
+     "C1": " 4 ",
+     "C2": "=A1",
+     "C3": "2",
+     "C4": "abc"
+    },
+    "reference": [
+     "err",
+     "#N/A"
+    ],
+    "arm": [
+     "err",
+     "#CYCLE!"
+    ]
+   }
+  ],
+  "op +": [
+   {
+    "formula": "=0+VLOOKUP(\"3\",A1:C4,3)",
+    "cells": {
+     "A1": "Apple",
+     "A2": "=1/0",
+     "B1": "1",
+     "B2": "false",
+     "B3": "2",
+     "C2": "=NOPE()",
+     "C3": "1e3",
+     "C4": "=A1"
+    },
+    "reference": [
+     "err",
+     "#N/A"
+    ],
+    "arm": [
+     "err",
+     "#DIV/0!"
+    ]
+   }
+  ],
+  "MOD": [
+   {
+    "formula": "=MOD(A2,MOD(C2,B4>=A1))",
+    "cells": {
+     "A1": "1e3",
+     "A2": "APPLE ",
+     "B1": "=A1",
+     "B2": "=NOPE()",
+     "B3": "=A1",
+     "C1": "",
+     "C3": "'7"
+    },
+    "reference": [
+     "err",
+     "#VALUE!"
+    ],
+    "arm": [
+     "err",
+     "#DIV/0!"
+    ]
+   },
+   {
+    "formula": "=MOD(\"a\",B2)<>AND(A1:B2)",
+    "cells": {
+     "A1": "=B2+1",
+     "A2": "-3",
+     "B1": "abc",
+     "B2": "=1/0",
+     "B3": "=B2+1",
+     "B4": "x",
+     "C3": "abc",
+     "C4": "0"
+    },
+    "reference": [
+     "err",
+     "#VALUE!"
+    ],
+    "arm": [
+     "err",
+     "#DIV/0!"
+    ]
+   },
+   {
+    "formula": "=MOD(B3,CONCAT(A1:C4,B1:B4,C4:A1))",
+    "cells": {
+     "A2": "=1/0",
+     "A3": "=A1",
+     "B1": " 4 ",
+     "B3": "abc",
+     "B4": "1e3",
+     "C2": "apple",
+     "C3": "=NOPE()"
+    },
+    "reference": [
+     "err",
+     "#VALUE!"
+    ],
+    "arm": [
+     "err",
+     "#DIV/0!"
+    ]
+   },
+   {
+    "formula": "=MOD(MOD(\"x y\",OR(\"\",A1:A4,A1:C4)),A4)",
+    "cells": {
+     "A1": "-3",
+     "A3": "10",
+     "A4": "#N/A",
+     "B2": " 4 ",
+     "B3": "=NOPE()",
+     "B4": "=A1",
+     "C2": " 4 "
+    },
+    "reference": [
+     "err",
+     "#VALUE!"
+    ],
+    "arm": [
+     "err",
+     "#NAME?"
+    ]
+   }
+  ],
+  "op >": [
+   {
+    "formula": "=-MIN(\"a\",C4:A1,A1:B2)>A3",
+    "cells": {
+     "A1": "-3",
+     "A2": "'7",
+     "A3": "APPLE ",
+     "A4": "0",
+     "B1": "10",
+     "B2": "=B2+1",
+     "B4": "=NOPE()",
+     "C1": "=NOPE()",
+     "C4": "1"
+    },
+    "reference": [
+     "err",
+     "#VALUE!"
+    ],
+    "arm": [
+     "err",
+     "#NAME?"
+    ]
+   }
+  ],
+  "ABS": [
+   {
+    "formula": "=ABS(VLOOKUP(\"\",A1:C4,2))",
+    "cells": {
+     "A1": "=B2+1",
+     "A2": "=1/0",
+     "A3": "=B2+1",
+     "A4": " 4 ",
+     "B1": "apple",
+     "B2": "x",
+     "B4": "0",
+     "C1": "=1/0",
+     "C2": "abc",
+     "C4": "=B2+1"
+    },
+    "reference": [
+     "err",
+     "#N/A"
+    ],
+    "arm": [
+     "err",
+     "#VALUE!"
+    ]
+   },
+   {
+    "formula": "=ABS(VLOOKUP(\" 2 \",A1:C4,3))>=ROUND(NOT(C2),1.7)",
+    "cells": {
+     "A1": "=A1",
+     "A2": "1",
+     "A3": "2.5",
+     "A4": "10",
+     "B2": "Apple",
+     "B3": "0",
+     "C1": "x",
+     "C2": "=A1",
+     "C4": "2"
+    },
+    "reference": [
+     "err",
+     "#N/A"
+    ],
+    "arm": [
+     "err",
+     "#CYCLE!"
+    ]
+   }
+  ],
+  "op *": [
+   {
+    "formula": "=\"x y\"*VLOOKUP(\"\",A1:C4,3)",
+    "cells": {
+     "A1": "=1/0",
+     "A2": "10",
+     "A3": "10",
+     "B1": " 4 ",
+     "B2": "2.5",
+     "B3": "1",
+     "B4": "Apple",
+     "C3": "false"
+    },
+    "reference": [
+     "err",
+     "#N/A"
+    ],
+    "arm": [
+     "err",
+     "#DIV/0!"
+    ]
+   }
+  ],
+  "LOWER": [
+   {
+    "formula": "=LOWER(VLOOKUP(\"x y\",A1:C4,2))",
+    "cells": {
+     "A1": "=B2+1",
+     "A2": "#N/A",
+     "A3": "#N/A",
+     "B1": "",
+     "B2": "abc",
+     "B4": "2",
+     "C1": "APPLE ",
+     "C2": "abc",
+     "C3": "x",
+     "C4": "Apple"
+    },
+    "reference": [
+     "err",
+     "#N/A"
+    ],
+    "arm": [
+     "err",
+     "#VALUE!"
+    ]
+   },
+   {
+    "formula": "=LOWER(IF(VLOOKUP(FALSE,A1:C4,1),C2&\"\",A1>=FALSE))",
+    "cells": {
+     "A1": "'7",
+     "A2": " 4 ",
+     "A4": "=1/0",
+     "B2": "apple",
+     "B3": "APPLE ",
+     "C2": "false",
+     "C4": "-3"
+    },
+    "reference": [
+     "err",
+     "#N/A"
+    ],
+    "arm": [
+     "err",
+     "#DIV/0!"
+    ]
+   }
+  ],
+  "TRIM": [
+   {
+    "formula": "=TRIM(-1*COUNTIF(B1:B4,\"<=a\"))",
+    "cells": {
+     "A1": "2.5",
+     "A2": "",
+     "A3": "false",
+     "A4": "-3",
+     "B1": "x",
+     "B2": "apple",
+     "B3": "APPLE ",
+     "B4": "TRUE",
+     "C1": "x",
+     "C2": "10",
+     "C3": "=A1",
+     "C4": "1e3"
+    },
+    "reference": [
+     "str",
+     "-0"
+    ],
+    "arm": [
+     "str",
+     "0"
+    ]
+   },
+   {
+    "formula": "=TRIM(LOWER(COUNTIF(A1:A4,\"\")))",
+    "cells": {
+     "A2": "'7",
+     "A3": "abc",
+     "B2": "1e3",
+     "B3": "x",
+     "B4": "x",
+     "C1": "-3",
+     "C4": "abc"
+    },
+    "reference": [
+     "str",
+     "0"
+    ],
+    "arm": [
+     "str",
+     "2"
+    ]
+   }
+  ],
+  "IFERROR": [
+   {
+    "formula": "=IFERROR(LOWER(-B4),TRIM(-B3))",
+    "cells": {
+     "A1": " 4 ",
+     "A3": "1",
+     "A4": "false",
+     "B1": "TRUE",
+     "B3": "0",
+     "C1": "APPLE ",
+     "C2": "-3",
+     "C3": "1",
+     "C4": "Apple"
+    },
+    "reference": [
+     "str",
+     "-0"
+    ],
+    "arm": [
+     "str",
+     "0"
+    ]
+   },
+   {
+    "formula": "=IFERROR(COUNTIF(A1:C4,\"\"),COUNTIF(A1:A4,\"=1\"))",
+    "cells": {
+     "A3": "=A1",
+     "A4": "=B2+1",
+     "B1": "=B2+1",
+     "B3": "abc",
+     "C1": "abc",
+     "C2": "10",
+     "C3": "TRUE",
+     "C4": "1e3"
+    },
+    "reference": [
+     "num",
+     0.0
+    ],
+    "arm": [
+     "num",
+     4.0
+    ]
+   },
+   {
+    "formula": "=IFERROR(OR(A1:B2,A1:A4,C4:A1),VLOOKUP(0.5,A1:C4,3))",
+    "cells": {
+     "A1": "1",
+     "A2": "=1/0",
+     "B1": "",
+     "B3": "2.5",
+     "C1": "=B2+1",
+     "C2": "false",
+     "C3": "false",
+     "C4": "2.5"
+    },
+    "reference": [
+     "err",
+     "#N/A"
+    ],
+    "arm": [
+     "err",
+     "#DIV/0!"
+    ]
+   },
+   {
+    "formula": "=IFERROR(TRUE-2>VLOOKUP(\"\",A1:C4,1),IF(B4,B1,AND(\"a\",B1:B4,B1:B4)))",
+    "cells": {
+     "A1": "false",
+     "A3": "=B2+1",
+     "A4": "=1/0",
+     "B1": "=1/0",
+     "B2": "Apple",
+     "B3": "'7",
+     "B4": "",
+     "C1": "-3",
+     "C3": "=NOPE()",
+     "C4": "false"
+    },
+    "reference": [
+     "err",
+     "#VALUE!"
+    ],
+    "arm": [
+     "err",
+     "#DIV/0!"
+    ]
+   }
+  ],
+  "IF": [
+   {
+    "formula": "=IF(A4,-A2,2)&MIN(A1:C4,A1:A4)",
+    "cells": {
+     "A1": "1e3",
+     "A4": "2.5",
+     "B1": "",
+     "B3": "2.5",
+     "C1": " 4 ",
+     "C3": " 4 ",
+     "C4": "0"
+    },
+    "reference": [
+     "str",
+     "-00"
+    ],
+    "arm": [
+     "str",
+     "00"
+    ]
+   },
+   {
+    "formula": "=IF(VLOOKUP(\"A\",A1:C4,1),COUNT(B1:B4),B4/A1)<=A2",
+    "cells": {
+     "A1": "=NOPE()",
+     "A3": "x",
+     "A4": "1e3",
+     "B2": "=NOPE()",
+     "B4": "2",
+     "C2": "Apple"
+    },
+    "reference": [
+     "err",
+     "#N/A"
+    ],
+    "arm": [
+     "err",
+     "#NAME?"
+    ]
+   },
+   {
+    "formula": "=IF(AND(A4,TRIM(A1),C4:A1),IF(A2,--1,MID(FALSE,9,0)),RIGHT(0,2.9))",
+    "cells": {
+     "A1": "2",
+     "A4": "-0.5",
+     "B1": " 4 ",
+     "B3": "=A1",
+     "B4": "-0.5",
+     "C1": "=1/0"
+    },
+    "reference": [
+     "err",
+     "#VALUE!"
+    ],
+    "arm": [
+     "err",
+     "#DIV/0!"
+    ]
+   },
+   {
+    "formula": "=IF(VLOOKUP(\"A\",A1:C4,1)<C4-\"apple\",AND(B1)>IFERROR(B2,A3),COUNTA(0>=A3))",
+    "cells": {
+     "A1": "false",
+     "A3": "=B2+1",
+     "A4": "TRUE",
+     "B1": "1e3",
+     "B2": "APPLE ",
+     "B3": "2.5",
+     "B4": "'7",
+     "C1": "2.5",
+     "C2": "Apple",
+     "C3": "1"
+    },
+    "reference": [
+     "err",
+     "#N/A"
+    ],
+    "arm": [
+     "err",
+     "#VALUE!"
+    ]
+   }
+  ],
+  "SUM": [
+   {
+    "formula": "=SUM(COUNTIF(A1:B2,\"\"),TRUE,B1:B4)",
+    "cells": {
+     "A1": "=A1",
+     "A2": "Apple",
+     "A3": "2.5",
+     "A4": "2",
+     "B2": "TRUE",
+     "B3": "false",
+     "B4": "10",
+     "C2": "=B2+1",
+     "C3": "=A1",
+     "C4": "-0.5"
+    },
+    "reference": [
+     "num",
+     11.0
+    ],
+    "arm": [
+     "num",
+     12.0
+    ]
+   }
+  ],
+  "op =": [
+   {
+    "formula": "=-\" 2 \"=VLOOKUP(\"a\",A1:C4,1)<INT(C2>2)",
+    "cells": {
+     "A1": "=1/0",
+     "A2": "Apple",
+     "A3": "-0.5",
+     "B1": "abc",
+     "B2": "=A1",
+     "B3": " 4 ",
+     "C1": "=B2+1",
+     "C2": "=B2+1"
+    },
+    "reference": [
+     "err",
+     "#N/A"
+    ],
+    "arm": [
+     "err",
+     "#DIV/0!"
+    ]
+   }
+  ],
+  "LEFT": [
+   {
+    "formula": "=LEFT(OR(RIGHT(\"a\",3),C4:A1,C4:A1),-1)",
+    "cells": {
+     "A2": "1e3",
+     "A3": "-0.5",
+     "A4": "10",
+     "B2": "APPLE ",
+     "B3": "TRUE",
+     "B4": "false",
+     "C1": "=1/0",
+     "C2": "'7",
+     "C4": "APPLE "
+    },
+    "reference": [
+     "err",
+     "#VALUE!"
+    ],
+    "arm": [
+     "err",
+     "#DIV/0!"
+    ]
+   }
+  ],
+  "RIGHT": [
+   {
+    "formula": "=RIGHT(MIN(\"a\",A1:C4,B4),0)<>(B4)%<MOD(C3,C2)",
+    "cells": {
+     "A1": "=1/0",
+     "A2": "1e3",
+     "A4": "=1/0",
+     "B1": "0",
+     "B2": "APPLE ",
+     "B3": "false",
+     "B4": "=A1",
+     "C1": "TRUE",
+     "C3": "Apple",
+     "C4": ""
+    },
+    "reference": [
+     "err",
+     "#VALUE!"
+    ],
+    "arm": [
+     "err",
+     "#DIV/0!"
+    ]
+   }
+  ],
+  "MIN": [
+   {
+    "formula": "=MIN(MID(C1,1,0),A1:A4,A1:B2)/B2^IF(A3,B2,B2)",
+    "cells": {
+     "A1": "10",
+     "A3": " 4 ",
+     "A4": "2.5",
+     "B1": "'7",
+     "B2": "=NOPE()",
+     "B4": "2",
+     "C2": "TRUE",
+     "C3": " 4 "
+    },
+    "reference": [
+     "err",
+     "#VALUE!"
+    ],
+    "arm": [
+     "err",
+     "#NAME?"
+    ]
+   }
+  ],
+  "MID": [
+   {
+    "formula": "=MID(IF(IFERROR(C1,B2),VLOOKUP(0,A1:C4,1),(C2)%),9,0)",
+    "cells": {
+     "A1": "=A1",
+     "A2": "2.5",
+     "A4": "false",
+     "B1": "1e3",
+     "B2": "Apple",
+     "B3": " 4 ",
+     "C1": "2.5",
+     "C2": "apple",
+     "C3": "false",
+     "C4": "-3"
+    },
+    "reference": [
+     "err",
+     "#N/A"
+    ],
+    "arm": [
+     "err",
+     "#CYCLE!"
+    ]
+   }
+  ],
+  "AND": [
+   {
+    "formula": "=AND(COUNTA(A1:C4,A1:C4,A1:A4),VLOOKUP(0.5,A1:C4,1))<=\"3\"",
+    "cells": {
+     "A1": "=1/0",
+     "A3": "x",
+     "A4": "x",
+     "B3": "10",
+     "B4": "=A1",
+     "C2": "x",
+     "C3": "APPLE "
+    },
+    "reference": [
+     "err",
+     "#N/A"
+    ],
+    "arm": [
+     "err",
+     "#DIV/0!"
+    ]
+   }
+  ],
+  "COUNTA": [
+   {
+    "formula": "=COUNTA(IFERROR(C1,A1),B1:B4,A1:B2)>VLOOKUP(FALSE,A1:C4,1)",
+    "cells": {
+     "A4": "=NOPE()",
+     "B2": "=A1",
+     "B3": "TRUE",
+     "B4": "apple",
+     "C1": "=A1",
+     "C2": "2",
+     "C3": "1"
+    },
+    "reference": [
+     "err",
+     "#N/A"
+    ],
+    "arm": [
+     "err",
+     "#NAME?"
+    ]
+   }
+  ]
+ }
+}
