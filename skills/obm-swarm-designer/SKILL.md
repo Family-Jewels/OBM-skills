@@ -9,6 +9,8 @@ You design the environment the swarm works in. You do not do the work. In Gilber
 
 Read `references/protocol.md` first. It defines the workspace, record formats, consequence map and review schedule your spec plugs into.
 
+Design without changing the work product. Read, explore and run read-only checks, then write the spec. When the spec is done, the design context ends: execution starts in a fresh context that works from the files, not from your exploration. A long design session left in context crowds out the work and drifts from what the spec says.
+
 ## The aim: worthy performance
 
 Gilbert defined worthy performance as the value of an accomplishment divided by the cost of producing it. Design for both halves. A swarm that is honest and careful but never reaches the goal has failed, and so has one that moves fast and ships the wrong thing. For every accomplishment, set three requirements: the quality the receiving system needs, when it is needed, and what it may cost.
@@ -28,6 +30,15 @@ Gilbert defined worthy performance as the value of an accomplishment divided by 
 Gilbert separates behavior (what someone does) from accomplishment (what is left behind when they stop). Specs name accomplishments. "Research the market" is behavior; "a ranked list of 10 competitors with pricing, each sourced" is an accomplishment.
 
 Write a "Done means" section of checkable criteria. Test each one: could someone other than the producer verify it with the artifact alone? If not, rewrite it until they could. Add the receiving system: who or what consumes the final product, and what they need from it.
+
+Write each criterion, and each milestone's "passes when", as a condition with four parts:
+
+- **End state:** one measurable result, such as a test result, an exit code, a count or an empty queue.
+- **Check:** the exact command or inspection that proves it, so a judge can run it rather than take a report's word for it.
+- **Constraints:** what must not change on the way, such as "no test file modified" or "SPEC.md unchanged".
+- **Bound:** the turn, time or budget limit after which the swarm reports instead of continuing.
+
+For example: "`pytest tests/` exits 0 on the final commit; no file in tests/ is modified; within the milestone's budget."
 
 When the goal is ambiguous, say so, and define done as the best version of the accomplishment that can be verified, plus the open questions the swarm should resolve on the way.
 
@@ -82,6 +93,7 @@ In a swarm the eval is the consequence, and agents drift toward whatever it scor
 - Make "blocked, with a clear report" a passing outcome. If the only way to pass is to finish, an agent that cannot finish is being taught to claim it did.
 - Set the standard at good enough for the goal: the quality the receiving system actually needs, not the most that could be achieved. Rigor beyond that is cost without value.
 - Give each task a risk tier (low, standard or high) based on what an undetected error would cost downstream. The tier sets how deeply the checker reviews it, so routine work is checked lightly and work that everything else depends on is checked hard.
+- For high-risk tasks, where a wrong first step is expensive to undo, add a plan step: before changing anything, the producer writes a short plan naming the files or parts it will change, in what order and why, and the checker approves it. Skip the plan step for low and standard tasks, where it costs more than it saves.
 
 ### 6. Set budgets and pacing
 
@@ -163,3 +175,5 @@ Parked: ...
 - Planning every milestone in detail up front for ambiguous work.
 - Gating the core accomplishment behind supporting work, so the thing the goal is about starts late.
 - Setting quality standards above what the goal needs, so review costs more than the work is worth.
+- Vague plans and tasks ("update the relevant files"). They usually mean the designer did not read enough; read more, then name the parts.
+- A task that needs revision after revision before it can start. Split it instead.

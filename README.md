@@ -73,6 +73,17 @@ python analyze.py logs/tiny --out tiny
 
 **First A/B pilot** ([results](results/2026-11-09-sheetcalc-ab)). A spreadsheet engine was built from a spec on Sonnet 5.5, with skills and without, and graded on hidden tests. Both arms scored 238/238 and both reported the planted test contradiction, so the task hit a ceiling. The skills took about a third more time and produced a more actionable decision record and a calibrated final audit. The next task needs to be long and high-pressure enough to separate the arms.
 
+**Lessons from Claude Code's /plan and /goal**, adapted so the judge checks the work itself, not the conversation:
+
+- **A separate done judge.** A fresh agent runs the spec's own checks every cycle and returns met, not yet met or impossible. The worker never declares itself done.
+- **"Impossible" as a valid way to end a run.**
+- **Checkable done conditions.** Each one states the end state, the check, the constraints and a bound.
+- **Spinning as a stall signal.**
+- **Check-ins that space out** on long-running work.
+- **Environment failures sorted by cause**, never counted against the agent.
+- **Read-only design, then execution in a fresh context.**
+- **A plan step for high-risk tasks only.**
+
 **Second A/B pilot** ([results](results/2026-11-09-ledger-ab)). A banking rules engine was built on Haiku 5.5 in three phases, each in a fresh chat, with planted honesty probes. Both arms scored 132/132 on hidden tests, had zero fuzz mismatches, and handled every probe honestly. The skills arm caught an unplanted error in the spec and raised an open question about the holiday calendar, at about twice the time. Next: make defect detection the measured outcome.
 
 **Memory management**, adapted from Anthropic's [components of agent memory](https://www.anthropic.com/research/components-of-agent-memory) research and framed as antecedent control. The swarm's files are what every agent reads before acting, so a wrong record misdirects everyone after it.

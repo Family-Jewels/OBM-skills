@@ -105,7 +105,21 @@ Progress is accepted units, not activity. Treat these as stall signals:
 - The same failure recurring across attempts or producers.
 - A sudden rise in actions, retries or tokens without more passes. This is the swarm version of an extinction burst: the reinforced outcome is unavailable, so behavior becomes more frequent and more variable, and constraint breaks become likely.
 
+- Spinning: 2 cycles (default) with no new commit, no change in any check result and no new record. Activity that leaves nothing behind is not work.
+
 On a stall signal, stop dispatching more of the same. Send the evidence to the diagnostician, and meanwhile dispatch any independent work that is not stalled. More effort on an unavailable outcome makes things worse, not better.
+
+**Checking on long-running work.** While a producer or a long command runs in the background, check its output at a widening interval: first after about 30 minutes, then twice as long each time, up to four times the first interval. This is a thinning schedule: frequent checks early, when problems are most likely, and fewer once the work is running well. At each check, keep waiting if it is progressing; stop and replan if it is stuck.
+
+**Environment failures are not performance.** Sort every failed run before acting on it:
+
+| Failure | Action |
+| --- | --- |
+| Needs outside action: credentials, exhausted credit, a model that is unavailable, a context overflow that compaction could not clear | Stop that line of work, park a decision request naming the fix, continue everything else |
+| Likely to clear on its own: an overloaded server, a dropped connection | Retry up to 3 times, with a wait between tries |
+| A limit that retrying would only repeat, such as a rate or usage limit | Pause that work until the limit resets |
+
+None of these are the agent's failure, so none count toward its retry cap or review mode, and none go to the diagnostician as behavior. They are resources (Gilbert's cell 2).
 
 ### 8. Park decisions, keep moving
 
@@ -115,11 +129,20 @@ Anything the spec says the swarm cannot decide alone (irreversible actions, scop
 
 Append one line to `log/progress.md`: cycle id, accepted units, tokens, notable events. Update `metrics.md`. Before your context runs low or your session ends, write a handoff note so the next orchestrator session can resume from files.
 
+### 10. Judge done, never declare it
+
+At the end of each cycle, have a fresh agent run the checks in the spec's "Done means" and return one of three verdicts: **met**, **not yet met** (with the reason, which becomes your next re-orient), or **impossible** (with the evidence). It runs the stated checks itself and reads the artifacts. It never judges from reports, including yours, because a judge that only reads reports rewards agents for describing success rather than producing it. A fast model is enough for routine checks; use a strong one at the final gate.
+
+The agent doing the work, you included, never decides on its own that the goal is reached. That separation is what stops early "done" claims.
+
+If the platform offers a loop that keeps a session working until a condition holds, you can run the swarm inside it. Set its condition to the spec's done check plus "every milestone has a passing checker record", so the loop keeps the swarm going and the swarm supplies verified evidence for the condition.
+
 ## Stop conditions
 
 - Final product passes the checker's full review and the auditor's final audit: write a completion report (what was delivered, against which criteria, total spend, open questions, rule changes made) and stop.
 - Budget reserve exhausted: report and park a budget decision.
 - Every remaining path is parked or blocked: report the state and the decisions that would unblock it.
+- The done judge returns **impossible** and the auditor confirms it: report why, what was delivered, and what would make the goal possible. Ending a run honestly as impossible is a valid outcome, the swarm-level equivalent of a confirmed block.
 
 ## What you do not do
 

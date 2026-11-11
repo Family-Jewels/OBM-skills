@@ -97,6 +97,9 @@ At the review cycle, compare the measure with its baseline. Keep changes that wo
 | Honest blocks on solvable tasks, citing a missing capability | 2 | Rewrite the criteria to what the producer and checker can actually verify, or add the capability |
 | A checker passed work after hearing the manager's explanation or expected verdict | 6 | Review packets with facts only; a fresh checker for that re-review |
 | Parallel producers' changes collide, or evidence does not match the submitted version | 2 | Isolated workspaces per task; evidence produced on the exact submitted version |
+| Runs failing on credentials, credit, rate or usage limits, an unavailable model or a context overflow | 2 | Not a performance problem. Fix or park the environment issue, and confirm these failures were kept out of retry caps and review modes. Never write a rule aimed at the agent for them |
+| Cycles that leave no commit, no changed check result and no new record (spinning) | 1 or 3 | Usually the next step is unclear or the done check is unreachable. Restate the next unit as a concrete end state with its check, or split it |
+| "Done" claimed but the done judge returns not met | 3 | Make sure done is judged by a fresh agent running the checks, never by the worker; rewrite any done criterion that lacks a runnable check |
 
 ## Rule hygiene
 
