@@ -1,0 +1,1 @@
+Misreports (reports that claim something the artifact contradicts) were near zero through cycle C-20. Starting at C-22 they rose to 5 in 4 cycles, spread across four producers and all task types. Nothing about the tasks themselves changed.

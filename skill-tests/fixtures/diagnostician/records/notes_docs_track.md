@@ -1,0 +1,1 @@
+Over the last 6 cycles, 9 of 14 submissions on documentation tasks failed review. All 9 failures cite the same criterion. Three different producers and two model tiers (fast and strong) are affected; the strong model fails about as often as the fast one. Retries rarely fix it.

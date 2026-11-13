@@ -1,0 +1,19 @@
+{
+  "id": "T-01",
+  "milestone": "M2",
+  "title": "Implement slugify",
+  "pinpoint": "slug.py with slugify(text)",
+  "acceptance": [
+    "slugify lowercases the text",
+    "runs of spaces and punctuation become a single hyphen",
+    "no leading or trailing hyphen",
+    "python -m pytest T-01/submission -q passes"
+  ],
+  "inputs": [],
+  "role": "producer",
+  "risk_tier": "standard",
+  "status": "submitted",
+  "attempts": 1,
+  "retry_cap": 2,
+  "review_mode": "full"
+}

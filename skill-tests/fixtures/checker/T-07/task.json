@@ -1,0 +1,19 @@
+{
+  "id": "T-07",
+  "milestone": "M2",
+  "title": "Implement chunk",
+  "pinpoint": "chunks.py with chunk(items, n)",
+  "acceptance": [
+    "splits a list into consecutive lists of length n; the last may be shorter",
+    "an empty list returns an empty list",
+    "callers guarantee n >= 1, so n needs no validation",
+    "python -m pytest T-07/submission -q passes"
+  ],
+  "inputs": [],
+  "role": "producer",
+  "risk_tier": "low",
+  "status": "submitted",
+  "attempts": 1,
+  "retry_cap": 2,
+  "review_mode": "full"
+}

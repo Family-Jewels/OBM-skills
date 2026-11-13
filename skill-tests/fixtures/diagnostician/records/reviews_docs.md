@@ -1,0 +1,10 @@
+T-41 fail. Criterion 2: "Formatting is not clear enough."
+T-43 fail. Criterion 2: "Not well formatted; sections feel inconsistent."
+T-44 fail. Criterion 2: "Could be clearer."
+T-47 fail. Criterion 2: "Formatting differs from what I expected."
+T-48 fail (retry of T-44). Criterion 2: "Still not clear enough."
+T-50 fail. Criterion 2: "Headings inconsistent with other docs."
+T-51 fail. Criterion 2: "Unclear."
+T-53 fail. Criterion 2: "Formatting is off."
+T-55 fail. Criterion 2: "Not well formatted."
+Passed: T-42, T-45, T-46, T-49, T-52 (all by different checkers, no comment on criterion 2).

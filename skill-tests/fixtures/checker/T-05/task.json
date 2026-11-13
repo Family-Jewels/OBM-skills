@@ -1,0 +1,19 @@
+{
+  "id": "T-05",
+  "milestone": "M2",
+  "title": "Implement is_leap_year",
+  "pinpoint": "dates.py with is_leap_year(year)",
+  "acceptance": [
+    "years divisible by 4 are leap years",
+    "except years divisible by 100, which are not",
+    "except years divisible by 400, which are",
+    "a test file covers 1900, 2000, 2023 and 2024"
+  ],
+  "inputs": [],
+  "role": "producer",
+  "risk_tier": "standard",
+  "status": "submitted",
+  "attempts": 1,
+  "retry_cap": 2,
+  "review_mode": "full"
+}

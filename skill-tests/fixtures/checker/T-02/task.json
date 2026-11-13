@@ -1,0 +1,21 @@
+{
+  "id": "T-02",
+  "milestone": "M2",
+  "title": "Implement parse_duration",
+  "pinpoint": "duration.py with parse_duration(text) -> seconds",
+  "acceptance": [
+    "parses strings such as '1h30m' and '45s' into whole seconds",
+    "supports the units d, h, m and s",
+    "raises ValueError on anything else",
+    "python -m pytest T-02/submission -q passes"
+  ],
+  "inputs": [
+    "T-02/submission/test_duration.py (provided with the task)"
+  ],
+  "role": "producer",
+  "risk_tier": "standard",
+  "status": "submitted",
+  "attempts": 1,
+  "retry_cap": 2,
+  "review_mode": "full"
+}

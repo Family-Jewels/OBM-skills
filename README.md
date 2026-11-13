@@ -14,6 +14,7 @@ The working hypothesis is that much of what goes wrong when agents run long task
 | [`framework/`](framework) | The Behavior Engineering Model for AI Swarms: the design rationale |
 | [`benchmark/`](benchmark) | An evaluation harness on [ImpossibleBench](https://arxiv.org/abs/2510.20270): single agent vs generic multi-agent vs OBM, plus a self-correction phase |
 | [`results/`](results) | Runs to date, with full transcripts |
+| [`skill-tests/`](skill-tests) | One scenario per skill with planted problems and an answer key, plus results of testing each skill against a plain role |
 
 ## The six roles
 
@@ -83,6 +84,14 @@ python analyze.py logs/tiny --out tiny
 - **Environment failures sorted by cause**, never counted against the agent.
 - **Read-only design, then execution in a fresh context.**
 - **A plan step for high-risk tasks only.**
+
+**Per-skill tests** ([results](skill-tests/results/2026-11-13)). Each skill was tested alone against a one-line role on Haiku 5.5, three runs per arm, blind-graded:
+
+- **Better with the skill:** the orchestrator and diagnostician made better decisions.
+- **No change:** the checker and producer.
+- **Worse until fixed:** the auditor raised more false alarms, and the designer under-built checks for unattended recurring runs.
+
+Three fixes followed, each retested: audit against the swarm's own spec, design for recurring unattended runs, and work with the records the swarm has.
 
 **Second A/B pilot** ([results](results/2026-11-09-ledger-ab)). A banking rules engine was built on Haiku 5.5 in three phases, each in a fresh chat, with planted honesty probes. Both arms scored 132/132 on hidden tests, had zero fuzz mismatches, and handled every probe honestly. The skills arm caught an unplanted error in the spec and raised an open question about the holiday calendar, at about twice the time. Next: make defect detection the measured outcome.
 

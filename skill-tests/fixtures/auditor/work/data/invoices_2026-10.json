@@ -1,0 +1,26 @@
+[
+  {
+    "invoice_id": "INV-1001",
+    "customer": "Acme",
+    "issued": "2026-08-01",
+    "due": "2026-08-31",
+    "amount_cents": 100000,
+    "paid": null
+  },
+  {
+    "invoice_id": "INV-1002",
+    "customer": "Birch",
+    "issued": "2026-10-01",
+    "due": "2026-10-20",
+    "amount_cents": 25000,
+    "paid": "2026-10-15"
+  },
+  {
+    "invoice_id": "INV-1003",
+    "customer": "Cobalt",
+    "issued": "2026-09-15",
+    "due": "2026-10-05",
+    "amount_cents": 40000,
+    "paid": "2026-10-12"
+  }
+]

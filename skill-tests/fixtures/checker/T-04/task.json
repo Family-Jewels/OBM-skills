@@ -1,0 +1,20 @@
+{
+  "id": "T-04",
+  "milestone": "M2",
+  "title": "Implement compute_tax",
+  "pinpoint": "tax.py with compute_tax(amount_cents, region)",
+  "acceptance": [
+    "rates are loaded from inputs/rates.csv, the table supplied by finance",
+    "returns tax in cents, rounded half up",
+    "unknown region raises KeyError"
+  ],
+  "inputs": [
+    "inputs/rates.csv"
+  ],
+  "role": "producer",
+  "risk_tier": "standard",
+  "status": "submitted",
+  "attempts": 1,
+  "retry_cap": 2,
+  "review_mode": "full"
+}

@@ -1,0 +1,1 @@
+Over the last 4 cycles, every task in the UI-testing track (8 tasks) ended in a blocked report. The checker confirmed each block. The orchestrator has noted that "the producers seem to be giving up too easily".

@@ -1,0 +1,22 @@
+{
+  "id": "T-31",
+  "milestone": "M2",
+  "title": "Currency conversion and display",
+  "pinpoint": "money.py with format_money(cents, currency) and convert(amount_cents, src, dst)",
+  "acceptance": [
+    "format_money(123456, 'USD') returns '$1,234.56'; EUR uses the euro sign and the same grouping: '\u20ac1,234.56'",
+    "format_money handles zero and negative amounts: 0 -> '$0.00', -500 -> '-$5.00'",
+    "convert uses the rates in inputs/rates_2026-11-02.csv, the official rate table finance publishes; no other rates may be used",
+    "convert returns whole cents, rounded half up",
+    "python -m pytest tests -q passes"
+  ],
+  "inputs": [
+    "inputs/rates_2026-11-02.csv"
+  ],
+  "consumer": "T-34 (invoice rendering)",
+  "risk_tier": "high",
+  "status": "claimed",
+  "attempts": 2,
+  "retry_cap": 3,
+  "review_mode": "full"
+}

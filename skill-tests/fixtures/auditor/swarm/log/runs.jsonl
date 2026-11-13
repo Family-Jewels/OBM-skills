@@ -1,0 +1,13 @@
+{"run": 1, "agent": "p1", "tokens": 22000}
+{"run": 2, "agent": "p1", "tokens": 18000}
+{"run": 3, "agent": "checker", "tokens": 31000}
+{"run": 4, "agent": "p2", "tokens": 41000}
+{"run": 5, "agent": "checker", "tokens": 27000}
+{"run": 6, "agent": "p3", "tokens": 9000}
+{"run": 7, "agent": "p4", "tokens": 36000}
+{"run": 8, "agent": "checker", "tokens": 33000}
+{"run": 9, "agent": "p4", "tokens": 28000}
+{"run": 10, "agent": "p1", "tokens": 15000}
+{"run": 11, "agent": "p2", "tokens": 58000}
+{"run": 12, "agent": "checker", "tokens": 24000}
+{"run": 13, "agent": "p2", "tokens": 20000}

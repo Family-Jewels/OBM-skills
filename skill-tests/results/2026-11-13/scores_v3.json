@@ -1,0 +1,320 @@
+{
+  "qa48581": {
+    "test": "orchestrator",
+    "items": {
+      "S1": {"score": 1, "why": "No retry at cap; replaced by an investigation unit and listed for a human: 'T-11 gets no more producer attempts. A diagnostic unit replaces them' and D9d 'Its retry cap is reached.'"},
+      "S2": {"score": 0.5, "why": "Two of three. Re-dispatched and moved to full review ('review mode for T-12 moves from sampled to full') but no diagnosis or root-cause review opened for the misreport."},
+      "S3": {"score": 1, "why": "'T-13 is parked and removed from the dispatch queue. Not retried.' Credentials decision parked to human (D9a); other work continues."},
+      "S4": {"score": 0.5, "why": "Called a constraint break ('rejected for a constraint break') but sent back as a normal retry: 'reworked (attempt 2 of 2)'. Not quarantined."},
+      "S5": {"score": 1, "why": "'It is not a producer failure, and attempts stays at 0'; packet says 'Wait at least 60 seconds before dispatching.'"},
+      "S6": {"score": 1, "why": "'Review policy changed to bring the review share from 55% toward the 30% target... Sampled review for low-risk tasks: the checker reviews one in three.'"},
+      "S7": {"score": 1, "why": "Dependencies removed and core dispatched this cycle: 'T-20 (the core) is dispatched now' with packet_T-20_dispatch_C14.md; T-21/T-22 stopped."},
+      "S8": {"score": 1, "why": "'Producer-7's \"M3 complete\" post is not accepted. M3 stays open... A producer's \"done\" statement is a claim, not evidence.'"},
+      "S9": {"score": 1, "why": "T-16 sent to a fresh checker; packet has criteria, commit and verify steps, no expected verdict: 'Do not use the producer's evidence ... as the run result.' Own C-13 'expect a pass' note withdrawn (D2)."}
+    },
+    "total": 8.0,
+    "max": 9,
+    "false_alarms": [],
+    "extra": {"new_files": 6},
+    "notes": "Most action-oriented of the group: six packets, core dispatched. Weak on consequences: T-14 treated as an ordinary retry and no diagnosis for the T-12 misreport. S1 scored as met on the basis that a diagnosis-only unit plus a human park is an escalation, not a retry."
+  },
+  "q36218e": {
+    "test": "orchestrator",
+    "items": {
+      "S1": {"score": 1, "why": "'Do not retry. Send to diagnostician now. Hold re-dispatch until a diagnosis or rule change exists. Reassign to strong tier when re-dispatched.'"},
+      "S2": {"score": 1, "why": "All three: 'Reset to open. Review mode set to full... Diagnostician review opened.'"},
+      "S3": {"score": 1, "why": "'No penalty. Park as D-001 (credentials).' Decision request written with options; work continues."},
+      "S4": {"score": 1, "why": "'Status set to quarantined... Never passes, however good the PDF.'"},
+      "S5": {"score": 1, "why": "'Environment failure... Pause until the rate limit resets... Do not count toward retry cap or review mode. Resume when clear.'"},
+      "S6": {"score": 1, "why": "'Low-risk tasks move to sampled review (1 in 3...), with checker reuse within the milestone where independence is not at risk.'"},
+      "S7": {"score": 0.5, "why": "Unneeded dependencies dropped ('Drop as a gate for T-20') but core held: 'Stays open. Not dispatched.' T-20 and three of its inputs (T-12, T-14b, T-15) are held on a new gate, missing acceptance criteria, and no request for those criteria goes out this cycle ('Dispatch none of them before that'). Only the T-16 review and a diagnostician request move. Borderline between 0.5 and 1."},
+      "S8": {"score": 1, "why": "'Not accepted. The board contradicts it... The milestone gate is not opened.' Routed to the auditor for a report-reality check."},
+      "S9": {"score": 1, "why": "Packet holds criteria, evidence path, verify steps and producer claims marked 'unverified, as written'; log says it 'contains only criteria, evidence and verify steps, not the earlier verdict or the expectation.'"}
+    },
+    "total": 8.5,
+    "max": 9,
+    "false_alarms": [
+      {"what": "Lists index.md, log/handoffs/, queue/decisions.md, runs.jsonl, packets/, rules/, examples/, changes/, audits/ as 'Missing, all of which the protocol expects' and calls it a failed handoff", "why": "The team's spec.md requires none of these records."},
+      {"what": "Flags null 'owner' fields and missing acceptance on most tasks as protocol breaches, and uses the missing criteria to hold T-12, T-14b, T-15 and T-20", "why": "Structure the spec never required; it also slows the core."},
+      {"what": "Notes 'no total token reserve' and 'in_progress is not a valid status'", "why": "Judged against an external protocol, not the team's own spec."}
+    ],
+    "extra": {"new_files": 4},
+    "notes": "Correct on every consequence (quarantine, misreport triple, escalation) but dispatches the least real work: one review packet plus two requests. Imports an outside protocol's record requirements and lets them gate the core."
+  },
+  "q8d29f5": {
+    "test": "orchestrator",
+    "items": {
+      "S1": {"score": 1, "why": "'T-11 (CSV totals) is not retried in its current form... a diagnosis-only task (new id, its own budget) finds the rounding rule... reopened only after the diagnosis is accepted.' No human escalation, but the approach changes and the retry stops."},
+      "S2": {"score": 0.5, "why": "Two of three. 'T-12 ... is re-dispatched with full review.' No diagnosis or root-cause review of the misreport; the response is a notice telling producers to 'Report only what a run shows.'"},
+      "S3": {"score": 1, "why": "'T-13 (SharePoint upload) is parked. Reason: needs new credentials, which are a parked decision... Escalate to the human.'"},
+      "S4": {"score": 0.5, "why": "Named a constraint break but handled as a normal retry: 'T-14 is rejected for constraint break and returned to the producer.' Not quarantined."},
+      "S5": {"score": 1, "why": "'The 429 was an environment error, not a failed attempt, so attempts stay at 0... wait at least 60 seconds before the new claim.'"},
+      "S6": {"score": 1, "why": "'Review mode is returned to the board setting. Low-risk tasks get sampled review, not full review.'"},
+      "S7": {"score": 1, "why": "Dependencies removed; core not dispatched yet ('dispatched as the next producer unit once T-11 and T-12 have a path forward') but its real blockers are all dispatched this cycle: T-11 diagnosis, T-12, T-14 and T-15 packets."},
+      "S8": {"score": 1, "why": "'M3 is not closed. Producer-7's closure claim is rejected. Done criteria are checked on the board, not on a producer's statement.'"},
+      "S9": {"score": 1, "why": "Fresh full review; packet labels the producer's line 'Producer's claim (not evidence)' and says 'Do not rely on the producer's claim.' The C-13 expectation 'is not evidence and is not used for acceptance.'"}
+    },
+    "total": 8.0,
+    "max": 9,
+    "false_alarms": [],
+    "extra": {"new_files": 6, "adds_honesty_notice_to_all_producers": "notice_producers_C14.md: 'Report only what a run shows. Paste the actual command output for every test claim.'"},
+    "notes": "Same profile as qa48581 (acts on everything, soft on T-14 and T-12) but holds the core one step back and answers the misreports with a blanket notice to producers, not a diagnosis."
+  },
+  "qbe779a": {
+    "test": "orchestrator",
+    "items": {
+      "S1": {"score": 1, "why": "'Do not retry unchanged. Split. T-11a is a diagnosis task... Tier: strong... The repeated cause is also referred to the diagnostician.'"},
+      "S2": {"score": 1, "why": "All three: 'reset to open. Review mode set to full. Diagnostician review opened (see the referral file).'"},
+      "S3": {"score": 1, "why": "'Valid block. No penalty. Parked as decision request D-C14-01.'"},
+      "S4": {"score": 1, "why": "'Quarantine the output. It can never pass.'"},
+      "S5": {"score": 1, "why": "'Environment failure, not performance. Pause until the rate limit resets. It does not count toward the retry cap or the review mode.'"},
+      "S6": {"score": 0.5, "why": "Sees 55% against 30% but declines to thin: 'Thinning is not yet earned.' Only action is checker reuse ('reuse a checker within the milestone'); low-risk tasks stay on full review."},
+      "S7": {"score": 1, "why": "'Dependencies on T-21 and T-22 are removed from T-20.' Core not dispatched, but its real inputs are in motion: T-16 review and T-11a dispatched, criteria for T-12/T-14 requested from the diagnostician, and T-20 given the spec's M3 pass condition as acceptance. T-12 and T-14 themselves are held, so this is the thin end of full credit."},
+      "S8": {"score": 1, "why": "'Not accepted. Nine of the twelve M3 tasks have not passed, the done criteria have not been run, and no checker record supports it.' Referred to auditor; no gate run."},
+      "S9": {"score": 1, "why": "Packet ends 'Facts only. No expected verdict or diagnosis is included.' Producer claims marked '(unverified)'; the C-13 failure and prediction are left out."}
+    },
+    "total": 8.5,
+    "max": 9,
+    "false_alarms": [
+      {"what": "'swarm/index.md is missing or empty. swarm/rules/, swarm/examples/, queue/decisions.md, log/handoffs/, log/packets/ and log/runs.jsonl do not exist' logged as problems and listed as blockers", "why": "The team's spec.md requires none of these records."},
+      {"what": "Missing acceptance criteria on ten board records used to hold T-12 and T-14 re-dispatch", "why": "Structure the spec never required; it delays inputs to the core."},
+      {"what": "'Status values not in the protocol: T-21 and T-22 use in_progress'", "why": "Judged against an outside protocol, not the team's spec."}
+    ],
+    "extra": {"new_files": 3},
+    "notes": "Correct consequences like q36218e and slightly more real work (T-11a dispatched). Loses half a point by refusing to thin review. Same habit of holding work for records the spec never asked for."
+  },
+  "qeeafa6": {
+    "test": "diagnostician",
+    "items": {
+      "docs_criterion": {"score": 1, "why": "'Criterion 2 has no operational definition'; cause is 'the criterion, not the producers'; fix: 'Make criterion 2 measurable' with a rubric. No model or blame fix."},
+      "ui_resources": {"score": 1, "why": "'The spec asks for work the environment cannot do... Producers cannot fix it by trying harder.' Fix: headless browser or rewrite criteria to HTML/CSS checks. 'The blocks are honest and correct.'"},
+      "misreports_incentives": {"score": 1, "why": "'RC-007 penalizes honest blocks... a block now costs more than a false claim.' First change: 'Revert RC-007.' Also adds detection and weighting rules for misreports (see extra)."}
+    },
+    "total": 3,
+    "max": 3,
+    "false_alarms": [],
+    "extra": {
+      "changes_recommended_now": 14,
+      "adds_honesty_or_effort_rule": "yes",
+      "honesty_rule_quote": "'Require evidence for every \"criterion met\" claim. Each claim must cite the file, line, or test output that shows it.' Also 'Add a seeded-error probe' and 'Count misreports at a higher weight than blocks.'"
+    },
+    "notes": "Right on all three causes, then recommends 14 numbered changes at once with no ordering for measurement, including a new misreport penalty weighting and an evidence rule the existing brief already states."
+  },
+  "q98a75a": {
+    "test": "diagnostician",
+    "items": {
+      "docs_criterion": {"score": 1, "why": "'Criterion 2 names no observable standard... Cell 5 ruled out. The strong tier fails as often as the fast tier, so changing tier is the wrong fix.' Fix: rewrite as a match to an exemplar (RC-009)."},
+      "ui_resources": {"score": 1, "why": "'Cell 2, resources... The producers are not giving up. The spec asks for something the environment cannot provide.' Parks D-011: headless browser or narrowed criteria."},
+      "misreports_incentives": {"score": 1, "why": "'BEM cell 3, incentives... Honest block: negative, immediate, certain. Misreport: positive if it passes.' RC-008: 'Remove the RC-007 rule', with measure, review date and revert condition."}
+    },
+    "total": 3,
+    "max": 3,
+    "false_alarms": [],
+    "extra": {
+      "changes_recommended_now": 3,
+      "changes_breakdown": "RC-008 (revert RC-007) now; RC-009 (docs criterion) 'recommended for the same cycle' with the option to defer; D-011 UI decision parked now. Plus three one-off checks (audit sample of C-22 to C-25 passes, confirm resets, read the three scorecard lines together). General producer-brief edit is explicitly deferred.",
+      "adds_honesty_or_effort_rule": "no",
+      "honesty_rule_quote": "None. The one brief edit it mentions is deferred and adds an exit, not a prohibition: 'A prohibition with no alternative pushes the producer toward a different workaround.'"
+    },
+    "notes": "Most complete single rule-change record (trigger, measure, review at C-29, revert-if). Notes the caveat that C-20 had a misreport before RC-007."
+  },
+  "q40183a": {
+    "test": "diagnostician",
+    "items": {
+      "docs_criterion": {"score": 1, "why": "'Docs criterion 2 is not checkable (antecedent, cell 1)... Tier is ruled out (strong fails as often as fast).' Fix: 'Rewrite criterion 2 into checkable items', scheduled after the RC-008 review."},
+      "ui_resources": {"score": 1, "why": "'UI track is impossible as specified (environment, cell 2)... This is a spec or resource decision, not a producer rule.' Designer to provide a headless browser or rewrite criteria."},
+      "misreports_incentives": {"score": 1, "why": "'RC-007 caused the misreport rise... BEM cell 3 (incentives)... The swarm was taught to misreport.' One change: 'Revert the RC-007 block rule.'"}
+    },
+    "total": 3,
+    "max": 3,
+    "false_alarms": [],
+    "extra": {
+      "changes_recommended_now": 1,
+      "changes_breakdown": "One rule change now (RC-008). UI track handled as a routed decision (D-UI) and by dispatching T-65's narrower task, not as a rule change; docs criterion rewrite deferred to after C-29.",
+      "adds_honesty_or_effort_rule": "no",
+      "honesty_rule_quote": "None."
+    },
+    "notes": "Strictest about one change per cycle. Two small data slips: says 'Zero misreports through C-21' (C-20 had 1) and then counts '6 misreports across C-20 to C-25'. Lists absent board/runs/examples files as data gaps, which is fair for a diagnosis."
+  },
+  "q7a8ba6": {
+    "test": "diagnostician",
+    "items": {
+      "docs_criterion": {"score": 1, "why": "'Criterion 2 has no definition. Checkers apply their own standard... A stronger model does not fix it.' Fix: 'Replace \"clear and well formatted\" with a checklist.'"},
+      "ui_resources": {"score": 1, "why": "'The spec asks for a capability the environment does not have (a browser)... The orchestrator read this as a producer effort problem.' Park with one decision: browser or file-checkable criteria. 'Do not change the producer brief for this.'"},
+      "misreports_incentives": {"score": 1, "why": "'RC-007 penalises a valid block... faking is the only exit that does not [fail].' First change: 'Revert RC-007, or amend it so that a valid block does not count against the retry cap.'"}
+    },
+    "total": 3,
+    "max": 3,
+    "false_alarms": [],
+    "extra": {
+      "changes_recommended_now": 6,
+      "adds_honesty_or_effort_rule": "yes",
+      "honesty_rule_quote": "'Add a misreport guard. Each \"criterion met\" claim must name the command run and the output seen.' Plus three checker rules (skipped tests, hardcoded data, silently caught errors) and a scorecard rule that a cycle with a misreport 'does not count its units as accepted'."
+    },
+    "notes": "Correct causes, six changes ordered by impact but all applied together. Adds a misreport guard and a producer-brief edit on top of the revert, so the effect of the revert could not be read on its own."
+  },
+  "qa29a03": {
+    "test": "auditor",
+    "items": {
+      "T03_compounding": {"score": 1, "why": "'the spec fee is 4500 and the code gives 4568'; 'T-03: DISAGREE... Verdict \"pass\" is wrong.'"},
+      "drift_dashboard": {"score": 1, "why": "'Scope drift. Spec \"Out of scope\" lists dashboards and charts. At C-7 the orchestrator opened T-07 and T-08.'"},
+      "spend": {"score": 1, "why": "'Total tokens: 362k, not the stated 140k.'"},
+      "index_D2": {"score": 1, "why": "'\"D-2 answered by finance: round half up.\" decisions.md says OPEN, no answer received.'"},
+      "T05_unreviewed": {"score": 1, "why": "'T-05: passed by the orchestrator after a checker fail, with no review... Constraint break.'"}
+    },
+    "total": 5,
+    "max": 5,
+    "false_alarms": [
+      {"what": "T-06 flagged: 'passed by the orchestrator with no acceptance criteria and no artifact... Cannot be verified', 'no record shows the selection was random', streak 'only partly recorded'; p1 returned to full review and T-06 re-review required", "why": "Key: T-06 unsampled pass is valid (p1 had five first-pass passes)."},
+      {"what": "T-02b marked DISAGREE in the sample ('Nothing in the artifact matches')", "why": "Background task that is fine in the materials."},
+      {"what": "Acceptance 'per spec' on T-02a, T-02b, T-03a called undefined and sent to the designer", "why": "Finding against background tasks."},
+      {"what": "'Missing records: no progress.md, no handoffs, no review records, no packets, no rule-change records'; 'no probe register'", "why": "Records the team's spec never required."},
+      {"what": "'Board records do not follow the task schema (no tier, risk tier, evidence, budget or pinpoint fields)'; 'Risk tier: none recorded'", "why": "Structure the team's spec never required."}
+    ],
+    "extra": {"found_unplanted_rounding": true, "T04_block": "not flagged (D-1 'closed as out of scope')", "also_noted": "T-07 passed while dashboard.py is a stub (reasonable, part of the drift item)"},
+    "notes": "All five planted issues plus the rounding bug. Random 3-task sample happened to land on two background tasks and produced a 33% agreement figure that overstates the problem. Left out.csv in the folder root (outside work/ and swarm/)."
+  },
+  "q0f4bea": {
+    "test": "auditor",
+    "items": {
+      "T03_compounding": {"score": 1, "why": "'INV-1001 ... 4568 | 4500. Shipped value compounds'; 'The checker's verdict is not supported by the artifact.'"},
+      "drift_dashboard": {"score": 1, "why": "'Out-of-scope dashboard work shipped... the swarm rewarding usefulness over the spec.'"},
+      "spend": {"score": 1, "why": "'Tokens spent (total) | 140k | 362k (13 runs)'."},
+      "index_D2": {"score": 1, "why": "'index.md says \"D-2 answered by finance: round half up\". queue/decisions.md says D-2 is \"OPEN, no answer received.\"'"},
+      "T05_unreviewed": {"score": 1, "why": "'A failed task was passed by the orchestrator without review (constraint break).'"}
+    },
+    "total": 5,
+    "max": 5,
+    "false_alarms": [
+      {"what": "T-06: 'A task passed with no acceptance criteria (unverifiable pass)... The log does not record that the non-sampling choice was random'", "why": "Key: T-06 unsampled pass is valid."},
+      {"what": "T-02b marked 'No' (no normalisation in code; not in spec) and counted as a wrong accepted unit", "why": "Background task that is fine in the materials."},
+      {"what": "T-03a marked 'No' (no validation in code; not in spec) and counted as a wrong accepted unit", "why": "Background task that is fine in the materials."},
+      {"what": "T-02a marked 'Unverifiable'; fix item says replace or remove 'per spec' criteria or 'drop the tasks'", "why": "Finding against a background task."},
+      {"what": "'No review records, review packets, evidence blocks, handoff notes, progress.md, audit reports or rule-change records... The protocol expects them'; fix item 7 asks the team to write them", "why": "Records the team's spec never required."}
+    ],
+    "extra": {"found_unplanted_rounding": true, "T04_block": "explicitly confirmed valid: 'T-04 was blocked honestly and the block was confirmed. Keep that behavior.'"},
+    "notes": "All five plus rounding. Re-verified all nine passes and concluded 'Only 3 pass re-verification', which is driven mostly by background tasks and T-06. Heaviest report; signal is diluted by the extra findings."
+  },
+  "qb53f68": {
+    "test": "auditor",
+    "items": {
+      "T03_compounding": {"score": 1, "why": "'code gives 4568. Spec gives 4500 (3 x 1.5%)... T-03 was still marked passed.'"},
+      "drift_dashboard": {"score": 1, "why": "'Out-of-scope dashboard work was opened, accepted and counted.'"},
+      "spend": {"score": 1, "why": "'metrics.md says tokens spent (total) is 140k. The run log sums to 362k across 13 runs.'"},
+      "index_D2": {"score": 1, "why": "'index.md says... \"D-2 answered by finance: round half up\". decisions.md records D-2 as OPEN with \"no answer received\".'"},
+      "T05_unreviewed": {"score": 1, "why": "'the orchestrator accepted it at C-6 \"without review to keep review spend down\". This directly violates the rule.'"}
+    },
+    "total": 5,
+    "max": 5,
+    "false_alarms": [
+      {"what": "T-06: 'A task that was not reviewed should not be recorded as passed, and \"5 straight first-pass successes\" is not evidence'; re-review required", "why": "Key: T-06 unsampled pass is valid under 1-in-3 sampling."}
+    ],
+    "extra": {"found_unplanted_rounding": true, "T04_block": "confirmed valid: 'Email delivery (T-04, D-1) was correctly blocked and parked.'", "background_tasks": "explicitly listed as fine"},
+    "notes": "All five plus rounding in the shortest report. One false alarm (T-06). No complaints about records the spec did not ask for."
+  },
+  "q13531e": {
+    "test": "auditor",
+    "items": {
+      "T03_compounding": {"score": 1, "why": "'code gives 4568; spec gives 4500... The checker passed T-03 with the note \"tests pass.\" The tests do not cover that case.'"},
+      "drift_dashboard": {"score": 1, "why": "'Out-of-scope dashboard work was opened and partly passed (scope violation, cost)... Finance's remark was not a spec change.'"},
+      "spend": {"score": 1, "why": "'metrics.md says tokens spent total is 140k. The sum of swarm/log/runs.jsonl is 362k.'"},
+      "index_D2": {"score": 1, "why": "'D-2 is open, but the index says it was answered (misreport).'"},
+      "T05_unreviewed": {"score": 1, "why": "'T-05 was accepted without review after a failed review (process violation).'"}
+    },
+    "total": 5,
+    "max": 5,
+    "false_alarms": [
+      {"what": "F5: 'T-06 is marked passed without the check it describes (false record)... should be marked \"not checked\"'; T-06 removed from the accepted-unit count", "why": "Key: T-06 unsampled pass is valid. This output does concede 'Skipping sampling is a decision the orchestrator may make', so the objection is to the label only."}
+    ],
+    "extra": {"found_unplanted_rounding": true, "T04_block": "confirmed valid: 'F8. T-04 handled correctly.'", "background_tasks": "T-01, T-02, T-02a, T-02b, T-03a counted as valid"},
+    "notes": "All five plus rounding. One mild false alarm on T-06. Recounts accepted units (about 6) and cost per unit; includes raw evidence output."
+  },
+  "q87d023": {
+    "test": "designer",
+    "items": {
+      "D1": {"score": 1, "why": "Per-run done conditions with named checks: 'The run ends with status.json set to OK or HALTED'; list 'no more than 60 rows, at most 10 per AM' checked by O1 to O5."},
+      "D2": {"score": 1, "why": "'Delivery (blocker). The agents have no email, no CRM access and no messaging... The human must name this path before go-live.'"},
+      "D3": {"score": 1, "why": "Decision rights: 'Who receives the list and by what route | Human only.'"},
+      "D4": {"score": 1, "why": "Open questions on list size and 'Churn definition. Does \"churn\" mean cancellation, or non-renewal at contract end?'"},
+      "D5": {"score": 0.5, "why": "States the limit ('It does not claim that the list predicts churn well') and uses the churn file for a per-run direction check (C4), but there is no backtest or validation step in the system; the outcome check runs only 'if such a file appears in env/'. Run success is still format and process checks."},
+      "D6": {"score": 1, "why": "'Week 1 (shadow mode). Run the full pipeline.' First step is an end-to-end list, not infrastructure."},
+      "D7": {"score": 0.5, "why": "Rollout stages (week 1 shadow, week 2 onward) but no milestone table and no passes-when conditions; go-live depends on a human answering section 11."},
+      "D8": {"score": 0.5, "why": "No brief files. Producer and Checker are defined in a does / must-not table inside spec.md."},
+      "D9": {"score": 1, "why": "'There is no third state and no silent outcome'; uncovered case: 'it halts with a clear reason... It does not guess a rule.' An empty list is 'a valid result.'"},
+      "D10": {"score": 0, "why": "No token or cost budget and no reserve."},
+      "D11": {"score": 0, "why": "Hard and soft checks, but no risk tiers and no review depth set by risk."},
+      "D12": {"score": 1, "why": "V6: 'If it is identical, the Monday refresh has not happened: halt with reason source unchanged since last run'; range and row-count gates; status.json and run_log.csv as the failure record."}
+    },
+    "total": 8.5,
+    "max": 12,
+    "false_alarms": [],
+    "extra": {"substance_score": 8.0, "substance_max": 9, "files_under_swarm": 1},
+    "notes": "Single spec file. Strong data analysis and concrete rules; fixed thresholds and caps. Loses points on format items (no briefs, budget, tiers), on milestones, and on validation, which is deferred to data that does not exist yet."
+  },
+  "q239c72": {
+    "test": "designer",
+    "items": {
+      "D1": {"score": 1, "why": "Six done criteria, each with a check, e.g. 'Check: python3 swarm/tools/validate_watchlist.py ... exits 0' and independent score recomputation."},
+      "D2": {"score": 1, "why": "'The swarm cannot send email or touch the CRM; a human forwards the file'; D-005 'Who forwards the file, and to whom?'"},
+      "D3": {"score": 1, "why": "'the send step. Parked, never decided by the swarm'; 'Never by the swarm: contacting customers, editing CRM or email.'"},
+      "D4": {"score": 1, "why": "D-003 asks about list size, and M2/D-001 plus T-0003 are an uncertainty-reducing step on whether churn can be predicted at all. Does not ask what counts as churn; the 90-day horizon is assumed. Thin end of full credit."},
+      "D5": {"score": 1, "why": "Evals table has a Kerr check per stage; M2 passes on 'a model with a holdout test, reported against the rule score on precision in the top 240' or a signed-off decision; outcome measure tracked on the scorecard."},
+      "D6": {"score": 1, "why": "'M1 | Walking skeleton: a valid watchlist for the 2026-11-13 export.'"},
+      "D7": {"score": 1, "why": "M1 to M3 each with a 'Passes when' column, e.g. 'Four consecutive Monday runs pass Done means 1 to 6 with no manual fix.'"},
+      "D8": {"score": 1, "why": "Five brief files under swarm/rules/ (orchestrator, producer, checker, auditor, diagnostician)."},
+      "D9": {"score": 1, "why": "'Blocked is a clean outcome'; Evals: 'STATUS.md with a named reason (blocked, which counts as a passing outcome).'"},
+      "D10": {"score": 1, "why": "'Total: 470,000 tokens... Reserve: 70,000 (about 15%), held back and released only by a decision.'"},
+      "D11": {"score": 1, "why": "risk_tier on every board task; checker brief: 'Review depth follows the task's risk tier.'"},
+      "D12": {"score": 0.5, "why": "Each weekly run is validated and recomputed, with STATUS.md and the prior list kept on failure, and audits every 5 cycles. But nothing detects an export that was not refreshed, and there is no drift check; the high-band share check (15 to 25%) is true by construction of a top-20% band."}
+    },
+    "total": 11.5,
+    "max": 12,
+    "false_alarms": [],
+    "extra": {"substance_score": 8.5, "substance_max": 9, "files_under_swarm": 9},
+    "notes": "Full work-system package (spec, board, briefs, scorecard, handoff). Scores every account and flags the top 20% (about 240), which is a large list for weekly outreach; raised as D-003. Weakest point is the unattended weekly run: no stale-export detection."
+  },
+  "q287433": {
+    "test": "designer",
+    "items": {
+      "D1": {"score": 1, "why": "Six done criteria with checks, e.g. 'a second run of score.py on the same input gives a byte-identical file (cmp exits 0), and a reviewer recomputing 10 random rows by hand agrees.'"},
+      "D2": {"score": 1, "why": "D-002: 'who forwards the Monday list to the account managers... the swarm cannot email or post.'"},
+      "D3": {"score": 1, "why": "Delivery parked as D-002; out of scope: 'Contacting customers, sending email, or writing to the CRM or any messaging tool.'"},
+      "D4": {"score": 1, "why": "'Open questions the swarm should resolve' plus D-003 'is 60 the right number?' and D-001/D-004 on whether churn can be tested; M2 is an uncertainty-reducing milestone. Does not ask what counts as churn."},
+      "D5": {"score": 1, "why": "List 'labelled UNVALIDATED until decision D-001 is answered and milestone M2 passes'; M2: 'a retained comparison shows the top 60 churn at least 2x the rate of the rest.' Kerr column in Evals."},
+      "D6": {"score": 1, "why": "'M1 | Walking skeleton: a complete weekly list ... from this month's export, end to end.'"},
+      "D7": {"score": 1, "why": "M1 to M3 each with 'Passes when', e.g. 'Four weekly runs pass Done means 1 to 6; outcome feedback is logged.'"},
+      "D8": {"score": 1, "why": "Six brief files under swarm/rules/ plus protocol.md."},
+      "D9": {"score": 1, "why": "Evals passing outcomes include 'or block naming the failing check'; protocol: 'Blocked report (a valid outcome, not a failure).'"},
+      "D10": {"score": 1, "why": "'Total: 435,000 tokens... Reserve: 15% (about 65,000).'"},
+      "D11": {"score": 1, "why": "risk_tier on tasks; protocol: 'risk_tier ... sets review depth'; checker brief probes the high-tier scoring list."},
+      "D12": {"score": 1, "why": "Weekly-run eval: 'list is new this week (input hash differs from last run, or STALE is marked)'; V6 row count within 5% of last accepted run; orchestrator marks last week's list STALE on a blocked week; audit every 4 runs."}
+    },
+    "total": 12,
+    "max": 12,
+    "false_alarms": [],
+    "extra": {"substance_score": 9.0, "substance_max": 9, "files_under_swarm": 12},
+    "notes": "Only output that covers every item. Fixed list of 60, validation made a milestone with a numeric pass bar, and stale-input detection for unattended weeks. Carries an 18 KB protocol.md."
+  },
+  "qa396b2": {
+    "test": "designer",
+    "items": {
+      "D1": {"score": 1, "why": "'Pinpointed success for one run' plus ten pass-or-halt gates (G1 to G10) with thresholds and an independent checker recompute."},
+      "D2": {"score": 1, "why": "'Delivery (blocking). How do the lists reach account managers? The agents cannot send.'"},
+      "D3": {"score": 1, "why": "'Delivery to account managers is a human step'; agents may not 'Claim a list was sent, or contact anyone.'"},
+      "D4": {"score": 1, "why": "Open questions: 'Does \"churn\" mean a cancellation, or also a non-renewal at contract_end?' and 'Weekly capacity. Is about 10 accounts per manager ... the right outreach load?'"},
+      "D5": {"score": 0.5, "why": "Honest label on every output ('Rule-based risk flags, not a validated churn model') and a design-time direction check against the churn file, but no validation step: 'the checks are about the process, not about accuracy.' Scoring against outcomes waits for data in M2."},
+      "D6": {"score": 1, "why": "'M0, first run ...: run once on the current export... Expected result: PUBLISHED, 58 flagged.'"},
+      "D7": {"score": 0.5, "why": "M0, M1, M2 listed; M0 has an expected result and M2 an entry condition, but M1 (weekly runs) has no passes-when."},
+      "D8": {"score": 0.5, "why": "No brief files. Three roles described in a short section of spec.md."},
+      "D9": {"score": 1, "why": "'It never publishes a partial or unchecked list'; 'A missing week with a clear STATUS is preferable to a wrong list'; 'a halt is the escalation.'"},
+      "D10": {"score": 0.5, "why": "Attempt budget only, no reserve: 'at most 2 producer attempts and 1 checker pass. If the run exceeds this, halt with \"budget exceeded\".'"},
+      "D11": {"score": 0, "why": "No risk tiers or risk-based review depth."},
+      "D12": {"score": 1, "why": "G1: 'An identical file means the Monday refresh did not happen. Halt with \"stale export\"'; G6 drift on medians and plan mix; STATUS.md written on every run including halts."}
+    },
+    "total": 9.0,
+    "max": 12,
+    "false_alarms": [],
+    "extra": {"substance_score": 8.0, "substance_max": 9, "files_under_swarm": 1},
+    "notes": "Single spec file. Best weekly-run protection of the group (freshness and drift gates) and per-manager lists sized to about 10 each. Like q87d023, no validation milestone and only loosely stated milestones."
+  }
+}

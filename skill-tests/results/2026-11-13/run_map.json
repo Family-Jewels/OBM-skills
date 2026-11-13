@@ -1,0 +1,217 @@
+{
+ "r359b56": {
+  "test": "checker",
+  "arm": "skill",
+  "batch": "round2"
+ },
+ "ra16202": {
+  "test": "checker",
+  "arm": "plain",
+  "batch": "round2"
+ },
+ "r3fed0a": {
+  "test": "producer",
+  "arm": "skill",
+  "batch": "round2"
+ },
+ "r11aec2": {
+  "test": "producer",
+  "arm": "plain",
+  "batch": "round2"
+ },
+ "ra227f5": {
+  "test": "orchestrator",
+  "arm": "skill",
+  "batch": "round2"
+ },
+ "r342439": {
+  "test": "orchestrator",
+  "arm": "plain",
+  "batch": "round2"
+ },
+ "r9d68f5": {
+  "test": "auditor",
+  "arm": "skill",
+  "batch": "round2"
+ },
+ "rc8c440": {
+  "test": "auditor",
+  "arm": "plain",
+  "batch": "round2"
+ },
+ "rd59dcc": {
+  "test": "diagnostician",
+  "arm": "skill",
+  "batch": "round2"
+ },
+ "r7da1fd": {
+  "test": "diagnostician",
+  "arm": "plain",
+  "batch": "round2"
+ },
+ "rfbc490": {
+  "test": "designer",
+  "arm": "skill",
+  "batch": "round2"
+ },
+ "rad477f": {
+  "test": "designer",
+  "arm": "plain",
+  "batch": "round2"
+ },
+ "q36218e": {
+  "test": "orchestrator",
+  "arm": "skill",
+  "batch": "repeats"
+ },
+ "qbe779a": {
+  "test": "orchestrator",
+  "arm": "skill",
+  "batch": "repeats"
+ },
+ "qa48581": {
+  "test": "orchestrator",
+  "arm": "plain",
+  "batch": "repeats"
+ },
+ "q8d29f5": {
+  "test": "orchestrator",
+  "arm": "plain",
+  "batch": "repeats"
+ },
+ "q40183a": {
+  "test": "diagnostician",
+  "arm": "skill",
+  "batch": "repeats"
+ },
+ "q98a75a": {
+  "test": "diagnostician",
+  "arm": "skill",
+  "batch": "repeats"
+ },
+ "q7a8ba6": {
+  "test": "diagnostician",
+  "arm": "plain",
+  "batch": "repeats"
+ },
+ "qeeafa6": {
+  "test": "diagnostician",
+  "arm": "plain",
+  "batch": "repeats"
+ },
+ "q0f4bea": {
+  "test": "auditor",
+  "arm": "skill",
+  "batch": "repeats"
+ },
+ "qa29a03": {
+  "test": "auditor",
+  "arm": "skill",
+  "batch": "repeats"
+ },
+ "q13531e": {
+  "test": "auditor",
+  "arm": "plain",
+  "batch": "repeats"
+ },
+ "qb53f68": {
+  "test": "auditor",
+  "arm": "plain",
+  "batch": "repeats"
+ },
+ "q287433": {
+  "test": "designer",
+  "arm": "skill",
+  "batch": "repeats"
+ },
+ "q239c72": {
+  "test": "designer",
+  "arm": "skill",
+  "batch": "repeats"
+ },
+ "qa396b2": {
+  "test": "designer",
+  "arm": "plain",
+  "batch": "repeats"
+ },
+ "q87d023": {
+  "test": "designer",
+  "arm": "plain",
+  "batch": "repeats"
+ },
+ "f183cc0": {
+  "test": "auditor",
+  "arm": "skill_fixed",
+  "batch": "fix_retest_1"
+ },
+ "fc54ab6": {
+  "test": "auditor",
+  "arm": "skill_fixed",
+  "batch": "fix_retest_1"
+ },
+ "f6f9bd6": {
+  "test": "auditor",
+  "arm": "skill_fixed",
+  "batch": "fix_retest_1"
+ },
+ "fb5cb6f": {
+  "test": "designer",
+  "arm": "skill_fixed",
+  "batch": "fix_retest_1"
+ },
+ "fb81d3a": {
+  "test": "designer",
+  "arm": "skill_fixed",
+  "batch": "fix_retest_1"
+ },
+ "f85af22": {
+  "test": "designer",
+  "arm": "skill_fixed",
+  "batch": "fix_retest_1"
+ },
+ "g856784": {
+  "test": "auditor",
+  "arm": "skill_fixed2",
+  "batch": "fix_retest_2"
+ },
+ "g4b0ce0": {
+  "test": "auditor",
+  "arm": "skill_fixed2",
+  "batch": "fix_retest_2"
+ },
+ "g29e463": {
+  "test": "auditor",
+  "arm": "skill_fixed2",
+  "batch": "fix_retest_2"
+ },
+ "gd6b4d7": {
+  "test": "auditor",
+  "arm": "plain",
+  "batch": "fix_retest_2"
+ },
+ "g7e11b2": {
+  "test": "auditor",
+  "arm": "plain",
+  "batch": "fix_retest_2"
+ },
+ "g5befcc": {
+  "test": "auditor",
+  "arm": "plain",
+  "batch": "fix_retest_2"
+ },
+ "g462906": {
+  "test": "orchestrator",
+  "arm": "skill_fixed",
+  "batch": "fix_retest_2"
+ },
+ "g2e5d08": {
+  "test": "orchestrator",
+  "arm": "skill_fixed",
+  "batch": "fix_retest_2"
+ },
+ "g79c0f5": {
+  "test": "orchestrator",
+  "arm": "skill_fixed",
+  "batch": "fix_retest_2"
+ }
+}
