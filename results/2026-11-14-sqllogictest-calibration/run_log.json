@@ -1,0 +1,17 @@
+{
+ "run": "91c217f1",
+ "arm": "D",
+ "rep": 0,
+ "shifts": [
+  {
+   "shift": 1,
+   "cost": 0.3404,
+   "seconds": 470,
+   "subtype": "success",
+   "turns": 37,
+   "status_line": "status: blocked"
+  }
+ ],
+ "end": "status: blocked",
+ "spent": 0.34
+}

@@ -19,8 +19,9 @@ elif tool == "Bash":
     target = r"(?:\./)?(?:" + "|".join(rels) + r")(?:/|\b)"
     # a write whose target is a protected path: redirect into it, or a mutating command naming it
     redirect = re.search(r"(?<![0-9&])>>?\s*['\"]?" + target, cmd)
-    mutating = re.search(r"\b(tee|sed\s+-i|rm|mv|cp|truncate|chmod|touch|ln)\b[^|;&]*?" + target, cmd)
-    gitw = re.search(r"\bgit\s+(checkout|restore|apply|stash|rm|mv)\b[^|;&]*?" + target, cmd)
+    head = r"(?:^|[|;&(]\s*|\bsudo\s+|\bxargs\s+)"  # the word must be in command position
+    mutating = re.search(head + r"(tee|sed\s+-i\S*|rm|mv|cp|truncate|chmod|touch|ln|install|rsync)\b[^|;&\n]*?" + target, cmd, re.M)
+    gitw = re.search(head + r"git\s+(checkout|restore|apply|stash|rm|mv)\b[^|;&\n]*?" + target, cmd, re.M)
     pyw = re.search(r"open\([^)]*" + target + r"[^)]*['\"][wa]", cmd)
     if redirect or mutating or gitw or pyw: deny = f"bash: {cmd[:200]}"
 if deny:

@@ -3,7 +3,7 @@
 set -u
 WD=$(realpath "$1"); PROMPT=$(cat "$2"); MODEL=$3; SETTINGS=${4:-}; BUDGET=${5:-3}; TO=${6:-7200}
 CFG=/home/claude/obm-lab/cfg-clean; mkdir -p "$CFG"
-OUT=$(dirname "$WD")/$(basename "$WD")
+OUT=${7:-$(dirname "$WD")/$(basename "$WD")}
 EXTRA=(); [ -n "$SETTINGS" ] && EXTRA=(--settings "$SETTINGS")
 cd "$WD" || exit 1
 date +%s > "$OUT.start"

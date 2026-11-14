@@ -1,0 +1,22 @@
+{
+ "micro": 0.9997,
+ "macro": 0.9997,
+ "passed": 29074,
+ "reached": 29084,
+ "families": {
+  "evidence": 1.0,
+  "index/between": 0.9964,
+  "index/commute": 1.0,
+  "index/delete": 1.0,
+  "index/in": 1.0,
+  "index/orderby": 1.0,
+  "index/orderby_nosort": 1.0,
+  "index/random": 1.0,
+  "index/view": 1.0,
+  "random/aggregates": 1.0,
+  "random/expr": 1.0,
+  "random/groupby": 1.0,
+  "random/select": 1.0,
+  "select": 1.0
+ }
+}

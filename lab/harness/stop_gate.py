@@ -38,11 +38,19 @@ with tempfile.TemporaryDirectory() as td:
             continue
         (shutil.copytree if item.is_dir() else shutil.copy2)(item, td / item.name)
     shutil.copytree(pristine / "tests", td / "tests")
-    r = subprocess.run([sys.executable, "-m", "pytest", "tests", "-q", "-p", "no:cacheprovider", "--tb=no", "-rfE"],
-                       cwd=td, capture_output=True, text=True, timeout=120)
+    cmd = os.environ.get("GATE_CMD")
+    try:
+        if cmd:
+            r = subprocess.run(cmd, shell=True, cwd=td, capture_output=True, text=True, timeout=int(os.environ.get("GATE_CMD_TIMEOUT", "500")))
+        else:
+            r = subprocess.run([sys.executable, "-m", "pytest", "tests", "-q", "-p", "no:cacheprovider", "--tb=no", "-rfE"],
+                               cwd=td, capture_output=True, text=True, timeout=120)
+    except subprocess.TimeoutExpired:
+        r = subprocess.CompletedProcess([], 1, "FAILED done-check: the check timed out (engine too slow)\n", "")
     passed = r.returncode == 0
     full_out = r.stdout
-    summary = "\n".join(l for l in r.stdout.splitlines() if l.startswith(("FAILED", "ERROR")) or " passed" in l or " failed" in l)[-4000:]
+    lines_ = [l for l in r.stdout.splitlines() if l.startswith(("FAILED", "ERROR")) or " passed" in l or " failed" in l]
+    summary = ("\n".join(lines_[:25]) + (f"\n... and {len(lines_) - 26} more\n" + lines_[-1] if len(lines_) > 26 else ""))[-4000:]
 
 if passed:
     done("met", True)
@@ -51,11 +59,20 @@ if mode == "exits":
     if b.exists() and len(b.read_text().strip()) > 80:
         if os.environ.get("GATE_ACCOUNT") != "1":
             done("blocked", True)
-        failing = re.findall(r"^(?:FAILED|ERROR) \S*?::(?:test_case\[)?([\w\-]+)\]?", full_out, re.M)
-        missing = [f for f in failing if f not in b.read_text()]
-        if not missing:
+        if cmd:
+            failing = re.findall(r"^FAILED (\S+)", full_out, re.M)
+        else:
+            failing = re.findall(r"^(?:FAILED|ERROR) \S*?::(?:test_case\[)?([\w\-]+)\]?", full_out, re.M)
+        limit = int(os.environ.get("GATE_BLOCK_MAX", "30"))
+        btxt = b.read_text()
+        missing = [f for f in failing if f not in btxt and f.split("/")[-1] not in btxt]
+        if len(failing) <= limit and not missing:
             done("blocked", True)
-        account_note = f" BLOCKED.md must account for every failing test; it does not mention: {', '.join(missing[:15])}."
+        if len(failing) > limit:
+            account_note = (f" A block report can end the session only when few failures remain ({limit} or fewer) and it accounts"
+                            f" for each one; {len(failing)} records still fail.")
+        else:
+            account_note = f" BLOCKED.md must account for every failing test; it does not mention: {', '.join(missing[:15])}."
 if state["attempts"] >= cap:
     done("cap", True)
 
