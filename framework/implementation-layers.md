@@ -139,15 +139,19 @@ Not taken: a gate with no documented cap and no "impossible" exit; a large roste
 
 **An outside design review** (a critique of the project generated with ChatGPT) supplied the split between instruction and enforcement as a thing to test, and three ideas kept as candidates below.
 
-## Proposed, not yet adopted
+## Proposals and their status
 
-These would change the skills or the test plan. None has been tested, and the project's practice is to test a change before adopting it.
+Untested, so not adopted (the project's practice is to test a change before adopting it):
 
-- **A computable floor for risk tiers** (protocol 6), as described in the review table.
 - **Expiry on handoff notes** (protocol 2.1).
-- **Proportional intervention.** The smallest response that fits the size of the problem, stated as a rule for the orchestrator and diagnostician.
-- **Marking records as fact, assumption, hypothesis or decision**, so that a later agent can tell what was verified.
-- **A four-arm test** of the layers on one long task: no skills and no enforcement; skills only; enforcement only; both. It answers the question the two A/B pilots could not: how much of any gain comes from the instructions and how much from the harness.
+- **A four-arm test** of the layers on one long task: no skills and no enforcement; skills only; enforcement only; both. It answers the question the two A/B pilots could not: how much of any gain comes from the instructions and how much from the harness. In progress.
+
+Tested on 2026-11-13 ([results](../results/2026-11-13-proposals-and-stop-gate)):
+
+- **Proportional intervention**: a small gain on Haiku 5.5 (7.7 against 7.0 of 8). Candidate to adopt.
+- **A computable floor for risk tiers**: worse than judgment (6.8 against 8.0 of 8); it over-rated a test-only task. Not adopted.
+- **Marking records as fact, assumption, hypothesis or decision**: no difference; the existing "Unverified" field was enough. Not adopted.
+- **The stop gate**: built and tested. No arm faked success on impossible tasks, even with a strict gate; a gate without exits cost 2.4 times as much, and honest exits recovered most of that.
 
 ## One concrete mapping: Claude Code
 

@@ -1,0 +1,104 @@
+{
+ "4fd87a": {
+  "run": "abf32a8e",
+  "variant": "base",
+  "test": "prop"
+ },
+ "58e7a1": {
+  "run": "22e8abfe",
+  "variant": "base",
+  "test": "floor"
+ },
+ "062918": {
+  "run": "6e12c45b",
+  "variant": "prop",
+  "test": "prop"
+ },
+ "5095df": {
+  "run": "62046e0e",
+  "variant": "base",
+  "test": "prop"
+ },
+ "b36d17": {
+  "run": "982c190d",
+  "variant": "floor",
+  "test": "floor"
+ },
+ "e10d7d": {
+  "run": "ba3ad8e7",
+  "variant": "prop",
+  "test": "prop"
+ },
+ "2f06bb": {
+  "run": "05ee5164",
+  "variant": "floor",
+  "test": "floor"
+ },
+ "b9ddd6": {
+  "run": "5cf927a5",
+  "variant": "base",
+  "test": "prop"
+ },
+ "2de187": {
+  "run": "f91c851a",
+  "variant": "prop",
+  "test": "prop"
+ },
+ "fb02ec": {
+  "run": "c2e96cb7",
+  "variant": "base",
+  "test": "floor"
+ },
+ "58137f": {
+  "run": "4b9c53ac",
+  "variant": "floor",
+  "test": "floor"
+ },
+ "f9e890": {
+  "run": "31e86a55",
+  "variant": "base",
+  "test": "floor"
+ },
+ "084e6b": {
+  "writer": "eae038f3",
+  "reader": "54c7c835",
+  "variant": "base",
+  "test": "mark",
+  "writer_cost": 0.004105610000000001
+ },
+ "a9e434": {
+  "writer": "7649f6ee",
+  "reader": "f2258a73",
+  "variant": "base",
+  "test": "mark",
+  "writer_cost": 0.00391622
+ },
+ "0cc966": {
+  "writer": "0b9d7290",
+  "reader": "af7d39fa",
+  "variant": "base",
+  "test": "mark",
+  "writer_cost": 0.00418166
+ },
+ "75dc23": {
+  "writer": "98d8553d",
+  "reader": "7807559a",
+  "variant": "mark",
+  "test": "mark",
+  "writer_cost": 0.00400813
+ },
+ "bd4c7d": {
+  "writer": "529b9c3e",
+  "reader": "89744485",
+  "variant": "mark",
+  "test": "mark",
+  "writer_cost": 0.00453778
+ },
+ "46ca91": {
+  "writer": "1fc17e6b",
+  "reader": "cfb1d346",
+  "variant": "mark",
+  "test": "mark",
+  "writer_cost": 0.00503521
+ }
+}

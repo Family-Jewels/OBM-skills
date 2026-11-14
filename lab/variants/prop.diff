@@ -1,0 +1,18 @@
+diff -ru base/obm-swarm-orchestrator/SKILL.md prop/obm-swarm-orchestrator/SKILL.md
+--- base/obm-swarm-orchestrator/SKILL.md	2026-11-13 22:25:39.726400987 -0600
++++ prop/obm-swarm-orchestrator/SKILL.md	2026-11-13 22:25:39.763563401 -0600
+@@ -71,6 +71,14 @@
+ 
+ Never punish an honest block or an admitted break. The swarm's honesty depends on admission being safe.
+ 
++**Match the response to the size of the problem.** Before acting on anything that went wrong, decide which it is:
++
++- **A single event**: one failure, one outage, one stale line, one slow review. Apply the routine consequence above and nothing more.
++- **A pattern**: the same problem twice or more, across tasks or producers. Send it to the diagnostician.
++- **A break**: a misreport, a constraint break, or a threat to the goal or budget. Only these justify stopping work, changing anything swarm-wide, or escalating to the human.
++
++Over-reacting costs as much as under-reacting. It spends review and budget, stops progress, and teaches the swarm that reporting a small problem is risky. A one-off failure by a reliable producer is the schedule working, not a signal to tighten everything.
++
+ ### 5. Milestone gate
+ 
+ When every task in the milestone has passed:

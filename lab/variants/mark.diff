@@ -1,0 +1,175 @@
+diff -ru base/obm-swarm-auditor/references/protocol.md mark/obm-swarm-auditor/references/protocol.md
+--- base/obm-swarm-auditor/references/protocol.md	2026-11-13 22:25:39.727681757 -0600
++++ mark/obm-swarm-auditor/references/protocol.md	2026-11-13 22:25:39.766172833 -0600
+@@ -122,13 +122,18 @@
+ Evidence: log/evidence/T-0042.md
+ Approach: <what you were trying to do and why you chose this way>
+ Tried and failed: <dead ends, and why each failed>
+-Unverified: <what you suspect but did not check>
++Facts: <what you checked, each with where: the command, file or record>
++Assumptions: <what you acted on without checking>
++Hypotheses: <explanations you suspect but did not test>
++Decisions: <choices made, each with its reason>
+ Next step: <the single most useful next action>
+ Open questions: <only real ones>
+ Blockers: <what, and what would unblock it>
+ Tokens used this session: <measured figure, or "unknown"; never an estimate>
+ ```
+ 
++Mark every statement by its status. A fact names where it was checked; anything you did not check is an assumption or a hypothesis, however sure you are. The next agent treats only facts as settled and checks an assumption or hypothesis before building on it. The same marking applies to the index.
++
+ Test before finishing: if the next agent read only this note and the artifact, what would it waste time rediscovering? That is what the note is for. Leave a field as "none" rather than padding it.
+ 
+ ### 3.3 Evidence block (attached to every submission)
+diff -ru base/obm-swarm-checker/references/protocol.md mark/obm-swarm-checker/references/protocol.md
+--- base/obm-swarm-checker/references/protocol.md	2026-11-13 22:25:39.727041055 -0600
++++ mark/obm-swarm-checker/references/protocol.md	2026-11-13 22:25:39.766029579 -0600
+@@ -122,13 +122,18 @@
+ Evidence: log/evidence/T-0042.md
+ Approach: <what you were trying to do and why you chose this way>
+ Tried and failed: <dead ends, and why each failed>
+-Unverified: <what you suspect but did not check>
++Facts: <what you checked, each with where: the command, file or record>
++Assumptions: <what you acted on without checking>
++Hypotheses: <explanations you suspect but did not test>
++Decisions: <choices made, each with its reason>
+ Next step: <the single most useful next action>
+ Open questions: <only real ones>
+ Blockers: <what, and what would unblock it>
+ Tokens used this session: <measured figure, or "unknown"; never an estimate>
+ ```
+ 
++Mark every statement by its status. A fact names where it was checked; anything you did not check is an assumption or a hypothesis, however sure you are. The next agent treats only facts as settled and checks an assumption or hypothesis before building on it. The same marking applies to the index.
++
+ Test before finishing: if the next agent read only this note and the artifact, what would it waste time rediscovering? That is what the note is for. Leave a field as "none" rather than padding it.
+ 
+ ### 3.3 Evidence block (attached to every submission)
+diff -ru base/obm-swarm-designer/references/protocol.md mark/obm-swarm-designer/references/protocol.md
+--- base/obm-swarm-designer/references/protocol.md	2026-11-13 22:25:39.725820426 -0600
++++ mark/obm-swarm-designer/references/protocol.md	2026-11-13 22:25:39.766343367 -0600
+@@ -122,13 +122,18 @@
+ Evidence: log/evidence/T-0042.md
+ Approach: <what you were trying to do and why you chose this way>
+ Tried and failed: <dead ends, and why each failed>
+-Unverified: <what you suspect but did not check>
++Facts: <what you checked, each with where: the command, file or record>
++Assumptions: <what you acted on without checking>
++Hypotheses: <explanations you suspect but did not test>
++Decisions: <choices made, each with its reason>
+ Next step: <the single most useful next action>
+ Open questions: <only real ones>
+ Blockers: <what, and what would unblock it>
+ Tokens used this session: <measured figure, or "unknown"; never an estimate>
+ ```
+ 
++Mark every statement by its status. A fact names where it was checked; anything you did not check is an assumption or a hypothesis, however sure you are. The next agent treats only facts as settled and checks an assumption or hypothesis before building on it. The same marking applies to the index.
++
+ Test before finishing: if the next agent read only this note and the artifact, what would it waste time rediscovering? That is what the note is for. Leave a field as "none" rather than padding it.
+ 
+ ### 3.3 Evidence block (attached to every submission)
+diff -ru base/obm-swarm-diagnostician/references/protocol.md mark/obm-swarm-diagnostician/references/protocol.md
+--- base/obm-swarm-diagnostician/references/protocol.md	2026-11-13 22:25:39.728225187 -0600
++++ mark/obm-swarm-diagnostician/references/protocol.md	2026-11-13 22:25:39.765728109 -0600
+@@ -122,13 +122,18 @@
+ Evidence: log/evidence/T-0042.md
+ Approach: <what you were trying to do and why you chose this way>
+ Tried and failed: <dead ends, and why each failed>
+-Unverified: <what you suspect but did not check>
++Facts: <what you checked, each with where: the command, file or record>
++Assumptions: <what you acted on without checking>
++Hypotheses: <explanations you suspect but did not test>
++Decisions: <choices made, each with its reason>
+ Next step: <the single most useful next action>
+ Open questions: <only real ones>
+ Blockers: <what, and what would unblock it>
+ Tokens used this session: <measured figure, or "unknown"; never an estimate>
+ ```
+ 
++Mark every statement by its status. A fact names where it was checked; anything you did not check is an assumption or a hypothesis, however sure you are. The next agent treats only facts as settled and checks an assumption or hypothesis before building on it. The same marking applies to the index.
++
+ Test before finishing: if the next agent read only this note and the artifact, what would it waste time rediscovering? That is what the note is for. Leave a field as "none" rather than padding it.
+ 
+ ### 3.3 Evidence block (attached to every submission)
+diff -ru base/obm-swarm-orchestrator/references/protocol.md mark/obm-swarm-orchestrator/references/protocol.md
+--- base/obm-swarm-orchestrator/references/protocol.md	2026-11-13 22:25:39.726375272 -0600
++++ mark/obm-swarm-orchestrator/references/protocol.md	2026-11-13 22:25:39.765561079 -0600
+@@ -122,13 +122,18 @@
+ Evidence: log/evidence/T-0042.md
+ Approach: <what you were trying to do and why you chose this way>
+ Tried and failed: <dead ends, and why each failed>
+-Unverified: <what you suspect but did not check>
++Facts: <what you checked, each with where: the command, file or record>
++Assumptions: <what you acted on without checking>
++Hypotheses: <explanations you suspect but did not test>
++Decisions: <choices made, each with its reason>
+ Next step: <the single most useful next action>
+ Open questions: <only real ones>
+ Blockers: <what, and what would unblock it>
+ Tokens used this session: <measured figure, or "unknown"; never an estimate>
+ ```
+ 
++Mark every statement by its status. A fact names where it was checked; anything you did not check is an assumption or a hypothesis, however sure you are. The next agent treats only facts as settled and checks an assumption or hypothesis before building on it. The same marking applies to the index.
++
+ Test before finishing: if the next agent read only this note and the artifact, what would it waste time rediscovering? That is what the note is for. Leave a field as "none" rather than padding it.
+ 
+ ### 3.3 Evidence block (attached to every submission)
+diff -ru base/obm-swarm-producer/SKILL.md mark/obm-swarm-producer/SKILL.md
+--- base/obm-swarm-producer/SKILL.md	2026-11-13 22:25:39.726710256 -0600
++++ mark/obm-swarm-producer/SKILL.md	2026-11-13 22:25:39.766414038 -0600
+@@ -78,6 +78,10 @@
+ - what you were trying to do and why you chose this approach;
+ - what you tried that failed, and why it failed;
+ - what you suspect but did not verify;
++
++Mark each statement by its status: **fact** (checked, and say where: the command, file or record), **assumption** (acted on without checking), **hypothesis** (a suspected explanation, untested) or **decision** (a choice, with its reason). Confidence is not verification: a belief you did not check is an assumption or a hypothesis, however sure you are.
++
++When you start from someone else's note, treat only its facts as settled. Check an assumption or hypothesis before you build on it.
+ - what you would do next.
+ 
+ Do not restate what the artifact, the diff or the logs already show. The next agent can read those, and copied facts go stale. A short note with the dead ends is worth more than a long one that narrates the work. Before finishing, ask: if the next agent read only this note and the artifact, what would it waste time rediscovering? Write that down.
+diff -ru base/obm-swarm-producer/references/protocol.md mark/obm-swarm-producer/references/protocol.md
+--- base/obm-swarm-producer/references/protocol.md	2026-11-13 22:25:39.726683937 -0600
++++ mark/obm-swarm-producer/references/protocol.md	2026-11-13 22:25:39.765883388 -0600
+@@ -122,13 +122,18 @@
+ Evidence: log/evidence/T-0042.md
+ Approach: <what you were trying to do and why you chose this way>
+ Tried and failed: <dead ends, and why each failed>
+-Unverified: <what you suspect but did not check>
++Facts: <what you checked, each with where: the command, file or record>
++Assumptions: <what you acted on without checking>
++Hypotheses: <explanations you suspect but did not test>
++Decisions: <choices made, each with its reason>
+ Next step: <the single most useful next action>
+ Open questions: <only real ones>
+ Blockers: <what, and what would unblock it>
+ Tokens used this session: <measured figure, or "unknown"; never an estimate>
+ ```
+ 
++Mark every statement by its status. A fact names where it was checked; anything you did not check is an assumption or a hypothesis, however sure you are. The next agent treats only facts as settled and checks an assumption or hypothesis before building on it. The same marking applies to the index.
++
+ Test before finishing: if the next agent read only this note and the artifact, what would it waste time rediscovering? That is what the note is for. Leave a field as "none" rather than padding it.
+ 
+ ### 3.3 Evidence block (attached to every submission)
+diff -ru base/protocol.md mark/protocol.md
+--- base/protocol.md	2026-11-13 22:25:39.725358455 -0600
++++ mark/protocol.md	2026-11-13 22:25:39.765372323 -0600
+@@ -122,13 +122,18 @@
+ Evidence: log/evidence/T-0042.md
+ Approach: <what you were trying to do and why you chose this way>
+ Tried and failed: <dead ends, and why each failed>
+-Unverified: <what you suspect but did not check>
++Facts: <what you checked, each with where: the command, file or record>
++Assumptions: <what you acted on without checking>
++Hypotheses: <explanations you suspect but did not test>
++Decisions: <choices made, each with its reason>
+ Next step: <the single most useful next action>
+ Open questions: <only real ones>
+ Blockers: <what, and what would unblock it>
+ Tokens used this session: <measured figure, or "unknown"; never an estimate>
+ ```
+ 
++Mark every statement by its status. A fact names where it was checked; anything you did not check is an assumption or a hypothesis, however sure you are. The next agent treats only facts as settled and checks an assumption or hypothesis before building on it. The same marking applies to the index.
++
+ Test before finishing: if the next agent read only this note and the artifact, what would it waste time rediscovering? That is what the note is for. Leave a field as "none" rather than padding it.
+ 
+ ### 3.3 Evidence block (attached to every submission)

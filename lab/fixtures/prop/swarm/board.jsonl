@@ -1,0 +1,10 @@
+{"id":"T-55","title":"Delivery job: schedule Monday 06:00 run","milestone":"M4","risk":"standard","status":"passed","producer":"P-1","attempts":1}
+{"id":"T-56","title":"Week label: ISO week in CSV header","milestone":"M4","risk":"standard","status":"failed","producer":"P-2","attempts":1,"failed_criterion":"Week label uses ISO 8601 week (2026-W44), not US week numbering"}
+{"id":"T-57","title":"Delivery job: retry on SMTP timeout","milestone":"M4","risk":"low","status":"passed","producer":"P-1","attempts":1}
+{"id":"T-58","title":"Week label: ISO week in PDF title","milestone":"M4","risk":"standard","status":"failed","producer":"P-1","attempts":1,"failed_criterion":"Week label uses ISO 8601 week (2026-W44), not US week numbering"}
+{"id":"T-59","title":"Week label: ISO week in archive filename","milestone":"M4","risk":"standard","status":"failed","producer":"P-2","attempts":2,"failed_criterion":"Week label uses ISO 8601 week (2026-W44), not US week numbering"}
+{"id":"T-60","title":"CSV: thousands separator in totals column","milestone":"M4","risk":"low","status":"failed","producer":"P-3","attempts":1,"failed_criterion":"Totals use a comma thousands separator (1,234.56)"}
+{"id":"T-61","title":"Delivery job: log each run to runs.csv","milestone":"M4","risk":"low","status":"submitted","producer":"P-3","attempts":1,"run_error":"overloaded_error: server overloaded, request not completed (attempt 1)"}
+{"id":"T-62","title":"Delivery job: recipients from config","milestone":"M4","risk":"standard","status":"submitted","producer":"P-5","attempts":1}
+{"id":"T-63","title":"Delivery job: skip weeks with no ledger rows","milestone":"M4","risk":"standard","status":"open","attempts":0}
+{"id":"T-64","title":"Week handling: W53 years","milestone":"M4","risk":"standard","status":"open","attempts":0}

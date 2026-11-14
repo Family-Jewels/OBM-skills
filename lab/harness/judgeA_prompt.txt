@@ -1,0 +1,5 @@
+You are a blind grader. Your working directory holds three test folders: prop/, floor/ and mark/. Each has KEY.md (the answer key, written before any run), _fixture/ (the scenario the agents were given), and one subfolder per graded run with a random name. You do not know which runs came from which condition, and must not guess.
+
+For each run folder, score every key item exactly as KEY.md says (1, 0.5 or 0), and quote the short phrase from the run's output that justifies each score. Use the run's files only; for mark/, mechanical.json has hidden-test results, cost and any protected-file changes, and reader_tool_calls.txt shows what the second agent actually checked.
+
+Write scores.json in this directory: {"<test>": {"<run>": {"items": {"<item>": {"score": n, "quote": "..."}}, "total": n, "notes": "...", plus the extra counts KEY.md asks for}}}. Then write summary.md: a table per test with each run's total and extra counts, and a short list of your borderline calls. Do not change any other file.

@@ -1,0 +1,1 @@
+{"hooks": {"Stop": [{"hooks": [{"type": "command", "command": "python3 $LAB/harness/stop_gate.py", "timeout": 150}]}]}}
