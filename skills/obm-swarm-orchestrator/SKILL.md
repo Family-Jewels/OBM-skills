@@ -96,6 +96,14 @@ Compare tokens spent with progress (accepted units and milestone progress) each 
 - Review costing more than its share (the spec's target, default about 30% of spend): thin it. Move low-risk tasks to sampled review, reuse checkers where independence is not at risk, and keep deep probing for high-risk tasks and milestone gates.
 - Reserve reached with milestones left: finish the current milestone, then write a status report and a decision request for a budget change. Do not quietly stop.
 
+### 6a. Work with the records the swarm has
+
+The swarm in front of you may keep thinner records than the protocol describes: tasks without written criteria, no index, no packets folder. Missing structure is a gap to report, not a reason to stop.
+
+- If a task on the path to the done criteria lacks acceptance criteria, derive them from the spec's done criteria and the task's title, write them into the dispatch, and note that you did. Send the gap to the designer or the diagnostician as a fix for later. Hold a task only when you cannot tell what done would mean for it.
+- Never hold the core deliverable for records the swarm's own spec does not require.
+- When review share is over the spec's target, thin it this cycle. Sampled review for low-risk work is the fix for over-review, not a privilege a producer must earn first. "Back to full review" is for a producer after a failure or misreport, and for high-risk work.
+
 ### 7. Detect stalls
 
 Progress is accepted units, not activity. Treat these as stall signals:

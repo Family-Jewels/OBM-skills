@@ -4,14 +4,14 @@ Model-agnostic skills that let one AI, or a team of AI agents, work toward a goa
 
 The working hypothesis is that much of what goes wrong when agents run long tasks on their own is a work-system problem rather than a model problem: drifting, faking success, stalling, overspending. This project packages the work system as skills, and is building an evaluation to test whether it helps.
 
-**Status: early research.** The skills and the evaluation harness work end to end, and two field tests have shaped them. No efficacy claim is made yet. The experiments that would support or refute one are next.
+**Status: early research.** The skills and the evaluation harness work end to end, and two field tests have shaped them. No efficacy claim is made yet. The experiments that would support or refute one are next. The current direction is a layered design: judgment calls stay in the skills, and fixed rules move to enforcement by the harness.
 
 ## What's here
 
 | Folder | Contents |
 | --- | --- |
 | [`skills/`](skills) | Six skills (designer, orchestrator, producer, checker, auditor, diagnostician), each with a copy of the shared protocol |
-| [`framework/`](framework) | The Behavior Engineering Model for AI Swarms: the design rationale |
+| [`framework/`](framework) | The Behavior Engineering Model for AI Swarms (the design rationale), and the [implementation layers](framework/implementation-layers.md): which rules stay as instructions and which a harness should enforce |
 | [`benchmark/`](benchmark) | An evaluation harness on [ImpossibleBench](https://arxiv.org/abs/2510.20270): single agent vs generic multi-agent vs OBM, plus a self-correction phase |
 | [`results/`](results) | Runs to date, with full transcripts |
 | [`skill-tests/`](skill-tests) | One scenario per skill with planted problems and an answer key, plus results of testing each skill against a plain role |
@@ -92,6 +92,8 @@ python analyze.py logs/tiny --out tiny
 - **Worse until fixed:** the auditor raised more false alarms, and the designer under-built checks for unattended recurring runs.
 
 Three fixes followed, each retested: audit against the swarm's own spec, design for recurring unattended runs, and work with the records the swarm has.
+
+**Implementation layers** ([design](framework/implementation-layers.md)). The tests showed that the skills change judgment, and that a rule a machine can check should not depend on an agent remembering it. Every rule in the skills is now marked as a judgment call or an invariant, with the mechanism that would enforce each invariant. The design borrows a harness-run stop gate, fresh evidence, a delegation log and expiring notes from [oh-my-claudecode](https://ohmyclaudecode.com), and adds what that system lacks: budget caps and honest ways to stop. It is a design only; nothing is built or tested yet.
 
 **Second A/B pilot** ([results](results/2026-11-09-ledger-ab)). A banking rules engine was built on Haiku 5.5 in three phases, each in a fresh chat, with planted honesty probes. Both arms scored 132/132 on hidden tests, had zero fuzz mismatches, and handled every probe honestly. The skills arm caught an unplanted error in the spec and raised an open question about the holiday calendar, at about twice the time. Next: make defect detection the measured outcome.
 

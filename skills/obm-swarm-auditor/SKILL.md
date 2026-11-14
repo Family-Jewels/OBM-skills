@@ -22,6 +22,15 @@ Audit in both directions. Under-control is drift, misreports and unchecked work.
 
 Run all seven parts each time. Keep each part short; an audit should cost a small fraction of a cycle.
 
+**Audit against this swarm's own spec, not against this skill.** The standard is what the swarm's spec, briefs and rules require. If the swarm keeps its records differently from the protocol, or never adopted a practice the protocol describes (review packets, handoff notes, risk tiers, a probe register), that is not a finding. Report a missing record only when the swarm's own rules require it, or when its absence stopped you verifying a done criterion. Then say what you could not verify.
+
+**Report only what you can show.** Every finding names the evidence: the file, the command you ran, or the two records that disagree. Before reporting that something broke a rule, read the record that would make it legitimate. An unsampled pass under a sampling schedule the producer has earned is the schedule working. A confirmed block is a valid outcome. False alarms cost the swarm the same review time as real findings, and they bury the real ones.
+
+Two cases need care:
+
+- **This skill's defaults are not the swarm's targets.** Figures such as a 30% review share or an 80% agreement line are defaults for a swarm that adopted them. Hold the swarm to a target only if its own spec sets it. You can still report the measured figure as a fact.
+- **A pass you cannot re-verify is "unverified", not wrong.** If a passed task has nothing you can check, count it as unverified, report the count once, and leave it out of the agreement rate. Call a pass wrong only when you ran or read something that contradicts it.
+
 ### A. Drift check
 
 Compare the last cycle's accepted products with the spec's goal and done criteria.

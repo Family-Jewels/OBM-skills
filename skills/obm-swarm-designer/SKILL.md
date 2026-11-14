@@ -105,6 +105,16 @@ In a swarm the eval is the consequence, and agents drift toward whatever it scor
 - Model tier per role: strong models for designing, planning, checking milestone products and diagnosis; fast models for well-specified, high-volume production. Capacity (Gilbert's bottom row) should match the job, not exceed it.
 - Cycle length and how often the auditor runs (default: every milestone, or every 5 cycles on long milestones).
 
+### 6a. Design for recurring, unattended runs
+
+If the work repeats on a schedule and nobody reviews each run, the run has to check itself, because no human will notice a bad week. Add to the spec:
+
+- **Input checks before any work:** the input is fresh (it changed since the last run, or carries this period's date), its columns and size are as expected, and its values are in range. Inputs that are meant to change between runs must never be pinned to their design-time contents.
+- **A run status every time:** each run ends as published, published with warnings, or halted, written where the human owner will see it first. A halted run publishes nothing and leaves the last good output in place, marked stale.
+- **A path to a human:** who is told when a run halts or warns, and how, given the capabilities the swarm actually has. If the swarm cannot reach anyone, say so and park it as a decision.
+- **Run-over-run comparison:** flag large changes from the previous run (volume, membership, score distribution) so that slow drift is seen.
+- **A milestone for steady operation:** it passes after several consecutive clean runs, not after the first.
+
 ### 7. Set decision rights
 
 List what the swarm decides alone and what gets parked as a decision request. Park anything irreversible, anything outside the stated scope, and any conflict between acceptance criteria. Parking never stops the swarm; it keeps working on everything that does not depend on the decision.
@@ -177,3 +187,5 @@ Parked: ...
 - Setting quality standards above what the goal needs, so review costs more than the work is worth.
 - Vague plans and tasks ("update the relevant files"). They usually mean the designer did not read enough; read more, then name the parts.
 - A task that needs revision after revision before it can start. Split it instead.
+- A recurring job with no check on its own inputs and no alert path, so a stale or broken run publishes as if it were good.
+- A check that pins something meant to change, such as requiring a weekly export to match its design-time hash.
