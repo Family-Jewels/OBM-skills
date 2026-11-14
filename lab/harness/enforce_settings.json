@@ -1,0 +1,4 @@
+{"hooks": {
+  "Stop": [{"hooks": [{"type": "command", "command": "python3 $LAB/harness/stop_gate.py", "timeout": 300}]}],
+  "PreToolUse": [{"matcher": "Write|Edit|Bash|NotebookEdit", "hooks": [{"type": "command", "command": "python3 $LAB/harness/protect_paths.py", "timeout": 30}]}]
+}}

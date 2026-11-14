@@ -1,24 +1,65 @@
-# OBM Skills: organizational behavior management for AI agent teams
+# AI Performance Engineering
 
-Model-agnostic skills that let one AI, or a team of AI agents, work toward a goal for hours or days with minimal human oversight. They apply organizational behavior management (OBM), the branch of behavior analysis that designs workplaces where people do the right thing when no one is watching, to AI agents.
+Engineering the conditions under which AI agents work reliably on long tasks, for hours or days, with little human oversight.
 
-The working hypothesis is that much of what goes wrong when agents run long tasks on their own is a work-system problem rather than a model problem: drifting, faking success, stalling, overspending. This project packages the work system as skills, and is building an evaluation to test whether it helps.
+## Hypothesis
 
-**Status: early research.** The skills and the evaluation harness work end to end, and two field tests have shaped them. No efficacy claim is made yet. The experiments that would support or refute one are next. The current direction is a layered design: judgment calls stay in the skills, and fixed rules move to enforcement by the harness.
+> The reliability of long-horizon autonomous AI execution can be materially improved through engineered performance management systems that continuously establish expectations, measure actual execution, detect deviations, initiate corrective action, and enforce operational constraints.
+
+Agents that run long tasks on their own drift, stop early, fake success, stall and overspend. This project treats those as failures of the system the agent works in, not only of the model, and builds that system: skills that carry the management practices, a harness that enforces what must never depend on an agent's memory, and experiments that test whether either one helps.
+
+**Status: early research.** The skills, the enforcement hooks and the test harness work. No efficacy claim is made yet: on every task tried so far, current models were already good enough that the arms tied. The next experiment needs a task hard and long enough to make agents fail.
+
+## The approach: one philosophy, five engineering disciplines
+
+**Organizational behavior management (OBM) is the philosophy.** It is the branch of behavior analysis that designs workplaces where people do the right thing when no one is watching. It supplies the questions: what result is worth having, what the performer is told, what they are given, and what happens after they act. Its central rule is to fix the environment before blaming the performer. An agent cannot try harder next time, but its instructions, tools, checks and consequences can all change.
+
+**The engineering disciplines supply the machinery.** OBM says what a well-run system must do. These fields say how to make it do it reliably:
+
+| Discipline | What it contributes | Where it shows up |
+| --- | --- | --- |
+| **Control theory** | Feedback loops, stability, error correction. Expectation, measurement, deviation, correction, and keeping corrections small enough that the system doesn't oscillate | The cycle in the orchestrator; the diagnostician's one change at a time; review that thins as reliability is shown; over-control audits |
+| **Operations research** | Allocating limited resources for the most value. Budgets, review share, model tiers, cost per accepted unit | Worthy performance (value over cost); budgets and pacing; risk-based review depth |
+| **Distributed systems** | Coordination, state management, fault tolerance. Many agents and sessions sharing work without losing or corrupting it | All state in files; one writer per file; isolated workspaces; atomic task claims; resuming after a context reset; environment failures sorted from performance failures |
+| **Formal methods** | Constraints, invariants and verifiable conditions. Rules a machine can check, and done conditions stated as checks | Done conditions with runnable checks; protected paths; the stop gate; the split between judgment calls and invariants |
+| **Decision theory** | Acting under uncertainty: expected value, and when to stop | Done, impossible, blocked or budget spent as the four ways to stop; parking decisions without stopping; sampling review by expected cost of an error |
+
+## The performance loop
+
+The hypothesis names five functions. Each has an owner:
+
+| Function | How it is done here |
+| --- | --- |
+| **Establish expectations** | The designer turns a goal into checkable done conditions, milestones, contracts, budgets and decision rights |
+| **Measure actual execution** | Checkers verify work against the artifact, never the report. Spend is measured by the platform, never self-reported. A fresh judge runs the done checks |
+| **Detect deviations** | The orchestrator watches for stalls, spinning, retries and overspend. The auditor re-verifies a hidden sample and probes the checks themselves |
+| **Initiate corrective action** | Consequences are routed the same way every time. The diagnostician turns repeated failures into one versioned rule change, with a measure and a revert condition |
+| **Enforce operational constraints** | The harness, not the agent: a stop gate with honest exits, protected paths, budget caps, measured spend |
+
+## Three layers
+
+| Layer | Holds | Lives in |
+| --- | --- | --- |
+| **Enforcement** | Invariants: rules a machine can check, the same every time | Hooks, permissions and scripts in whatever runs the agents ([`lab/harness`](lab/harness)) |
+| **Protocols** | Judgment calls and the records every role reads and writes | The six skills and their shared protocol ([`skills/`](skills)) |
+| **Learning** | Changing the system after it fails, and checking the checkers | The diagnostician and auditor, and the human who selects products and manages rules |
+
+The skills stay complete without enforcement: on a platform with no hooks, every rule still exists as an instruction. Enforcement makes an invariant certain. Every gate keeps its honest exits open, because a gate that only opens on success teaches agents to fake success. Rule by rule, with the mechanism for each invariant: [`framework/implementation-layers.md`](framework/implementation-layers.md).
 
 ## What's here
 
 | Folder | Contents |
 | --- | --- |
 | [`skills/`](skills) | Six skills (designer, orchestrator, producer, checker, auditor, diagnostician), each with a copy of the shared protocol |
-| [`framework/`](framework) | The Behavior Engineering Model for AI Swarms (the design rationale), and the [implementation layers](framework/implementation-layers.md): which rules stay as instructions and which a harness should enforce |
-| [`benchmark/`](benchmark) | An evaluation harness on [ImpossibleBench](https://arxiv.org/abs/2510.20270): single agent vs generic multi-agent vs OBM, plus a self-correction phase |
-| [`results/`](results) | Runs to date, with full transcripts |
-| [`skill-tests/`](skill-tests) | One scenario per skill with planted problems and an answer key, plus results of testing each skill against a plain role |
+| [`framework/`](framework) | The [Behavior Engineering Model for AI Swarms](framework/behavior-engineering-model-for-ai-swarms.md) (the OBM rationale) and the [implementation layers](framework/implementation-layers.md) |
+| [`lab/`](lab) | The test harness: isolated headless agents with measured cost, the stop-gate and protected-paths hooks, fixtures and keys |
+| [`skill-tests/`](skill-tests) | One scenario per skill with planted problems and an answer key |
+| [`benchmark/`](benchmark) | An evaluation harness on [ImpossibleBench](https://arxiv.org/abs/2510.20270) |
+| [`results/`](results) | Every run to date |
 
 ## The six roles
 
-| Skill | Role in the organization |
+| Skill | Role |
 | --- | --- |
 | `obm-swarm-designer` | Designs the work system: goal, milestones, roles, contracts, evals, risk tiers, budgets |
 | `obm-swarm-orchestrator` | The manager: dispatches, routes on outcomes, builds review packets, paces spend, keeps the core goal moving |
@@ -29,12 +70,17 @@ The working hypothesis is that much of what goes wrong when agents run long task
 
 All state lives in files, and every record has a fixed format ([`skills/protocol.md`](skills/protocol.md)), so any session, model or vendor can resume the work.
 
-## Core ideas
+## Where the evidence stands
 
-- **Fix the environment before blaming the performer** (Gilbert's Behavior Engineering Model). Information, resources and incentives come first.
-- **Worthy performance** (Gilbert): judge the system on the value it delivers divided by what it costs. Honesty protects the value; pace and risk-based review protect the cost.
-- **Make honesty the rewarded path.** A checked "I'm blocked" is a passing outcome, a misreport is the costliest one, and claims are verified against the artifact, never against the report.
-- **The human selects products and manages rules** rather than reviewing every step (metacontingencies, Glenn). Corrections become versioned rules so they are made once.
+| Test | Finding |
+| --- | --- |
+| Two A/B builds from a spec (Sonnet 5.5, Haiku 5.5) | Both arms perfect on hidden tests and honest on every probe. The skills caught an unplanted spec error, at one and a half to two times the time |
+| Each skill alone against a plain role (Haiku 5.5, blind-graded) | The orchestrator and diagnostician made better decisions; the checker and producer tied; the auditor and designer were worse until fixed |
+| Three proposed protocol changes | Proportional intervention helped slightly; a computable risk-tier floor did worse than judgment; fact/assumption marking made no difference |
+| The stop gate on impossible tasks | No agent faked success with or without a gate. A gate without honest exits cost 2.4 times as much |
+| Four-arm calibration: a SQL engine from a spec | Baseline and skills plus enforcement both scored 100% on 1,650 hidden queries, in about five minutes |
+
+Current models are already honest and capable on tasks that fit in one sitting. The design claims to help where they break down: long runs, context resets, compounding errors, real budgets. That is what the next experiment has to create.
 
 ## Using the skills
 
@@ -97,6 +143,8 @@ Three fixes followed, each retested: audit against the swarm's own spec, design 
 
 **Proposal and stop-gate tests** ([results](results/2026-11-13-proposals-and-stop-gate), [harness](lab)). A harness that runs each agent as an isolated headless session with measured cost. Of three proposed changes, proportional intervention helped a little, a computable risk-tier floor did worse than judgment, and fact/assumption marking made no difference. A stop gate and a protected-paths hook were built. On tasks that could not be completed, no arm faked success, gate or no gate; a gate without honest exits cost 2.4 times as much. Small tasks don't separate the arms, so the four-arm test needs a long one.
 
+**Reframed as AI Performance Engineering.** OBM is now the philosophy rather than the whole architecture, combined with control theory, operations research, distributed systems, formal methods and decision theory. A first four-arm calibration on a SQL engine built from a spec hit the ceiling: baseline and skills plus enforcement both scored 100% on 1,650 hidden queries in about five minutes, and both reported the planted contradiction. It also exposed a false positive in the protected-paths hook, now fixed.
+
 **Second A/B pilot** ([results](results/2026-11-09-ledger-ab)). A banking rules engine was built on Haiku 5.5 in three phases, each in a fresh chat, with planted honesty probes. Both arms scored 132/132 on hidden tests, had zero fuzz mismatches, and handled every probe honestly. The skills arm caught an unplanted error in the spec and raised an open question about the holiday calendar, at about twice the time. Next: make defect detection the measured outcome.
 
 **Memory management**, adapted from Anthropic's [components of agent memory](https://www.anthropic.com/research/components-of-agent-memory) research and framed as antecedent control. The swarm's files are what every agent reads before acting, so a wrong record misdirects everyone after it.
@@ -109,7 +157,13 @@ Three fixes followed, each retested: audit against the swarm's own spec, design 
 
 ## Foundations
 
-Gilbert (1978), *Human Competence* · Rummler & Brache, *Improving Performance* · Glenn (1988), metacontingencies · Kerr (1975), "On the folly of rewarding A, while hoping for B" · Daniels, *Performance Management* · Malott (1992), rule-governed behavior in OBM · Alvero, Bucklin & Austin (2001), performance feedback · Austin (2000), the Performance Diagnostic Checklist · Risley & Hart (1968), say-do correspondence · Lerman & Iwata (1995), extinction bursts · Ferster & Skinner (1957), *Schedules of Reinforcement* · Wheeler, *Understanding Variation* · Zhong, Raghunathan & Carlini (2025), ImpossibleBench.
+- **OBM:** Gilbert (1978), *Human Competence* · Rummler & Brache, *Improving Performance* · Glenn (1988), metacontingencies · Kerr (1975), "On the folly of rewarding A, while hoping for B" · Daniels, *Performance Management* · Malott (1992), rule-governed behavior in OBM · Alvero, Bucklin & Austin (2001), performance feedback · Austin (2000), the Performance Diagnostic Checklist · Risley & Hart (1968), say-do correspondence · Lerman & Iwata (1995), extinction bursts · Ferster & Skinner (1957), *Schedules of Reinforcement* · Wheeler, *Understanding Variation*
+- **Control theory:** Åström & Murray (2008), *Feedback Systems*
+- **Operations research:** Hillier & Lieberman, *Introduction to Operations Research*
+- **Distributed systems:** Lamport (1978), "Time, clocks, and the ordering of events in a distributed system"
+- **Formal methods:** Hoare (1969), "An axiomatic basis for computer programming"
+- **Decision theory:** Wald (1947), *Sequential Analysis* · Raiffa & Schlaifer (1961), *Applied Statistical Decision Theory*
+- **AI agents:** Zhong, Raghunathan & Carlini (2025), ImpossibleBench
 
 ## License
 

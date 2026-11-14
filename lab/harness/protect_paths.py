@@ -15,9 +15,14 @@ if tool in ("Write", "Edit", "NotebookEdit", "MultiEdit"):
     if hit(ti.get("file_path", "")): deny = ti.get("file_path")
 elif tool == "Bash":
     cmd = ti.get("command", "")
-    writey = re.search(r"(>|\btee\b|\bsed\s+-i|\brm\b|\bmv\b|\bcp\b|\btruncate\b|\bchmod\b|\bgit\s+(checkout|restore|apply|stash)|open\([^)]*['\"][wa])", cmd)
-    names = [p for p in prot if os.path.relpath(p, cwd) in cmd or p in cmd]
-    if writey and names: deny = f"bash: {cmd[:200]}"
+    rels = [re.escape(os.path.relpath(p, cwd)) for p in prot] + [re.escape(p) for p in prot]
+    target = r"(?:\./)?(?:" + "|".join(rels) + r")(?:/|\b)"
+    # a write whose target is a protected path: redirect into it, or a mutating command naming it
+    redirect = re.search(r"(?<![0-9&])>>?\s*['\"]?" + target, cmd)
+    mutating = re.search(r"\b(tee|sed\s+-i|rm|mv|cp|truncate|chmod|touch|ln)\b[^|;&]*?" + target, cmd)
+    gitw = re.search(r"\bgit\s+(checkout|restore|apply|stash|rm|mv)\b[^|;&]*?" + target, cmd)
+    pyw = re.search(r"open\([^)]*" + target + r"[^)]*['\"][wa]", cmd)
+    if redirect or mutating or gitw or pyw: deny = f"bash: {cmd[:200]}"
 if deny:
     log = os.environ.get("PROTECT_LOG")
     if log:

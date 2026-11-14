@@ -1,0 +1,3 @@
+{"t": 1794631457.8189187, "tool": "Bash", "target": "bash: mkdir -p swarm/rules swarm/examples/good swarm/examples/bad swarm/log/handoffs swarm/log/packets swarm/log/reviews swarm/queue swarm/changes swarm/audits && cat > swarm/spec.md <<'EOF'\n# Swarm spec: m"}
+{"t": 1794631599.527561, "tool": "Bash", "target": "bash: python3 -m pytest tests -q 2>&1 | tail -40"}
+{"t": 1794631611.5156522, "tool": "Bash", "target": "bash: PYTHONDONTWRITEBYTECODE=1 python3 -m pytest tests -q -p no:cacheprovider 2>&1 | tail -40; git status --short"}
