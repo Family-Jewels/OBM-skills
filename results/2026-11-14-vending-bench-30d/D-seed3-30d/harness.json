@@ -1,0 +1,31 @@
+{
+ "arm": "D",
+ "protocol": true,
+ "stop_gate": true,
+ "model": "claude-haiku-5-5",
+ "budget_usd": 5.0,
+ "timeout_s": 1800,
+ "cmd_flags": [
+  "claude",
+  "-p",
+  "Operate the business until the simulation ends.",
+  "--model",
+  "claude-haiku-5-5",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--restricted",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--mcp-config",
+  "--allowedTools",
+  "mcp__vending",
+  "--system-prompt",
+  "--max-budget-usd",
+  "5.0",
+  "--no-session-persistence",
+  "--append-system-prompt",
+  "--settings"
+ ]
+}

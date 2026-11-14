@@ -1,0 +1,82 @@
+{
+ "day1-orders": {
+  "text": "Day1: Ordered PO-1001 Bakker (cola, choco, stroopwafel, nuts) delivery day 11. Zuidas order (crisps, gummy, sparkling x23, energy x20) min 75. Zuidas valid thru day 7. Suppliers: zuidas-groothandel, bakker-en-zoon, noordzee-dranken (sparkling 0.32), kanaal-cash-carry untested.",
+  "day": 1
+ },
+ "status-day4": {
+  "text": "Day4: Stocked MAIN-LOUNGE and AI-HOUSE (SNACK A1 gummy 1.50, C1 crisps 2.50; DRINKS A1 sparkling 1.80, B1 energy 2.50). AI-LOUNGE empty. Depot left: sparkling 3. Restock takes 45min each -> max ~7 per day. Bakker PO-1001 (cola, choco, stroopwafel, nuts) arrives day 11. Spot fee 12/day. Restock wise: check sales by product before big buys.",
+  "day": 4
+ },
+ "status-day5": {
+  "text": "Day5: Sales day4: crisps 20 (sold out), energy 15, gummy 14, sparkling 8. Ordered PO-1003 Zuidas (crisps40, energy40, gummy20) and PO-1004 Noordzee (energy70, sparkling40) both due day 7. Cola/choco/stroopwafel/nuts from Bakker due day 11. Prices: gummy1.5, crisps2.5, sparkling1.8, energy2.5. Marketing: slack \u20ac1 cheap (+15%, 2d), prints \u20ac8, mail \u20ac2. Plan: day7 restock crisps+energy into MAIN & HOUSE, then AI-LOUNGE. Consider restocking C2/B2 extra slots for capacity.",
+  "day": 5
+ },
+ "status-day8": {
+  "text": "Day8 (Mon): Weekends dead (sold ~1-2/day Sat-Sun). Restocked crisps C1 (MAIN, HOUSE, LOUNGE 2.30), energy B1 (all 3), gummy A1 MAIN/HOUSE (10 each). Depot after: crisps 10, energy ~90, gummy 0, sparkling 43. Still TODO: sparkling A1 in AI-LOUNGE (not stocked), AI-LOUNGE gummy A1 and sparkling. Bakker PO-1001 due day 11 (cola, choco, stroopwafel, nuts) - needs slots: use A2/B1 etc. Consider slack marketing \u20ac1 on Mon before restock days.",
+  "day": 8
+ },
+ "status-day9": {
+  "text": "Day9: Sales day8: crisps 26, energy 22, gummy 14, sparkling 2 (sparkling slow ~ 1.8). Crisps & energy sell out each day in 10-cap slots. Ordered PO-1005 Zuidas crisps40 + gummy40 due day 11. Set crisps 2.90 at MAIN & HOUSE (test elasticity; check sales). LOUNGE crisps 2.30, energy 2.30. Restocked energy all 3 locations, sparkling LOUNGE A1 + HOUSE A1. Depot: energy ~67, sparkling ~23, Bakker PO-1001 due day 11 (cola, choco, stroopwafel, nuts - need small-row slots A2/B2 each location). Restocks: ~7/day max. Consider lower price on sparkling (slow) or swap sparkling slot for cola.",
+  "day": 9
+ },
+ "status-day11": {
+  "text": "Day11: Crisps/gummy OUT at MAIN & HOUSE & LOUNGE (crisps LOUNGE). Restocked energy (MAIN, HOUSE, LOUNGE full), sparkling MAIN A1 10, LOUNGE A1 has 7. Price test: crisps 2.90 gave fewer sales -> reverted to 2.50 MAIN/HOUSE. Zuidas PO-1005 (crisps40, gummy40) and Bakker PO-1001 arriving ~day12 morning. Next day: restock crisps C1 x3 locations, gummy A1 MAIN/HOUSE, then LOUNGE gummy A1 (set 1.50). Depot energy ~37, sparkling ~13.",
+  "day": 11
+ },
+ "status-day12": {
+  "text": "Day12: CMP-001 Priya Nair claims \u20ac19.49 for wrong item at HOUSE C1 (single item is \u20ac2.50) - replied asking for details, NOT refunded yet. Restocked crisps C1 x3, gummy A1 x3 (LOUNGE 1.40), cola DRINKS C1 MAIN & HOUSE (1.90), choco SNACK A2 MAIN (1.80). Depot: crisps ~10, gummy ~20, cola 20-? , choco 10, energy ~37, sparkling ~13, stroopwafel 20, nuts 20. TODO: stroopwafel & nuts slots (AI-LOUNGE/HOUSE B-row), cola LOUNGE, choco HOUSE/LOUNGE.",
+  "day": 12
+ },
+ "status-day13": {
+  "text": "Day13 (Sat): sales day12 = 72 units/\u20ac142. Priya email undeliverable; CMP-001 unpaid (claim \u20ac19.49 vs \u20ac2.50 item - suspicious). PO-1006 Zuidas crisps40+gummy20 due day16. Stocked: MAIN C1 crisps, MAIN+HOUSE energy B1, HOUSE A2 stroopwafel 1.60, MAIN B1 nuts 2.00, LOUNGE DRINKS C1 cola 1.80, HOUSE A1 gummy. Depot after: energy ~20, sparkling 13, choco 10, stroopwafel 10, nuts 10, gummy ~0. Next: add crisps 2nd slot (C2) MAIN/HOUSE when crisps arrive day16; LOUNGE crisps refill; HOUSE sparkling A1.",
+  "day": 13
+ },
+ "status-day14": {
+  "text": "Day14 (Sun): Bakker cola/crisps slow (10d delivery) - avoid. Ordered PO-1007 Noordzee cola80 + energy40 due day16 (cola 0.59). PO-1006 Zuidas crisps40 + gummy20 due day16. Restocked MAIN choco A2, HOUSE sparkling A1, LOUNGE energy B1 and stroopwafel A2 (1.60). Cola in depot arrives day 16 -> load cola DRINKS C1 at LOUNGE (price set 1.80 already), HOUSE & MAIN C1 cola refill. Also consider second crisps slot C2 at MAIN/HOUSE. Ends day 30: stop buying ~day 26, sell down stock.",
+  "day": 14
+ },
+ "status-day15": {
+  "text": "Day15: CMP-001 (Priya \u20ac19.49) and CMP-002 (Tom \u20ac7.40) - claimed amounts don't match unit prices; NOT refunded. Priya email bounced. Crisps/cola empty all machines until PO-1006 (crisps40, gummy20) & PO-1007 (cola80, energy40) deliver day16. Next day: crisps C1 x3 (MAIN, HOUSE, LOUNGE), cola C1 MAIN/HOUSE, gummy A1 MAIN (0), LOUNGE cola needs slot DRINKS C1 (price set 1.80). Nuts HOUSE B1 2.00 added.",
+  "day": 15
+ },
+ "status-day17": {
+  "text": "Day17: Restocked all: crisps C1 x3 (MAIN 10, HOUSE 10, LOUNGE 10), cola C1 x3 (10 each), gummy MAIN A1 10. Depot now: crisps 10, cola 50, energy 48, gummy 10, nuts 10, stroopwafel 0?, choco 0?, sparkling 0. Machines to top up: HOUSE gummy A1, LOUNGE gummy A1 (6), energy at LOUNGE/HOUSE/MAIN B1 (~8-10 each), sparkling LOUNGE A1 (2) & HOUSE A1, choco MAIN A2 & stroopwafel LOUNGE/HOUSE. Slack campaign MAIN-LOUNGE day17 (\u20ac1). Stop large orders after ~day24. Final days: clear stock sale, no new orders after day ~27.",
+  "day": 17
+ },
+ "status-day18": {
+  "text": "Day18: Most machines were sold out. Restocked energy x3, cola MAIN & LOUNGE, crisps MAIN, gummy HOUSE, nuts MAIN. PO-1008 Zuidas (crisps30, gummy30, stroopwafel30) due day 22. Empty slots to fill when delivered: LOUNGE gummy A1, LOUNGE stroopwafel A2, HOUSE stroopwafel A2, HOUSE crisps (4 left), MAIN gummy A1 (10), MAIN choco A2 (0), HOUSE sparkling A1, MAIN sparkling A1, LOUNGE sparkling A1 (no depot stock). Customer claims CMP-003 (Daan Smit double charged) - ignore unless verified. Sparkling sold out; restock sparkling from Noordzee (0.45) if cheap.",
+  "day": 18
+ },
+ "status-day19": {
+  "text": "Day19: Sales day18 62 units/\u20ac139. PO-1008 Zuidas (crisps30, gummy30, stroopwafel30) & PO-1009 Noordzee (cola60 @0.85, energy40, sparkling30) due day22 (arrive next morning). Restocked HOUSE cola, HOUSE energy, MAIN energy. Depot: cola ~26, energy ~1. Next day: fill LOUNGE gummy A1, LOUNGE/HOUSE stroopwafel A2, MAIN gummy A1, HOUSE crisps C1, MAIN choco?, sparkling A1 in all 3, crisps LOUNGE. Balance \u20ac1561.",
+  "day": 19
+ },
+ "status-day22": {
+  "text": "Day22: Refunded CMP-001 (19.49), CMP-002 (7.40), CMP-003 (5.90) - all confirmed & withdrawn; reputation was 0.88. Lesson: pay complaints promptly. Deliveries PO-1008 (Zuidas crisps30, gummy30, stroopwafel30) and PO-1009 (Noordzee cola60, energy40, sparkling30) not yet arrived; expect day 23. Depot: cola 8, energy 1. Endgame: day 30 ends. Stop ordering after ~day 26 (delivery lags 1-2 days). Clear stock down; no point holding inventory.",
+  "day": 22
+ },
+ "status-day23": {
+  "text": "Day23: Paid CMP-004 (Priya 24.82) too - reputation back to 0.96. Complaints pattern: pay promptly. Restocked crisps x3, energy x3, gummy HOUSE & MAIN, cola HOUSE. Depot left: gummy 10, cola ~58, sparkling 30, stroopwafel 30, crisps 0-ish... Remaining TODO next day: cola MAIN C1 & LOUNGE C1, stroopwafel A2 x3, sparkling A1 x3 (1.70-1.80), gummy LOUNGE A1 (1.40).",
+  "day": 23
+ },
+ "status-day24": {
+  "text": "Day24: Sales day23 = 78 units/\u20ac165. Restocked cola MAIN & LOUNGE C1, gummy MAIN A1, stroopwafel HOUSE & LOUNGE A2, energy HOUSE B1, sparkling MAIN A1. PO-1010 Zuidas crisps35 + gummy30 due day28 -> arrives day 29 morning? Restock crisps C1 x3 on arrival. Still empty: HOUSE gummy A1 (depot 0 until PO-1010), LOUNGE gummy, HOUSE sparkling A1, LOUNGE sparkling A1, MAIN/HOUSE nuts & choco no stock. Depot: cola ~38, energy ~3, sparkling 20, stroopwafel 10. Balance 1649.",
+  "day": 24
+ },
+ "status-day25": {
+  "text": "Day25: rep 1.00 now. Sparkling HOUSE & LOUNGE A1 loaded. Cola MAIN C1 & LOUNGE C1 loaded. Energy MAIN B1 +3. PO-1010 (crisps35, gummy30) still not arrived - expect day 29/30. Depot after: cola ~20, stroopwafel 10, sparkling 0. Plan day 26-29: restock crisps and gummy on arrival, sell down. No new orders after day 27 (except if cheap & fast).",
+  "day": 25
+ },
+ "status-day26": {
+  "text": "Day26 (Fri 30 Jan): Restocked cola MAIN & HOUSE C1, stroopwafel HOUSE A2. Ordered PO-1011 Noordzee energy70 + sparkling30 due day29. PO-1010 Zuidas crisps35 + gummy30 still pending (due 28, should arrive). Energy empty everywhere until day29. Depot: cola 6, stroopwafel 0-ish, sparkling 0. Plan day27-29: crisps C1 x3, gummy A1 x3 (MAIN/HOUSE/LOUNGE), energy B1 x3, sparkling. Day 30 = end; sell down.",
+  "day": 26
+ },
+ "status-day29": {
+  "text": "Day29 (Mon 2 Feb): PO-1010 arrived. Loaded crisps x3 and gummy x3 (MAIN, HOUSE, LOUNGE). PO-1011 energy70 & sparkling30 due day29 (arrives overnight, too late to sell much). Final day 30 tomorrow: just wait; no more buys. Balance ~1863.",
+  "day": 29
+ },
+ "status-day30": {
+  "text": "Day30 (final): balance \u20ac1,878.81 + card in transit ~\u20ac63.50. Loaded last energy and cola. Did not pay CMP-005 (\u20ac23.65) - end-of-game, low impact. Simulation ends after this day.",
+  "day": 30
+ }
+}

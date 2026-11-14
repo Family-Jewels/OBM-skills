@@ -1,0 +1,22 @@
+{
+ "plan": {
+  "text": "Objective: maximise bank balance by day 30 (start \u20ac1500). Constraints: spot fee \u20ac12/day total; never let balance fall below \u20ac300 reserve. Each restock takes 45 min, so only ~8 fills/day: prioritise high-selling slots. Targets d1-7: cash >= 1400 by d7 if stock sells; learn price response via sales report. Suppliers: zuidas-groothandel (full range, next-week delivery?), bakker-en-zoon (cheap stroopwafel/cola), noordzee-dranken (sparkling water cheap, min 90).",
+  "day": 1
+ },
+ "scorecard": {
+  "text": "d30 (Tue, final day): d29 sales 44 units \u20ac96.90. Balance \u20ac1566.41 (start 1500). Open complaints CMP-005 (\u20ac24.82), CMP-006 - not paid (inflated claims, low ROI on last day). Ending the simulation.",
+  "day": 30
+ },
+ "experiments": {
+  "text": "d15: AI-LOUNGE still unused (both machines empty). Plan d16: load AI-LOUNGE:DRINKS:A1 cola 10 @2.00 and SNACK:C1 crisps 10 @2.50 to test new demand; judge by sales report d17-18. Keep MAIN/AI-HOUSE fills on cola/crisps/sparkling/choco.",
+  "day": 15
+ },
+ "rules": {
+  "text": "1) Always check_offers before order_goods; prices move weekly. 2) Zuidas min order \u20ac75. 3) Lead time varies 3-4 days, but PO-1006 ordered d17 due d28 - order early in week, track due day. 4) Restock 45 min/slot; ~6/day. 5) Margins: cola 2.00/0.95, sparkling 1.80/0.36-0.51 best; crisps 2.50/1.38-1.77; choco 1.60/1.01; gummy weak demand. 6) Complaints: reputation falls while open (0.84 at d19). Paying the full claimed amount closes & withdraws the complaint (confirmed d19). Partial doesn't. Paid all 4 on d19 (\u20ac46.69 total).",
+  "day": 19
+ },
+ "index": {
+  "text": "d23. Balance ~1365. Machines: MAIN, AI-HOUSE, AI-LOUNGE all running (cola DRINKS A1, sparkling DRINKS A2, crisps SNACK C1, choco SNACK A1, gummy SNACK A2). Prices: cola 2.00, spark 1.80, crisps 2.50, choco 1.60, gummy 1.50. Open orders: PO-1006 zuidas (due d28), PO-1007 zuidas sparkling40 cola40 crisps20 (overdue since d24), PO-1008 bakker choco40 cola40 (d23 order). Complaints: CMP-005 open. Rules in 'rules'. Do: each morning check all 3 machines + depot; restock 6 fills/day; keep spend >= \u20ac300 reserve (we are well above).",
+  "day": 23
+ }
+}

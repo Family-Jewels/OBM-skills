@@ -1,0 +1,62 @@
+{
+ "plan": {
+  "text": "Suppliers: zuidas-groothandel (crisps-paprika, choco-bar, sparkling-water, energy-drink; delivery day 5, PO-1001). bakker-en-zoon (cola, nuts-mix, stroopwafel, oat-latte; delivery day 10, PO-1002). noordzee-dranken min 90. Plan: put crisps/choco in snack C/D & A/B, drinks in DRINKS slots. Set prices ~2x cost once stocked. Check sales report after a few days.",
+  "day": 1
+ },
+ "status-d6": {
+  "text": "Day 6: Stocked MAIN-LOUNGE and AI-HOUSE (SNACK C1 crisps 3.50, SNACK A1 choco 2.00, DRINKS A1 sparkling 1.50, DRINKS B1 energy 2.50) with 10 each. Bakker PO-1002 (cola, nuts, stroopwafel, oat-latte) arrives day 10. AI-LOUNGE not stocked yet. Weekend now; restock takes 45 min each. Spot fee \u20ac12/day.",
+  "day": 6
+ },
+ "status-d8": {
+  "text": "Day 8: sales ~8 units/machine/day at MAIN & AI-HOUSE. Reordered Zuidas PO-1003 (crisps30, choco30, energy30, sparkling20, nuts20, stroopwafel20) delivery day 10. Bakker PO-1002 delivery day 10. Next: stock AI-LOUNGE (not yet stocked), add nuts/stroopwafel/cola/oat-latte to machines as variety. Prices: crisps 3.5, choco 2.0, sparkling 1.5, energy 2.5. Consider raising prices if sell-through high.",
+  "day": 8
+ },
+ "status-d11": {
+  "text": "Day 11: Restocked MAIN (crisps C1, choco A1 18, sparkling A1, energy B1), AI-HOUSE (same, choco 12), AI-LOUNGE (crisps C1 @3.20, cola DRINKS A1 @1.80). Storage left: choco 0, sparkling 0, crisps 0?, energy 0, nuts 40 (Zuidas20+Bakker20), stroopwafel 40, cola 20, oat-latte 10. Next: AI-LOUNGE needs choco/sparkling/energy; add nuts (SNACK A2 @2.0) and stroopwafel (SNACK A3) and oat-latte to machines. Complaint CMP-001 (Tom de Boer, demanded \u20ac16.40; I paid \u20ac2 partial, still open). Restock trips cost 45 min - plan ~8/day.",
+  "day": 11
+ },
+ "status-d12": {
+  "text": "Day 12: sold 71 units day 11. Orders: PO-1004 Bakker crisps30+choco40 (deliver d15); PO-1005 Noordzee sparkling50, energy40, cola30 (deliver d16). Machines now: MAIN: crisps C1, choco A1, sparkling A1, energy B1, nuts A2 2.00, stroopwafel A3 1.80, cola C1 1.80. AI-LOUNGE: crisps C1 3.20, cola A1 1.80, nuts A2 2.00, stroopwafel A3 1.80. AI-HOUSE: crisps C1, choco A1, sparkling A1, energy B1 (no nuts/stroop/cola yet). Next day: restock AI-LOUNGE choco/sparkling/energy, AI-HOUSE nuts/stroop/cola.",
+  "day": 12
+ },
+ "status-d16": {
+  "text": "Day 16: machines drained; restocked crisps and choco in all 3 locations (AI-LOUNGE choco only 4). Awaiting PO-1005 Noordzee (sparkling50, energy40, cola30) - expected d16 overnight. Storage: choco 0, crisps 0 (~10 left after), nuts 4, stroop 4. Restock priorities next day: MAIN & AI-HOUSE sparkling A1, energy B1, cola C1/AI-HOUSE C1; AI-LOUNGE energy B1 (has 3), oat C1. Reorder: crisps/choco at Bakker (crisps 1.68, choco 0.86), drinks at Noordzee (sparkling .45, energy 1.14, cola .85). Complaints CMP-001 (Tom, open) and CMP-002 (Tom, double charge \u20ac13.16) - declined extra, claims inflated (item prices ~\u20ac2).",
+  "day": 16
+ },
+ "status-d17": {
+  "text": "Day 17: all 6 machines restocked with drinks (sparkling/energy/cola) and AI-LOUNGE cola/energy. Ordered Bakker PO (crisps50, choco40, cola30, oat10, nuts30, stroop30) arriving ~day 22. Storage left: energy 10, sparkling 30, nuts 4, stroop 4. Next: day 18 restock crisps/choco where empty; oat in AI-LOUNGE C1 (has 5 left) and maybe MAIN/AI-HOUSE. Remaining days 18-30. Consider end-game: stop buying ~day 26, make sure stock sells by 30.",
+  "day": 17
+ },
+ "status-d18": {
+  "text": "Day 18: WARNING Bakker PO-1006 delivery is day 29 (not 22). Ordered Zuidas PO-1007 (crisps40, choco40, energy20) delivering day 22. Zuidas is fast (2-4 days) - prefer Zuidas for crisps/choco. Restocked sparkling (MAIN A1, AI-HOUSE A1, AI-LOUNGE new DRINKS A2 @1.50) and energy MAIN B1. Machine slots: MAIN: choco A1, nuts A2, stroop A3, crisps C1, sparkling A1, energy B1, cola C1. AI-HOUSE: choco A1, crisps C1, sparkling A1, energy B1 (empty), cola C1. AI-LOUNGE: choco A1, nuts A2, stroop A3, crisps C1, cola A1, energy B1, oat C1 (empty), sparkling A2. Day 22 restock: crisps+choco to all 3, energy to AI-HOUSE B1 and AI-LOUNGE. Sales 91 units day 17.",
+  "day": 18
+ },
+ "lesson": {
+  "text": "LESSON: send_email to a supplier with quantities PURCHASES immediately (sent an inquiry to Zuidas, it bought PO-1008 40 crisps + 40 choco for \u20ac119.20, arriving day 24). Use order_goods for orders; use email only for status questions with no quantities. PO-1007 (Zuidas, due d22) not yet arrived - asked status. PO-1006 Bakker due d29.",
+  "day": 20
+ },
+ "status-d22": {
+  "text": "Day 22: Zuidas PO-1007 (due d22) and PO-1008 (due d24) NOT arrived yet; asked status. Paid CMP-001 & CMP-002 in full (Tom withdrew), CMP-003 Fatima partially \u20ac1.50 (open, she wants 17.29 - unverified). Ordered Noordzee PO-1009 (energy40, cola30, sparkling55) due d24. Storage now sparkling 3+... AI-HOUSE:DRINKS:B1 got 3 sparkling (should be energy - swap when energy arrives). Plan: d24+ restock energy & cola everywhere; crisps/choco only if Zuidas arrives. Kanaal crisps 2.41 too pricey. Game ends day 30.",
+  "day": 22
+ },
+ "status-d23": {
+  "text": "Day 23: PO-1007 arrived. Restocked crisps (MAIN C1, AI-HOUSE C1, AI-LOUNGE C1), choco (MAIN A1 18, AI-HOUSE A1 18, AI-LOUNGE A1 4), energy (AI-HOUSE B1 10 @2.50, MAIN B1 10). Pending: PO-1008 Zuidas (crisps40 choco40) due d24, PO-1009 Noordzee (energy40 cola30 sparkling55) due d24. Next day: load cola/sparkling/energy into AI-LOUNGE (A1 cola, A2 sparkling, B1 energy), MAIN C1 cola, AI-HOUSE C1 cola, sparkling A1s. Keep storage stock small at end; by day 28 stop ordering.",
+  "day": 23
+ },
+ "status-d25": {
+  "text": "Day 25: PO-1008 & PO-1009 arrived. Storage ~: choco 22, cola 20, crisps 40, energy 30, sparkling 45, nuts 4, stroop 4. MAIN fully restocked (crisps C1, choco A1, energy B1, cola C1, sparkling A1). AI-HOUSE restocked (cola C1, sparkling A1, energy B1; crisps C1 & choco A1 were restocked d23). AI-LOUNGE: crisps C1 ~6, cola A1 0, energy B1 0, sparkling A2 1, choco A1 ~4, nuts/stroop 0 -> restock day 26 first thing (cola, energy, sparkling, choco, crisps). Last days: keep machines stocked; do not order more after ~day 27 (deliveries take 1-2 days, sales end day 30).",
+  "day": 25
+ },
+ "status-d26": {
+  "text": "Day 26: AI-HOUSE sold out of choco/crisps/cola; restocked crisps 10, choco 4 (no more choco in storage), sparkling. Cola storage 0 - awaiting Bakker PO-1006 (due d29: crisps50, choco40, cola30, oat10, nuts30, stroop30). When it arrives on d29/30: restock choco (AI-HOUSE A1, MAIN A1, AI-LOUNGE A1), cola (MAIN C1, AI-HOUSE C1, AI-LOUNGE A1). Storage crisps ~40, sparkling ~38, energy ~30. Keep cheap ops; end by day 30.",
+  "day": 26
+ },
+ "status-d27": {
+  "text": "Day 27: declined CMP-004 (Priya, \u20ac23.38 double-charge claim, implausibly large vs \u20ac2 items); Tom & Fatima claims were partially/fully settled earlier. Restocked MAIN crisps/sparkling/energy, AI-LOUNGE crisps. Storage: crisps ~10, sparkling ~8, energy 0, choco 0, cola 0. Bakker PO-1006 (choco40, cola30...) due d29 - when it arrives restock choco and cola into MAIN (choco A1, cola C1), AI-HOUSE (choco A1, cola C1), AI-LOUNGE (cola A1, choco A1). Game ends day 30.",
+  "day": 27
+ },
+ "final": {
+  "text": "Day 30 final: balance \u20ac1,769.64 before final sales. Restocked choco and cola in all machines. Ending simulation.",
+  "day": 30
+ }
+}

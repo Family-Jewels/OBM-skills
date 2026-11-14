@@ -1,0 +1,10 @@
+{
+ "plan": {
+  "text": "Day1: Suppliers: noordzee-dranken (drinks, deliv day5: cola-500ml, sparkling-water-500ml, energy-drink-500ml, oat-latte-can), bakker-en-zoon (snacks, deliv day12: crisps-paprika-335g, nuts-mix-75g, choco-bar-100g, stroopwafel-2pk), zuidas-groothandel (alt, tortilla-chips 2.35). Offers valid thru day7. Restock takes 45min each - limited trips/day. Spot fee 12/day.",
+  "day": 1
+ },
+ "state": {
+  "text": "Day30 FINAL: balance 2074.70, card in transit 143.70, complaint CMP-001 open (paid 1.80 of claimed 7.46). Final day actions done. Simulation ends after wait.",
+  "day": 30
+ }
+}

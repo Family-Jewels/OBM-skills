@@ -1,0 +1,14 @@
+{
+ "plan": {
+  "text": "Day1: Ordered PO-1001 Bakker (stroopwafel, choco, nuts, cola; deliv d9), PO-1002 Zuidas (tortilla15, crisps20, gummy20; d5), PO-1003 Noordzee (sparkling42, energy31, oat20, cola20; d6). Suppliers: zuidas-groothandel, bakker-en-zoon, noordzee-dranken (min orders 75/60/90). Minimums matter; check_offers quantity affects price. Restock trip = 45min, so ~8 fills/day max.",
+  "day": 1
+ },
+ "state": {
+  "text": "Day29 (2 Feb) bal \u20ac1886. Tortilla PO-1011 not yet in storage (arrives ~d30) - load MAIN C2 & AI-HOUSE C2 on d30 if it arrives. Final days: avoid new purchases (no time to sell). Keep restocking only with stock on hand. Ends day 30.",
+  "day": 29
+ },
+ "lessons": {
+  "text": "- Offers change weekly (day 8 new prices). ALWAYS check_offers before ordering; I overpaid crisps (1.97 vs 1.58).\n- Sales d6-7: crisps & tortilla sell well at MAIN/AI-HOUSE; energy & cola sell. Restock takes 45min.\n- Day 8: Zuidas PO-1004 (crisps25, tortilla15, gummy5) delivers d12. Bakker PO-1001 delivers d9 (stroopwafel, choco, nuts, cola).\n- AI-LOUNGE loaded d8: oat latte drinks A1 2.60, gummy snack A1 1.90, sparkling drinks A2 1.80.",
+  "day": 8
+ }
+}

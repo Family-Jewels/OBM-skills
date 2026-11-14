@@ -1,0 +1,18 @@
+{
+ "plan": {
+  "text": "Objective: maximise bank balance by day 30 (start \u20ac1500). Rent \u20ac12/day network. Reserve: keep >= \u20ac300 cash at all times (covers ~25 days rent). Bottleneck: restock takes 45 min, swap 30 min, so ~8 restocks/day; prioritise high-selling slots. Targets day1-5: positive daily revenue, no slot empty at close of day when stock on hand, cash > \u20ac1400 by day 7.",
+  "day": 1
+ },
+ "rules": {
+  "text": "Complaints pattern: claims are inflated (\u20ac13-17 vs item \u20ac1.60-2.80). Policy: refund only item price (1 x price) and leave the rest open; this is consistent. Reputation drops ~0.04 per open complaint (now 0.88 on d22). Re-evaluate if reputation < 0.8 (then consider paying the gap).\nLead times: Zuidas 3-4d reliable (PO-1004/1005/1006). Bakker PO-1003 (12d) arrived later than due date sometimes.",
+  "day": 22
+ },
+ "index": {
+  "text": "FINAL (Day30, 3 Feb 2026). Balance \u20ac1755 (after \u20ac2 refund CMP-004), +\u20ac85 card in transit, net worth ~\u20ac1913. Sim ends after day 30. Lessons: lead times vary (3-12 days); large slots hold 10 per trip so trips are the bottleneck; complaint claims inflated, paid only item price; restock small slots (18/trip) first. Open complaints: CMP-001, 002, 003, 004 (not paid beyond item price).",
+  "day": 30
+ },
+ "scorecard": {
+  "text": "D25 | 1555 | 160.6 (D24) | 78 | yes | restock trips limiting\nD26 | 1663 | 47.6 (D25) | 24 | no | stock out\nD27 | 1692 | 1.9 | 1 | no | empty machines awaiting PO-1007/1008\nD28 | 1682 | 1.9 (D27)  | 1 | no | restocked 9 slots\nD29 | 1680 | 33 (D28) | 14 | no | Sunday\nD30 | 1758 | 152.2 (D29, mail campaign) | 67 | yes | final. Net worth ~\u20ac1914 at 09:00 d30. Reputation 0.84 (complaints CMP-001..004 open, only item-price refunds paid).",
+  "day": 30
+ }
+}

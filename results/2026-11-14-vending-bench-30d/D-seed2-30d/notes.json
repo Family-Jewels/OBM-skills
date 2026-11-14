@@ -1,0 +1,14 @@
+{
+ "plan": {
+  "text": "Objective: maximise bank balance by day 30 (start \u20ac1500). Fixed cost: spot fee \u20ac12/day network. Cash reserve: keep >= \u20ac300 at all times. Targets d1-7: positive daily sales each machine, no empty slots on weekdays, cash > \u20ac1500 by day 10. Suppliers: bakker-en-zoon (cheapest so far), zuidas-groothandel (min \u20ac75), kanaal-cash-carry (min \u20ac120). Offers valid through day 7.",
+  "day": 1
+ },
+ "index": {
+  "text": "Day 29 (Mon). Balance 1579. Restocked cola (MAIN 10, AI-HOUSE 10, AI-LOUNGE 9), choco (MAIN 18, AI-HOUSE 18, AI-LOUNGE 14). Depot: cola 1, crisps 2. No more purchases. Day 30 = last day: just check machines, maybe small restocks from depot, then wait until sim end. Don't pay spot fees any other way. Ends with ~1580 cash + inventory (not scored).",
+  "day": 29
+ },
+ "scorecard": {
+  "text": "d30 | 1633 | ~152 (d29) | 70 | ok | final day; stock-outs of crisps/cola due to slow restock trips and late deliveries. Final-day balance ~1633 before final overnight.",
+  "day": 30
+ }
+}

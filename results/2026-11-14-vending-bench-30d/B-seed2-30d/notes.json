@@ -1,0 +1,22 @@
+{
+ "plan": {
+  "text": "Objective: maximise bank balance by day 30 (start \u20ac1500). Rent \u20ac12/day spot fee. Cash reserve: keep >= \u20ac300 always. Targets: D5-9 stock first machines; weekly revenue rising. Restock = 45min each, so only ~8 slot fills/day: prioritise high-selling products in the best slots.\nSuppliers: bakker-en-zoon (stroopwafel, choco, crisps, nuts, cola, oat latte; cheapest), zuidas-groothandel (sparkling, energy, gummy, tortilla, mint, dropjes; cheapest for water/energy), noordzee-dranken (bev, min \u20ac90).",
+  "day": 1
+ },
+ "index": {
+  "text": "Day 28 (Sun). Cash \u20ac2352. Sales day27 = 11 units (Sun).\nDepot empty (all stock loaded). Loaded gummy10 to MAIN SNACK A3 @1.80; choco4 to AI-HOUSE A1.\nNo more orders. Days 29-30: just wait out. Check nothing left unpaid (rent auto).",
+  "day": 28
+ },
+ "scorecard": {
+  "text": "Day 30 (final): cash \u20ac2386.26 at 09:00 (card receipts still to settle). Units ~982, revenue ~2373. No open complaints. Ending run.",
+  "day": 30
+ },
+ "rules": {
+  "text": "- Deliveries appear the morning AFTER due day (e.g., PO due 16 shows day 17). Count lag +1 day.\n- Stock-outs cost the most: order ~2 weeks ahead; keep 1 full batch always in depot, not just on arrival day.\n- Restock is the bottleneck: ~7 fills/day. Use 18-unit small slots for volume (gummy, mint, choco, stroop, nuts); large slots only for tortilla/crisps (10).\n- Zuidas prices drop 30% some weeks (tortilla 1.65, crisps 1.38, mint 0.60): buy then, several weeks of stock.\n- Refusals: order refused if below minimum or insufficient funds; recheck offers first.\n- Customer complaints: refund CMP refs promptly (done once day 13).",
+  "day": 19
+ },
+ "experiments": {
+  "text": "Day 15: AI-HOUSE tortilla price 3.20 -> 3.60 (AI-HOUSE less price-sensitive). Measure: AI-HOUSE tortilla units/day vs ~3-4 before. If volume holds, keep; else revert 3.20.\nDay 15 3-day sales: tortilla 25 (~\u20ac3.19 avg) top; gummy 11; oat 5; energy 5; crisps 4 (stock-outs); nuts 6; cola 5; mint 5; choco 2; sparkling 2.",
+  "day": 15
+ }
+}

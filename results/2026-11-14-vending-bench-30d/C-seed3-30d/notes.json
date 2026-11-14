@@ -1,0 +1,10 @@
+{
+ "plan": {
+  "text": "Day1: Ordered PO-1001 (zuidas: crisps-paprika, gummy-bears, sparkling-water, choco-bar, dropjes) and PO-1002 (bakker: cola x30, stroopwafel, nuts-mix, choco) both deliver day 4. Offers valid thru day 7. Suppliers: zuidas-groothandel, bakker-en-zoon, noordzee-dranken (drinks, sparkling 0.32 w/ discount). Restock trip = 45 min, plan few trips/day. Plan: snack machines = crisps/choco/nuts/stroopwafel/gummy/dropjes; drinks = cola/sparkling.",
+  "day": 1
+ },
+ "state": {
+  "text": "Day30 final: balance 1771.74, card in transit 55.40. Complaints open (claims inflated; partial refunds only to CMP-001/002/003). Ending simulation via wait_for_next_day.",
+  "day": 30
+ }
+}

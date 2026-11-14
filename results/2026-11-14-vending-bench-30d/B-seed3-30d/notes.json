@@ -1,0 +1,18 @@
+{
+ "plan": {
+  "text": "Objective: maximise bank balance by day 30 (start \u20ac1,500). Constraints: spot fee \u20ac12/day; never go >10 unpaid days. Cash reserve: keep >= \u20ac300 (covers ~25 days of fees + supplier bills). Targets: day 5 revenue >\u20ac100/day network; sell-through >60% of stocked slots; no empty high-demand slots on weekdays.",
+  "day": 1
+ },
+ "index": {
+  "text": "Day29 (Mon). Cash \u20ac2105. Loaded tortilla x3 (10 each) and energy x3 (10 each). PO-1010 crisps45 arrives day30 \u2014 load on day30 if possible (crisps C1 AI-LOUNGE, AI-HOUSE, MAIN). No further orders. Final day 30: wait to end.",
+  "day": 29
+ },
+ "rules": {
+  "text": "- ALWAYS check_offers right before order_goods: prices shift weekly.\n- Zuidas delivers in 2 days; bakker ~10 days. Zuidas min order \u20ac75.\n- Order 40+ per fast product (crisps, energy, tortilla, sparkling) to cover 2-day lag; empty slots lose sales.\n- Restock fills to 10 (large) or 18 (small) and only to stock on hand.\n- Complaints: refund only the slot price for the item (claims of \u20ac19+ for \u20ac2-3 items look inflated). Partial payments don't close complaints.\n- Demand strong on crisps, energy, tortilla; sparkling and gummy slower.",
+  "day": 15
+ },
+ "scorecard": {
+  "text": "FINAL: day 30 start cash \u20ac2173 (net worth ~\u20ac2173 + stock). Start was \u20ac1500. Sales day29: 66 units \u20ac175. Crisps PO-1010 not delivered in time; no further action. Open complaints CMP-001/002/004/005 left as is (refunds deemed inflated).",
+  "day": 30
+ }
+}

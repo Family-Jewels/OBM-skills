@@ -1,0 +1,22 @@
+{
+ "plan": {
+  "text": "Objective: maximise bank balance by day 30 (start \u20ac1,500). Rent \u20ac12/day network spot fee. Cash reserve: keep >= \u20ac400 (covers ~30 days rent is 360; never let balance fall below reserve from buys). Survival: never >10 unpaid days. Restock trip = 45 min, so ~8 trips/day max; plan slots carefully. Targets: day 7-10 all machines stocked with core lines; daily net positive from day 8; balance grows each period.",
+  "day": 1
+ },
+ "index": {
+  "text": "Day 30 (final, Tue Feb 3). Balance \u20ac2,435.60 before final day close. All stock on hand loaded for last-day sales. No more orders. Simulation ends on advancing the day.",
+  "day": 30
+ },
+ "rules": {
+  "text": "- Lead times seen: noordzee 2-4 days; zuidas 3-4 days; bakker 14-16 days -> AVOID.\n- WEEKENDS: Sunday multiplier ~0.25. Stock up Fri, sell Mon-Fri.\n- Traffic: MAIN x1.8, AI-HOUSE x1.3, AI-LOUNGE x0.85.\n- Marketing: slack \u20ac1, +15% for 2 days, weekly limit 2. Helped d15 (96 units vs ~30).\n- Reputation drops with open complaints. Don't pay inflated claims (16.40, 13.16).\n- BOTTLENECK = restock trips (45 min). Units per trip: small snack slot 18 units, drinks/large slot 10. Per-trip margin: nuts ~21, choco ~16, stroopwafel ~16, oat ~14, cola ~14, energy ~14, crisps ~12, water ~10. Prioritise small snacks (nuts, stroop, choco) and high-volume drinks.\n- Stockouts happen when I don't restock for 2+ days. Each machine should be checked every day; in a bad day, restock the 4-5 emptiest.\n- Order ~every 3 days: noordzee (cola 0.60-0.85, energy 1.14, water 0.45), zuidas (stroop 0.59, nuts 0.78, crisps 1.77, choco 1.02).",
+  "day": 18
+ },
+ "scorecard": {
+  "text": "FINAL: day 30 (Tue Feb 3) balance before close \u20ac2,435.60 (start \u20ac1,500; net +\u20ac935 before final day sales, card receipts settle at end). Peak demand days ~100-124 units. Main losses: long supplier lags (bakker 16 days), stockouts from 45-min restock limit, weekends, open complaints (4 inflated claims, partly refunded at one item price).",
+  "day": 30
+ },
+ "experiments": {
+  "text": "D15: slack campaigns MAIN and AI-HOUSE (\u20ac1 each). Result: d15 sales 96u \u20ac199.50 (vs 25-32 earlier weekend). Keep using ~2x/week.\nD16: AI-LOUNGE energy (DRINKS:A2) price 2.50 -> 2.20. Expect higher AI-LOUNGE energy volume (price-sensitive). Measure: AI-LOUNGE energy units/day vs 2.5 baseline (~2-3/day). Revert if no gain in 3 days.\nD16: added second cola slots MAIN C2 and AI-HOUSE B2 (2.00) to add capacity.",
+  "day": 16
+ }
+}
