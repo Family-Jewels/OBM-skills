@@ -8,7 +8,7 @@ The aim is Gilbert's worthy performance: the value of what the swarm accomplishe
 
 ## Contents
 1. Roles and separation of duties
-2. Workspace layout
+2. Workspace layout (2.1 memory, 2.2 cadence)
 3. Record formats
 4. Status values and who may set them
 5. Consequence map
@@ -77,6 +77,23 @@ The files are the swarm's memory, and agents act on what they read there. A wron
 - **Consolidate at milestones.** At each milestone gate the orchestrator rolls up logs and rebuilds `index.md`: goal, current milestone, what has passed, open decisions, active rules, known traps, and links to the details, in under about 500 words. Every fact in the index is checked against ground truth, never copied from a note.
 - **Keep it lean.** Record what the next agent needs and cannot get from the artifact. Notes that restate the artifact go stale and bury what matters. Briefs stay within the diagnostician's rule budget, because long instruction files reduce how well agents follow them.
 - **Audit it.** The auditor checks the index, notes and rules against ground truth at every audit.
+
+### 2.2 Cadence: the system calls the roles
+
+Roles do not wait for each other to remember. In long runs, an agent told to call the auditor or the diagnostician did it for the first days and then stopped, and nothing noticed. So the cadence is run by the system: a harness, scheduler or hook where one exists, or the human otherwise. The designer writes the cadence table into the spec. The system invokes each role in a fresh context at its trigger and puts the role's output where the orchestrator will read it next.
+
+| Role | Invoked by | Trigger | Writes |
+| --- | --- | --- | --- |
+| Designer | System | Once at the start; again only on a human decision | `spec.md`, rules, the cadence table |
+| Measurement | System, as a script rather than a model where possible | Every period | Lines in `metrics.md`, taken from ground truth, never from an agent's report |
+| Orchestrator | Runs continuously | | Acts on what it is handed, and records that it did |
+| Checker | System | Each submission, or a random sample of actions | Review records |
+| Auditor | System | Every N periods (set in the spec), at milestone dates, and before done | `audits/A-NNN.md`, ending with `Diagnosis needed: yes` or `no` |
+| Diagnostician | System | When an audit says diagnosis is needed, or a measure leaves its control limits | A rule-change record and a new rule version |
+
+When an audit or rule change is handed to the orchestrator, it acts on it in the same period and logs the action. The next audit checks that it did.
+
+With no system to run the cadence (single-agent mode), the orchestrator runs this table itself at the fixed triggers, and the auditor first checks whether the cadence was kept. A missed audit is a finding.
 
 ## 3. Record formats
 

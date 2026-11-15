@@ -115,6 +115,16 @@ If the work repeats on a schedule and nobody reviews each run, the run has to ch
 - **Run-over-run comparison:** flag large changes from the previous run (volume, membership, score distribution) so that slow drift is seen.
 - **A milestone for steady operation:** it passes after several consecutive clean runs, not after the first.
 
+### 6b. Write the cadence table
+
+The other roles are invoked by the system, not by each other (protocol section 2.2), so the design must say when. Add a cadence table to the spec:
+
+- **Measures computed every period from ground truth**, by a script where possible: the few numbers the goal depends on, plus one that catches a target acting as a ceiling (capacity in use) and one that catches decline (this period against the same period earlier). Do not design measures that depend on an agent reporting them.
+- **The audit interval** (default every 30 days of a running operation, or every 5 cycles of a build), plus the milestone dates.
+- **Diagnosis triggers**: an audit that says so, or a measure outside its control limits.
+
+Set targets that rise: each one is raised when it has been met two periods running, so a target never becomes a ceiling.
+
 ### 7. Set decision rights
 
 List what the swarm decides alone and what gets parked as a decision request. Park anything irreversible, anything outside the stated scope, and any conflict between acceptance criteria. Parking never stops the swarm; it keeps working on everything that does not depend on the decision.
@@ -166,7 +176,10 @@ Version: 1   Created: <date>
 | Stage | Measures | Kerr check | Passing outcomes |
 
 ## Budgets and pacing
-Total: ...  Reserve: ...  Audit cadence: ...
+Total: ...  Reserve: ...
+
+## Cadence (run by the system, protocol 2.2)
+| Role or measure | Trigger | Output |
 
 ## Decision rights
 Swarm decides: ...

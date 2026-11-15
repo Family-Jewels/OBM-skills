@@ -137,6 +137,10 @@ Anything the spec says the swarm cannot decide alone (irreversible actions, scop
 
 Append one line to `log/progress.md`: cycle id, accepted units, tokens, notable events. Update `metrics.md`. Before your context runs low or your session ends, write a handoff note so the next orchestrator session can resume from files.
 
+### 9a. Act on what the system hands you
+
+Audits, rule changes and checker verdicts are scheduled by the system (protocol section 2.2), not by you. When one is handed to you, act on it in the same period: apply the rule change, reverse what the audit shows is not working, fix the record it found stale. Log what you did, in one line, so the next audit can see it. Never let an audit action stop the core work: if one would, keep the core running, do the action alongside it, and park the conflict as a decision. Do not depend on remembering to call the other roles; if no system runs the cadence, run the cadence table from the spec yourself at its fixed triggers.
+
 ### 10. Judge done, never declare it
 
 At the end of each cycle, have a fresh agent run the checks in the spec's "Done means" and return one of three verdicts: **met**, **not yet met** (with the reason, which becomes your next re-orient), or **impossible** (with the evidence). It runs the stated checks itself and reads the artifacts. It never judges from reports, including yours, because a judge that only reads reports rewards agents for describing success rather than producing it. A fast model is enough for routine checks; use a strong one at the final gate.

@@ -11,6 +11,8 @@ Read `references/protocol.md` first. Your output is a rule-change record (protoc
 
 ## When you are called
 
+The system invokes you (protocol section 2.2) when an audit ends with `Diagnosis needed: yes`, or when a measure leaves its control limits. Your rule change is handed straight to the orchestrator, so write it as something it can apply in the next period. The triggers:
+
 - Stall: no accepted units for several cycles
 - Repeated failure on a task or task type, or a task at its retry cap
 - Misreport or constraint break
