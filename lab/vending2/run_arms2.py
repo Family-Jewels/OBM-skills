@@ -45,7 +45,7 @@ def main():
     ap.add_argument('--arm', required=True, choices=['base', 'native', 'obm', 'obm_enf', 'obm_cadence']); ap.add_argument('--seed', type=int, default=1)
     ap.add_argument('--days', type=int, default=365); ap.add_argument('--budget', type=float, default=40)
     ap.add_argument('--timeout', type=int, default=7000); ap.add_argument('--output', type=Path, required=True)
-    ap.add_argument('--model', default='claude-haiku-5-5'); ap.add_argument('--audit-every', type=int, default=30)
+    ap.add_argument('--model', default='claude-haiku-5-5'); ap.add_argument('--audit-every', type=int, default=30); ap.add_argument('--pulse-every', type=int, default=7)
     a = ap.parse_args()
     out = a.output / f'{a.arm}-seed{a.seed}-{a.days}d'; out.mkdir(parents=True, exist_ok=False)
     ws = out / 'workspace'; ws.mkdir()
@@ -79,15 +79,21 @@ def main():
             hook = {'hooks': {'Stop': [{'hooks': [{'type': 'command', 'timeout': 30,
                     'command': f'python3 -I {HERE / "vb_stop_gate2.py"} {statedir / "state.json"} {out / "gate.jsonl"} {a.days} 40'}]}]}}
             if a.arm == 'obm_cadence':
+                ccfg = {'workspace': str(ws), 'log': str(out / 'cadence.jsonl'), 'adapter': 'adapters.vending:VendingState',
+                        'adapter_args': {'state_path': str(statedir / 'state.json')}, 'unit': 'day', 'horizon': a.days,
+                        'pulse_every': a.pulse_every, 'audit_every': a.audit_every, 'model': a.model, 'hook_event': 'PostToolUse',
+                        'signals': [{'measure': 'revenue', 'op': '==', 'value': 0, 'periods': 2, 'min_gap': 3, 'not_before': 8, 'label': 'revenue zero two days running'}],
+                        'budgets': {'pulse': 0.6, 'audit': 1.5, 'diagnosis': 1.5}}
+                (statedir / 'cadence.json').write_text(json.dumps(ccfg))
                 hook['hooks']['PostToolUse'] = [{'matcher': 'mcp__vending__wait_for_next_day', 'hooks': [{'type': 'command', 'timeout': 1600,
-                    'command': f'python3 -I {HERE / "cadence.py"} {statedir / "state.json"} {ws} {out / "cadence.jsonl"} {a.days} {a.audit_every} {a.model}'}]}]
+                    'command': f'python3 -I /home/claude/obm-lab/cadence/engine.py {statedir / "cadence.json"}'}]}]
             common += ['--settings', json.dumps(hook)]
         left = a.budget
         if a.arm == 'obm_cadence':
             design = ("Use the obm-swarm-designer skill to design the work system for operating this business for the whole simulation. "
                       "The system prompt is the business briefing. Write it into swarm/ in the current directory, including the cadence table "
                       "(protocol section 2.2): the system will write ground-truth measures to swarm/metrics_system.md every simulated day, run "
-                      f"the auditor every {a.audit_every} simulated days, and run the diagnostician when an audit asks for it, handing their "
+                      f"a short auditor pulse review every {a.pulse_every} simulated days and a full audit every {a.audit_every}, and run the diagnostician when an audit asks for it, handing their "
                       "results to the operator. You cannot use the business tools; design only.")
             p, r = claude(['-p', design, '--permission-mode', 'acceptEdits', '--max-budget-usd', '2', '--model', a.model, '--output-format',
                            'stream-json', '--verbose', '--tools', TOOLS, '--allowedTools', TOOLS, '--strict-mcp-config', '--system-prompt', prompt],
@@ -96,7 +102,7 @@ def main():
             run_prompt = (TASK + "\n\nYou are the orchestrator of a one-agent OBM swarm: use the obm-swarm-orchestrator skill, with the work "
                           "system the designer left in swarm/ (read swarm/index.md and swarm/spec.md first). You do the operating yourself. You do "
                           "not need to call the other roles: the system writes ground-truth measures to swarm/metrics_system.md every day, runs "
-                          f"an audit every {a.audit_every} simulated days and a diagnosis when needed, and hands you their results in the result "
+                          f"a pulse review every {a.pulse_every} simulated days, a full audit every {a.audit_every} and a diagnosis when needed, and hands you their results in the result "
                           "of wait_for_next_day. Act on what it hands you and log what you did. Keep operating until the simulation ends.")
             p, r = claude(['-p', run_prompt, '--permission-mode', 'acceptEdits', '--max-budget-usd', f'{left:.2f}', *common], cfg, ws, stream, a.timeout)
             results.append(r)
@@ -137,7 +143,7 @@ def main():
     q = lambda lo, hi: round(sum(d['revenue'] for d in sl if lo <= d['day'] <= hi), 2)
     rec = {**{k: v for k, v in score.items() if not isinstance(v, (dict, list))}, 'arm': a.arm, 'seed': a.seed, 'days': a.days,
            'api_cost_usd': round(sum(r.get('total_cost_usd') or 0 for r in results) + cadence_cost, 3), 'cadence_cost_usd': round(cadence_cost, 3),
-           'audits': sum(1 for e in cadence_events if e.get('event') == 'audit'), 'diagnoses': sum(1 for e in cadence_events if e.get('event') == 'diagnosis'), 'turns': sum(r.get('num_turns') or 0 for r in results),
+           'audits': sum(1 for e in cadence_events if e.get('event') == 'audit'), 'pulses': sum(1 for e in cadence_events if e.get('event') == 'pulse'), 'diagnoses': sum(1 for e in cadence_events if e.get('event') == 'diagnosis'), 'turns': sum(r.get('num_turns') or 0 for r in results),
            'runtime_seconds': round(elapsed, 1), 'error': error,
            'avg_stocked_slots': round(sum(len(d.get('per_slot', [])) for d in sl) / len(sl), 2) if sl else None,
            'revenue_by_quarter': [q(1, 91), q(92, 182), q(183, 273), q(274, 366)] if a.days >= 300 else None,

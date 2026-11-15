@@ -88,10 +88,11 @@ Roles do not wait for each other to remember. In long runs, an agent told to cal
 | Measurement | System, as a script rather than a model where possible | Every period | Lines in `metrics.md`, taken from ground truth, never from an agent's report |
 | Orchestrator | Runs continuously | | Acts on what it is handed, and records that it did |
 | Checker | System | Each submission, or a random sample of actions | Review records |
-| Auditor | System | Every N periods (set in the spec), at milestone dates, and before done | `audits/A-NNN.md`, ending with `Diagnosis needed: yes` or `no` |
+| Auditor, pulse review | System | Often: every few periods (default every 7 periods of an operation, or every cycle of a build) | `audits/P-NNN.md`: the numbers' direction against targets, and at most three pivots |
+| Auditor, full audit | System | Every N periods (set in the spec), at milestone dates, and before done | `audits/A-NNN.md`, ending with `Diagnosis needed: yes` or `no` |
 | Diagnostician | System | When an audit says diagnosis is needed, or a measure leaves its control limits | A rule-change record and a new rule version |
 
-When an audit or rule change is handed to the orchestrator, it acts on it in the same period and logs the action. The next audit checks that it did.
+When a pulse, an audit or a rule change is handed to the orchestrator, it acts on it in the same period and logs the action. The next audit checks that it did.
 
 With no system to run the cadence (single-agent mode), the orchestrator runs this table itself at the fixed triggers, and the auditor first checks whether the cadence was kept. A missed audit is a finding.
 

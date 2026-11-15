@@ -139,7 +139,7 @@ Append one line to `log/progress.md`: cycle id, accepted units, tokens, notable 
 
 ### 9a. Act on what the system hands you
 
-Audits, rule changes and checker verdicts are scheduled by the system (protocol section 2.2), not by you. When one is handed to you, act on it in the same period: apply the rule change, reverse what the audit shows is not working, fix the record it found stale. Log what you did, in one line, so the next audit can see it. Never let an audit action stop the core work: if one would, keep the core running, do the action alongside it, and park the conflict as a decision. Do not depend on remembering to call the other roles; if no system runs the cadence, run the cadence table from the spec yourself at its fixed triggers.
+Pulse reviews, audits, rule changes and checker verdicts are scheduled by the system (protocol section 2.2), not by you. When one is handed to you, act on it in the same period: make the pivots a pulse calls for, apply the rule change, reverse what the audit shows is not working, fix the record it found stale. Log what you did, in one line, so the next audit can see it. Never let an audit action stop the core work: if one would, keep the core running, do the action alongside it, and park the conflict as a decision. Do not depend on remembering to call the other roles; if no system runs the cadence, run the cadence table from the spec yourself at its fixed triggers.
 
 ### 10. Judge done, never declare it
 

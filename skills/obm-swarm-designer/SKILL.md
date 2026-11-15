@@ -33,12 +33,12 @@ Write a "Done means" section of checkable criteria. Test each one: could someone
 
 Write each criterion, and each milestone's "passes when", as a condition with four parts:
 
-- **End state:** one measurable result, such as a test result, an exit code, a count or an empty queue.
+- **End state:** one measurable result, such as a test result, a count, a balance, a response time or an empty queue.
 - **Check:** the exact command or inspection that proves it, so a judge can run it rather than take a report's word for it.
 - **Constraints:** what must not change on the way, such as "no test file modified" or "SPEC.md unchanged".
 - **Bound:** the turn, time or budget limit after which the swarm reports instead of continuing.
 
-For example: "`pytest tests/` exits 0 on the final commit; no file in tests/ is modified; within the milestone's budget."
+For example, for software: "`pytest tests/` exits 0 on the final commit; no file in tests/ is modified; within the milestone's budget." For a running operation: "cash stays above the reserve every period, and revenue for the last 30 periods exceeds the previous 30; checked from the ledger, not from reports." For research or writing: "every claim in the report cites a source that a second reader can open and confirm; checked by sampling ten claims."
 
 When the goal is ambiguous, say so, and define done as the best version of the accomplishment that can be verified, plus the open questions the swarm should resolve on the way.
 
@@ -120,7 +120,7 @@ If the work repeats on a schedule and nobody reviews each run, the run has to ch
 The other roles are invoked by the system, not by each other (protocol section 2.2), so the design must say when. Add a cadence table to the spec:
 
 - **Measures computed every period from ground truth**, by a script where possible: the few numbers the goal depends on, plus one that catches a target acting as a ceiling (capacity in use) and one that catches decline (this period against the same period earlier). Do not design measures that depend on an agent reporting them.
-- **The audit interval** (default every 30 days of a running operation, or every 5 cycles of a build), plus the milestone dates.
+- **The pulse interval** for the auditor's short, frequent review of the numbers (default every 7 periods of a running operation, or every cycle of a build), and **the full-audit interval** (default every 30 periods, or every 5 cycles), plus the milestone dates. Keep the pulse frequent: like a director, the swarm needs a close ear on how the numbers are moving so it can pivot early.
 - **Diagnosis triggers**: an audit that says so, or a measure outside its control limits.
 
 Set targets that rise: each one is raised when it has been met two periods running, so a target never becomes a ceiling.
