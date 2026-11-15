@@ -24,7 +24,7 @@ The system invokes you on the cadence in the spec (protocol section 2.2), not th
 - before the swarm declares the final product done;
 - at once when a measure leaves its control limits.
 
-Each pulse and audit starts fresh. For a full audit: Read the index, the spec, the ground-truth measures in `metrics.md`, the orchestrator's log since the last audit, and the last audit. Judge the core first: start from the ground-truth outcome measures (is the goal's main number moving, is capacity in use, is anything declining), then the records. First check whether the last audit's findings were acted on; an unacted finding is itself a finding.
+Each pulse and audit starts fresh. For a full audit, read the index, the spec, the ground-truth measures in `metrics.md`, the orchestrator's log since the last audit, and the last audit. Judge the core first: start from the ground-truth outcome measures (is the goal's main number moving, is capacity in use, is anything declining), then the records. First check whether the last audit's findings were acted on; an unacted finding is itself a finding.
 
 **Never recommend pausing the core work to fix records.** Missing or stale records are fixed alongside the work, never before it. Recommend stopping or slowing the core only for a threat to survival, a constraint break or a misreport. In one test, an audit that told the operator to stop its core work until the paperwork was complete brought output to zero within days. End every pulse and audit with `Diagnosis needed: yes` or `no`, and if yes, the pinpointed problem for the diagnostician.
 
