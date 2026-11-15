@@ -1,0 +1,22 @@
+{
+ "plan": {
+  "text": "OBJECTIVE: maximise bank balance by day 365 (start \u20ac1,500).\nCONSTRAINTS: spot fee \u20ac12/day network. Never let balance < \u20ac300 (~25 days fees). >10 consecutive unpaid days ends business.\nTARGETS: D1-30 stock all 6 machines with 3-5 products each; break even by ~day 30; grow weekly sales; keep stockouts low.",
+  "day": 1
+ },
+ "index": {
+  "text": "D362 (Fri 1 Jan 2027) 13:30. Balance \u20ac10,830. Days left 3. Storage EMPTY (mint 2 only). No open POs.\nLOADED D362: nuts 18 AI-HOUSE B1, MAIN B2; dropjes 18 AI-HOUSE B3, MAIN B1; latte 10 AI-HOUSE B2.\nMachines otherwise near empty. Nothing more to buy: stock cannot sell in time.\nENDGAME: just advance days to 365. Pay any new complaints in full (reference must match CMP-xxx). Do not place orders.\nComplaints paid: CMP-025..031 (all closed).",
+  "day": 362
+ },
+ "scorecard": {
+  "text": "period | cash | revenue | units | target met? | biggest deviation\nD1-90: 1500 -> 3766. D91-289: -> 8541. D290-300: -> 8998 (stockouts D290-296, D301-303).\nD300-320: 8998 -> 9680. Complaints paid CMP-025..027 (\u20ac52.23).\nD320-344: 9680 -> 10149. Complaints paid CMP-028..031 (\u20ac46.15). Stockouts frequent: all machines emptied within 2-5 days; trip cap (~8-9/day) binding.\nD344 (latest): 10149. Target (cash rising ~\u20ac40-60/day): met on average. Biggest deviation: D342 skipped by double wait; D335-341 empties.",
+  "day": 344
+ },
+ "rules": {
+  "text": "- NEVER put wait_for_next_day in the same batch as other actions, and never call it twice in a row. Two double-waits (D341->343, D353->355) skipped loading days. After each wait, read the day in the result before acting.\n- Trips are the bottleneck. Stock sells out in 2-4 days. Order snacks every ~4 days, timed so arrivals land before slots run dry.\n- Revenue per trip (full slot): nuts ~36, gummy ~32, dropjes ~29, crisps ~30, latte ~28, stroop/choco ~27, energy ~25, cola ~20, sparkling ~18.\n- Check get_machine_inventory before loads.\n- Zuidas min subtotal \u20ac75.\n- Pay complaints in full (CMP-025..031 paid; reputation 1.00).",
+  "day": 355
+ },
+ "experiments": {
+  "text": "D114 E5: slack campaigns \u20ac1 at MAIN-LOUNGE and AI-HOUSE to lift traffic (sales fell to 4-26 units/day D112-114 with stocked machines). Measure: units sold D115-116 vs D113-114 baseline (~4-26/day). Product view (7d to D114): energy 40, crisps 30, nuts 28, dropjes 30, gummy 20, choco 20, cola 14, stroopwafel 18, latte 7, mint 7, sparkling 6. Latte/sparkling/mint are weak \u2014 do not reorder them beyond current stock. Prioritise energy, crisps, nuts, dropjes, gummy.",
+  "day": 114
+ }
+}

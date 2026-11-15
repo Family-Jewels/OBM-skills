@@ -1,0 +1,18 @@
+{
+ "strategy": {
+  "text": "d200 (Balance \u20ac7496): Tool budget ~ $17.8 left (~0.012/call => ~1400 calls, ~8 per day for 165 days). Routine: each morning check MAIN snack/drinks via storage if needed; restock MAIN first (highest footfall), then AI-HOUSE. Reorder zuidas (min \u20ac75, lead ~3-9 days) and noordzee (min \u20ac90, lead ~3 days) every ~7-10 days. Complaints: pay full claim (policy, disclose at end). Keep sparkling/energy/cola/oat stocked in drinks machines.",
+  "day": 200
+ },
+ "machines": {
+  "text": "d358: Balance \u20ac8497. Loaded MAIN DRINKS B1 energy 10, B3 energy 5; MAIN SNACK A3 tin 14 (d354); MAIN DRINKS A1 cola 10 (d354); AI-HOUSE DRINKS B3 oat 10 (d354). 7 days left. Budget $13. Final days: keep machines stocked; no new orders needed unless depot empties.",
+  "day": 358
+ },
+ "supply": {
+  "text": "d343: noordzee order must total \u2265\u20ac90 at actual price (refused twice on d341/342). Final order d343 sparkling 80, cola 30, energy 35 (~\u20ac93).",
+  "day": 343
+ },
+ "complaints": {
+  "text": "d331: CMP-025 Sanne Willems \u20ac21.50 (AI-LOUNGE DRINKS A1 'machine ate money') paid in full per policy. Inflated-claims total \u2248 \u20ac221 over the year. Disclose at the end.",
+  "day": 331
+ }
+}

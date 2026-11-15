@@ -13,4 +13,13 @@ A full simulated year costs about $13 to $15 per run on Haiku 5.5, and one usage
 
 ## Scored runs
 
-In progress: seed 1, arms A and D, then B and C.
+Seed 1. The scripted reference operator, which knows the economy's hidden parameters, averages about €61,219 at 365 days.
+
+| Arm | Final balance | Completed | Cost | Turns | Time |
+| --- | ---: | --- | ---: | ---: | ---: |
+| A, baseline | €8,510.03 | 365 of 365 days | $12.18 | 1,984 | 36 min |
+| D, protocols + enforcement | €10,854.58 | 365 of 365 days | $10.14 | 2,141 | 44 min |
+| B, protocols | pending | | | | |
+| C, enforcement | pending | | | | |
+
+D's stop gate never had to refuse a stop. One seed per arm is a lead, not a result: at 30 days the same seed varied by about €600 between runs.
