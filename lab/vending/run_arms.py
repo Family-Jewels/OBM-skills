@@ -60,6 +60,8 @@ def run(arm, seed, a):
                     if d.get('type') == 'result': result = d
                 except ValueError: pass
             if proc.returncode: error = f'CLI exit {proc.returncode}'
+            if 'limit' in str(result.get('result', '')).lower() and 'hit your' in str(result.get('result', '')).lower():
+                error = 'environment: usage limit reached (not an agent stop)'
         except subprocess.TimeoutExpired: error = 'Wall-clock timeout'
         except Exception as e: error = str(e)
         finally:

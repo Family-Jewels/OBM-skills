@@ -1,0 +1,94 @@
+{
+ "status": "excluded from scoring",
+ "reason": "Every run in this batch was cut off by the account usage limit, not by the agent. The benchmark labels these \"Agent stopped before the horizon\" and scores 0; that label is wrong here.",
+ "runs": [
+  {
+   "run": "A-seed1-365d",
+   "arm": "A",
+   "seed": 1,
+   "days_reached": 118,
+   "api_cost_usd": 3.89,
+   "cause": "environment: account 5-hour usage limit reached",
+   "evidence": "You've hit your 5-hour limit \u00b7 resets 7:20pm (America/Chicago)",
+   "scored": false,
+   "benchmark_label": "Agent stopped before the horizon."
+  },
+  {
+   "run": "A-seed2-365d",
+   "arm": "A",
+   "seed": 2,
+   "days_reached": 166,
+   "api_cost_usd": 4.28,
+   "cause": "environment: account 5-hour usage limit reached",
+   "evidence": "You've hit your 5-hour limit \u00b7 resets 7:20pm (America/Chicago)",
+   "scored": false,
+   "benchmark_label": "Agent stopped before the horizon."
+  },
+  {
+   "run": "B-seed1-365d",
+   "arm": "B",
+   "seed": 1,
+   "days_reached": 123,
+   "api_cost_usd": 4.38,
+   "cause": "environment: account 5-hour usage limit reached",
+   "evidence": "You've hit your 5-hour limit \u00b7 resets 7:20pm (America/Chicago)",
+   "scored": false,
+   "benchmark_label": "Agent stopped before the horizon."
+  },
+  {
+   "run": "B-seed2-365d",
+   "arm": "B",
+   "seed": 2,
+   "days_reached": 128,
+   "api_cost_usd": 3.87,
+   "cause": "environment: account 5-hour usage limit reached",
+   "evidence": "You've hit your 5-hour limit \u00b7 resets 7:20pm (America/Chicago)",
+   "scored": false,
+   "benchmark_label": "Agent stopped before the horizon."
+  },
+  {
+   "run": "C-seed1-365d",
+   "arm": "C",
+   "seed": 1,
+   "days_reached": 175,
+   "api_cost_usd": 4.48,
+   "cause": "environment: account 5-hour usage limit reached",
+   "evidence": "You've hit your 5-hour limit \u00b7 resets 7:20pm (America/Chicago)",
+   "scored": false,
+   "benchmark_label": "Agent stopped before the horizon."
+  },
+  {
+   "run": "C-seed2-365d",
+   "arm": "C",
+   "seed": 2,
+   "days_reached": 162,
+   "api_cost_usd": 5.56,
+   "cause": "environment: account 5-hour usage limit reached",
+   "evidence": "You've hit your 5-hour limit \u00b7 resets 7:20pm (America/Chicago)",
+   "scored": false,
+   "benchmark_label": "Agent stopped before the horizon."
+  },
+  {
+   "run": "D-seed1-365d",
+   "arm": "D",
+   "seed": 1,
+   "days_reached": 113,
+   "api_cost_usd": 4.15,
+   "cause": "environment: account 5-hour usage limit reached",
+   "evidence": "You've hit your 5-hour limit \u00b7 resets 7:20pm (America/Chicago)",
+   "scored": false,
+   "benchmark_label": "Agent stopped before the horizon."
+  },
+  {
+   "run": "D-seed2-365d",
+   "arm": "D",
+   "seed": 2,
+   "days_reached": 131,
+   "api_cost_usd": 3.53,
+   "cause": "environment: account 5-hour usage limit reached",
+   "evidence": "You've hit your 5-hour limit \u00b7 resets 7:20pm (America/Chicago)",
+   "scored": false,
+   "benchmark_label": "Agent stopped before the horizon."
+  }
+ ]
+}
