@@ -1,6 +1,6 @@
 {
  "status": "excluded from scoring",
- "reason": "Every run in this batch was cut off by the account usage limit, not by the agent. The benchmark labels these \"Agent stopped before the horizon\" and scores 0; that label is wrong here.",
+ "reason": "Every run listed was cut off by the account usage limit, not by the agent. The benchmark labels these \"Agent stopped before the horizon\" and scores 0; that label is wrong here.",
  "runs": [
   {
    "run": "A-seed1-365d",
@@ -87,6 +87,54 @@
    "api_cost_usd": 3.53,
    "cause": "environment: account 5-hour usage limit reached",
    "evidence": "You've hit your 5-hour limit \u00b7 resets 7:20pm (America/Chicago)",
+   "scored": false,
+   "benchmark_label": "Agent stopped before the horizon."
+  },
+  {
+   "run": "A-seed1-365d (batch 2)",
+   "arm": "A",
+   "seed": 1,
+   "days_reached": 341,
+   "api_cost_usd": 13.09,
+   "balance_when_cut_off": 8734.52,
+   "cause": "environment: account 5-hour usage limit reached",
+   "evidence": "You've hit your 5-hour limit \u00b7 resets 12:30am (America/Chicago)",
+   "scored": false,
+   "benchmark_label": "Agent stopped before the horizon."
+  },
+  {
+   "run": "B-seed1-365d (batch 2)",
+   "arm": "B",
+   "seed": 1,
+   "days_reached": 327,
+   "api_cost_usd": 9.3,
+   "balance_when_cut_off": 8677.57,
+   "cause": "environment: account 5-hour usage limit reached",
+   "evidence": "You've hit your 5-hour limit \u00b7 resets 12:30am (America/Chicago)",
+   "scored": false,
+   "benchmark_label": "Agent stopped before the horizon."
+  },
+  {
+   "run": "C-seed1-365d (batch 2)",
+   "arm": "C",
+   "seed": 1,
+   "days_reached": 348,
+   "api_cost_usd": 9.28,
+   "balance_when_cut_off": 9811.15,
+   "cause": "environment: account 5-hour usage limit reached",
+   "evidence": "You've hit your 5-hour limit \u00b7 resets 12:30am (America/Chicago)",
+   "scored": false,
+   "benchmark_label": "Agent stopped before the horizon."
+  },
+  {
+   "run": "D-seed1-365d (batch 2)",
+   "arm": "D",
+   "seed": 1,
+   "days_reached": 251,
+   "api_cost_usd": 10.37,
+   "balance_when_cut_off": 6431.32,
+   "cause": "environment: account 5-hour usage limit reached",
+   "evidence": "You've hit your 5-hour limit \u00b7 resets 12:30am (America/Chicago)",
    "scored": false,
    "benchmark_label": "Agent stopped before the horizon."
   }

@@ -4,8 +4,13 @@ Claude Haiku 5.5, benchmark v3.0.0. Harness: [`../../lab/vending`](../../lab/ven
 
 ## Environment failures (not scored)
 
-The first batch (four arms × seeds 1 and 2, started 2026-11-14 afternoon) was cut off in every run by the account's 5-hour usage limit, at simulated days 113 to 175. Each run's final message is the platform's "You've hit your 5-hour limit". The benchmark's verifier labels these runs "Agent stopped before the horizon" and scores them 0, but the agent did not stop. Following the protocol's rule that environment failures are never counted against the performer, all eight are excluded from scoring and recorded in `environment-failures.json`. The runner now tags this case as an environment failure automatically.
+Two batches were cut off by the account's 5-hour usage limit, and every run's final message is the platform's "You've hit your 5-hour limit". The benchmark's verifier labels these runs "Agent stopped before the horizon" and scores them 0, but the agent did not stop. Following the protocol's rule that environment failures never count against the performer, all twelve are excluded from scoring and recorded in `environment-failures.json`.
+
+- Batch 1: four arms × seeds 1 and 2, cut off at simulated days 113 to 175.
+- Batch 2: four arms × seed 1, cut off at days 251 to 348 (balances when cut off: €6,431 to €9,811). Not scorable: the score is defined only for a completed year.
+
+A full simulated year costs about $13 to $15 per run on Haiku 5.5, and one usage window holds about $35 to $40, so scored runs now go two at a time. The runner tags a usage-limit cutoff as an environment failure automatically.
 
 ## Scored runs
 
-In progress: seed 1, all four arms, restarted after the limit reset with a $25 cap per run.
+In progress: seed 1, arms A and D, then B and C.
