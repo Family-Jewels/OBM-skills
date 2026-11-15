@@ -42,8 +42,10 @@ log.write(json.dumps({"t": time.time(), "day": day, "event": "measure"}) + "\n")
 
 handoff = ""
 over = bool(s.get("finished") or s.get("terminated"))
-if not over and day - mem["last_audit"] >= every:
-    mem["n_audit"] += 1; mem["last_audit"] = day
+recent = [x["revenue"] for x in sl[-2:]]
+signal = len(recent) == 2 and all(v == 0 for v in recent) and day > 5 and day - mem["last_audit"] >= 3
+if not over and (day - mem["last_audit"] >= every or signal):
+    mem["prev_audit"] = mem["last_audit"]; mem["n_audit"] += 1; mem["last_audit"] = day
     aid = f"A-{mem['n_audit']:03d}"
     (sw / "audits").mkdir(exist_ok=True)
     def run(prompt, budget, timeout):
@@ -54,14 +56,14 @@ if not over and day - mem["last_audit"] >= every:
         try: r = json.loads(p.stdout)
         except Exception: r = {}
         return r
-    r = run(f"Use the obm-swarm-auditor skill. You are invoked by the system on its schedule: this is audit {aid}, at simulated day {day} of {days} "
+    r = run(f"Use the obm-swarm-auditor skill. You are invoked by the system ({'because revenue has been zero for two days running' if signal else 'on its schedule'}): this is audit {aid}, at simulated day {day} of {days} "
             f"of a business the swarm in swarm/ is running. You cannot see or use the business's tools; audit the records. The ground-truth "
             f"measures are in swarm/metrics_system.md (written by the system from the simulator's own state). Judge the business first: is the "
             f"main outcome (cash, revenue) moving toward the goal, is capacity in use, is anything declining, has a target become a ceiling? "
             f"Then whether earlier audit findings were acted on, then whether the records are current. Never tell the operator to pause "
             f"selling, buying or restocking to fix records. Write swarm/audits/{aid}.md: findings first, then at most three concrete actions "
             f"for the operator, then a last line exactly 'Diagnosis needed: yes' or 'Diagnosis needed: no'.", 1.5, 900)
-    log.write(json.dumps({"t": time.time(), "day": day, "event": "audit", "id": aid, "cost": r.get("total_cost_usd"), "turns": r.get("num_turns")}) + "\n")
+    log.write(json.dumps({"t": time.time(), "day": day, "event": "audit", "trigger": "control limit: no revenue two days running" if signal and day - mem.get("prev_audit", 0) < every else "scheduled", "id": aid, "cost": r.get("total_cost_usd"), "turns": r.get("num_turns")}) + "\n")
     af = sw / "audits" / f"{aid}.md"
     audit = af.read_text() if af.exists() else (r.get("result") or "(the auditor produced no report)")
     handoff = f"SYSTEM CADENCE: audit {aid} ran at day {day} (swarm/audits/{aid}.md). Act on it this period and log what you did.\n\n{audit[-3500:]}"
