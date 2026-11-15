@@ -1,0 +1,18 @@
+{
+ "plan": {
+  "text": "Day1: Ordered PO-1001 from zuidas-groothandel (delivery day 5): stroopwafel-2pk 18, choco-bar-100g 18, crisps-paprika-335g 10, cola-500ml 10, sparkling-water-500ml 10, oat-latte-can 10. Other suppliers: bakker-en-zoon (cheap stroopwafel/cola/nuts), noordzee-dranken (sparkling 0.37). Offers valid through day 7. Spot fee 12/day. Restock trips take 45 min, so plan few trips/day.",
+  "day": 1
+ },
+ "state": {
+  "text": "Day 364 (Sun 3 Jan 2027). Balance ~17,525. Final day next. No open orders, no open complaints known. Simulation ends at day 365. Nothing further needed beyond advancing the day.",
+  "day": 364
+ },
+ "complaints": {
+  "text": "Complaints: paying the FULL demanded amount closes them (partial payments leave them open). Paid d22: CMP-001 (Daan 13.90 total), CMP-002 (Tom 13.16), CMP-003 (Sanne 17.29 total). Reputation was 0.88 due to open complaints; watch if it recovers to 1.0.",
+  "day": 22
+ },
+ "strategy": {
+  "text": "KEY INSIGHT (d66): Trips are the constraint (~8/day). Snack slots hold 18 units vs drinks 10 -> per trip snacks earn more. Priority per trip: nuts/choco/gummy/stroop 18u (@1.8-2.3), crisps 10u@2.5, energy 10u@2.8, oat 10u@2.8, cola 10u@2.4, sparkling 10u@1.5. Refill the emptiest high-price slots first. Orders: PO-1029 zuidas d66 (nuts60 gummy60 stroop60 choco60 crisps40) and PO-1030 noordzee d67 (energy80 oat60 cola60 spark40) \u2014 big stock arriving; load every morning ~8 trips. Order BIG each week (100+ per snack line), zuidas lead 2-4 days, noordzee 3-4 days. Bakker went out of business d64 (don't use). Pay complaints in full (closes them, keeps reputation).",
+  "day": 66
+ }
+}

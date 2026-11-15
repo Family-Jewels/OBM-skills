@@ -13,13 +13,20 @@ A full simulated year costs about $13 to $15 per run on Haiku 5.5, and one usage
 
 ## Scored runs
 
-Seed 1. The scripted reference operator, which knows the economy's hidden parameters, averages about €61,219 at 365 days.
+Seed 1, one run per arm. The scripted reference operator, which knows the economy's hidden parameters, averages about €61,219 at 365 days.
 
-| Arm | Final balance | Completed | Cost | Turns | Time |
-| --- | ---: | --- | ---: | ---: | ---: |
-| A, baseline | €8,510.03 | 365 of 365 days | $12.18 | 1,984 | 36 min |
-| D, protocols + enforcement | €10,854.58 | 365 of 365 days | $10.14 | 2,141 | 44 min |
-| B, protocols | pending | | | | |
-| C, enforcement | pending | | | | |
+| Arm | Score | Days | Balance at end | Units sold | Cost | Time |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| A, baseline | €8,510.03 | 365 | €8,510.03 | 10,080 | $12.18 | 36 min |
+| B, protocols | **€0** (stopped early) | 179 | €8,437.60 | 8,405 | $11.79 | 42 min |
+| C, enforcement | €17,578.21 | 365 | €17,578.21 | 16,208 | $14.10 | 48 min |
+| D, protocols + enforcement | €10,854.58 | 365 | €10,854.58 | 13,598 | $10.14 | 44 min |
 
-D's stop gate never had to refuse a stop. One seed per arm is a lead, not a result: at 30 days the same seed varied by about €600 between runs.
+**B stopped early, and this is a real agent failure, not an environment one.** On day 179 its last message was "Day 179 has started. The balance is €8,437.60 ... Next I'll check storage and the Zuidas order timing before reloading the remaining slots", and then it ended its turn without calling a tool. The session ended, and the benchmark scores any run that stops before the horizon as zero, so half a year of profitable operation scored nothing. B had the operating protocol, which says "never stop early", but no stop gate. This is the failure the gate exists for: an instruction did not prevent it, and a hook that refuses the stop would have sent the agent back to work.
+
+**What this does and doesn't show.**
+
+- The gate never had to refuse a stop in C or D, so C's and D's higher scores are not the gate's doing. C's lead over D and A is within the kind of run-to-run spread seen at 30 days, and one run per arm can't separate the arms on money.
+- The early stop is the clearest signal so far: across the six runs that reached a scorable end at 365 days or stopped on their own, the only zero came from an arm without the gate. One case is an anecdote; it says what to count in the next seeds: premature stops per arm, and how often the gate has to refuse one.
+
+**Next:** more seeds, two runs per usage window, counting completion rate, gate refusals and final balance per arm.

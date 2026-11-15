@@ -1,0 +1,30 @@
+{
+ "plan": {
+  "text": "Objective: maximise bank balance by day 365 (start \u20ac1,500). Rent \u20ac12/day network. Cash reserve: keep >= \u20ac300 (~25 days rent) at all times. Never let unpaid days build up. Targets: week 1 stock all 6 machines with 6+ products each; weekly revenue growing; no empty core slots on weekdays. Raise targets as sales data arrives.",
+  "day": 1
+ },
+ "index": {
+  "text": "Day 178 (Wed 1 Jul). Balance ~\u20ac8,368. Loaded day 178: MAIN choco A1 18, MAIN gummy B1 18, AI-HOUSE choco A2 18, AI-HOUSE gummy A1 18, AI-HOUSE tortilla C1 10, AI-LOUNGE tortilla C2 10. Pending: MAIN tortilla/crisps, dropjes, stroopwafel, AI-LOUNGE choco/gummy, drinks check. Next Zuidas order due ~day 178-180 (min \u20ac75). Rules: rule_stockout_buffer, rule_holiday. Reload MAIN first. Never put quantities in supplier emails; use order_goods.",
+  "day": 178
+ },
+ "scorecard": {
+  "text": "period | cash | revenue | units | target met? | biggest deviation\nDays 36-64 (condensed): balance 2160 -> 3710. Stock-outs, Bakker failed day 64.\nDay 65-83: balance 3731 -> 4849. Mostly partial; big gaps when storage ran out (day 67, 71, 73, 80, 81).\nDay 84 (Sun) | 4989 | 113.60 (day 83: 35u) | 35 | weekend | -\nDay 85 (Mon) | 4871 | 287.20 | 138 | YES | best day; drinks partly out\nDay 86 (Tue) | 4997 | 137.50 | 69 | partial | storage empty\nDay 87 (Wed) | 5247 | 41.30 | 23 | no | machines empty\nDay 88 (Thu) | 5244 | 13.50 | 8 | NO | ALL MACHINES EMPTY; PO-1042 late 1 day (rule_stockout_buffer)\nDay 89 (Fri) | 5262 | 150.60 | 58 | partial | 8 trips restock\nDay 90 (Sat) | 5176 | 82.80 | 37 | weekend | PO-1043 late\nDay 91 (Sun) | 5055 | 106.40 | 47 | weekend | 4 drinks slots empty\nDay 92 (Mon) | 5139 | 228.40 | 108 | YES | storage thin\nDay 93 (Tue) | 5268 | 122.90 | 52 | partial | drinks empty until PO-1044 (day 94)\nDay 94 (Wed) | 5462 | 9.60 | 5 | NO | deliveries due day 94 landed overnight\nDay 95 (Thu) | 5530 | 209.70 | 97 | YES | 10 trips\nDay 96 (Fri) | 5588 | 207.10 | 103 | YES | 10 trips\nDay 97 (Sat) | 5647 | 52.30 | 23 | weekend | -\nDay 98 (Sun) | 5704 | 54.30 | 23 | weekend | energy 0\nDay 99 (Mon) | 5735 | 192.20 | 86 | partial | 8 small top-ups only\nTarget: keep all snack slots loaded before Monday; balance +\u20ac100/week minimum.",
+  "day": 100
+ },
+ "rules": {
+  "text": "1) Order minimums: zuidas 75, bakker 60, noordzee 90. Check offers if refused (prices move weekly; weekly discounts up to 30%). 2) Compare 2+ quotes. 3) NEVER put product quantities in a supplier email (it buys). Use order_goods. 4) Restock is 45 min per slot: ~7 trips/day. Revenue per trip: tortilla 3.20x10=32 (best), nuts 1.90x18=34, choco 1.70x18=31, gummy 1.60x18=29, stroopwafel 29, crisps 29, dropjes 27, energy 24-27, oat 24, cola 20, sparkling 18. 5) Check all 6 machines each morning; MAIN sells out by ~10:00 every weekday. 6) LEAD TIMES: zuidas 3-4 days (best, main supplier); noordzee 3 days; BAKKER 7-19 days (AVOID for time-critical items; PO-1021 due day 56). 7) No marketing while stock-limited. 8) COMPLAINTS: partial payment does NOT close; full claimed amount closes (customer withdraws). Pay full on every complaint (cheap vs reputation). 9) Weekends: sales are low (Sun 18-31 units) \u2014 use Sunday for restocking. Friday sales are high.",
+  "day": 38
+ },
+ "experiments": {
+  "text": "Exp 4 (day 50, planned): because stock limits sales (slots sell out before noon), raise MAIN prices ~10-15% and measure units/day over 3 days vs Fri-Sun baseline:\n MAIN tortilla 3.20 -> 3.60; gummy 1.60 -> 1.80; choco 1.70 -> 1.90; dropjes 1.50 -> 1.70; cola 2.00 -> 2.30; sparkling 1.80 -> 2.00; energy 2.70 stays.\nBaseline (MAIN units/day): Fri 48 (~17 total network), weekday Mon/Tue ~50-70 per location. Compare MAIN 'units sold' next 3 weekdays. If units fall <15% keep new prices.\nExp 2 (MAIN energy 2.70 since day 23): units ~10/day, equal to before -> keep 2.70.\nExp 3 (AI-LOUNGE tortilla line from day 26): tortilla sold 23 Fri day 26 -> good, keep.\nExp 4b (AI-LOUNGE dropjes line from day 36): check AI-LOUNGE dropjes sales.",
+  "day": 49
+ },
+ "rule_stockout_buffer": {
+  "text": "Day 89 lesson: sales collapsed (Wed 23 units, Thu 8 units) because ALL six machines ran empty after Tue. Zuidas PO-1042 was due day 88 but landed morning of day 89; Noordzee/Zuidas lead times slip by 1 day.\nRULE: keep at least 4 days of stock on order. Place Zuidas order every 4-5 days (not waiting for empties). Order size: tortilla/crisps/choco/dropjes/gummy/stroopwafel 40 each (Zuidas) and energy/cola/sparkling 40-60 each (Noordzee, min 90). Check machine levels Sunday evening before the weekly reorder.\nRULE: Monday-Tuesday are the biggest days (138 units on Mon 30 Mar). Always be fully stocked before Monday.",
+  "day": 89
+ },
+ "rule_holiday": {
+  "text": "Day 113 (Mon 27 Apr) = King's Day (Koningsdag, NL). Sales collapsed to 4 units (holiday multiplier 0.05 in sales report). RULE: sales report shows 'holiday' multiplier; if it is <1 expect near-zero sales that day; do not overbuy or over-restock on holidays. Koningsdag is 27 April every year (check 27 Apr 2027 = day ~ 392, beyond horizon but same pattern in any year in sim). Holiday demand returns the next day.",
+  "day": 114
+ }
+}

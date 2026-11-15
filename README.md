@@ -81,6 +81,7 @@ All state lives in files, and every record has a fixed format ([`skills/protocol
 | Four-arm calibration: a SQL engine from a spec | Baseline and skills plus enforcement both scored 100% on 1,650 hidden queries, in about five minutes |
 | Stress-test calibration: SQLite's own conformance suite (sqllogictest) | One 8-minute shift scored 99.97% on 29,000 held-out queries for $0.34 |
 | [Prosus Vending Bench](https://github.com/ProsusAI/vending-bench), 30 days, four arms × 3 seeds (Haiku 5.5) | All runs completed. Means €2,086 to €2,225 from €1,500, with ±€400 noise: no separation. The 365-day run is next |
+| Prosus Vending Bench, 365 days, four arms × seed 1 | Baseline €8,510; protocols **€0** (the agent ended its turn on day 179 and the run scored zero); enforcement €17,578; both €10,855. The first long-horizon failure seen: a premature stop, in an arm without the stop gate. One seed; more running |
 
 Current models are already honest and capable on tasks that fit in one sitting, and on large tasks they already know well with an oracle to check against. The design claims to help where they break down: long runs, context resets, compounding errors, real budgets. That is what the next experiment has to create.
 
