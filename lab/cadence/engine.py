@@ -7,15 +7,16 @@ or a scheduler). Each time it runs:
      swarm/metrics_system.md.
   2. Pulse review every `pulse_every` periods: a short auditor review of the numbers, ending in at most three pivots.
   3. Full audit every `audit_every` periods, or at once when a signal rule fires (a measure out of its limits).
-  4. Diagnosis when a pulse or audit ends with "Diagnosis needed: yes".
-  5. Hand-off: reviews run in the background while the work continues; their findings and any rule change go back to
+  4. Diagnosis when a pulse or audit ends with "Diagnosis needed: yes": what is going wrong and why, no fix.
+  5. Redesign: the designer reads the diagnosis and reworks the spec, KPIs or rules (spaced so each change can be judged).
+  6. Hand-off: reviews run in the background while the work continues; their findings and any redesign go back to
      the orchestrator at the first period after they finish, as additional context on the hook's event.
 
 usage: engine.py <config.json>      (reads the hook's JSON on stdin and ignores it)
 Config keys: workspace, log, adapter ("module.path:Class"), adapter_args, unit ("day", "cycle", ...), horizon,
-pulse_every, audit_every, min_periods_between_diagnoses (default 21: a rule must have time to show its effect),
-signals ([{measure, op, value, periods, label, not_before, min_gap}]), model, hook_event (default PostToolUse),
-budgets ({pulse, audit, diagnosis} in USD).
+pulse_every (default 5), audit_every (default 50), min_periods_between_redesigns (default 20: a change must have time
+to show its effect), signals ([{measure, op, value, periods, label, not_before, min_gap}]), model, hook_event (default
+PostToolUse), budgets ({pulse, audit, diagnosis, redesign} in USD).
 """
 import importlib, json, operator, subprocess, sys, time
 from pathlib import Path
@@ -60,12 +61,12 @@ def main():
         if len(last) == s.get("periods", 1) and all(v is not None and OPS[s["op"]](v, s["value"]) for v in last):
             if period - max(mem["last_audit"], mem["last_pulse"]) >= s.get("min_gap", 3):
                 fired = s.get("label", f"{s['measure']} {s['op']} {s['value']}"); break
-    full_due = period - mem["last_audit"] >= cfg.get("audit_every", 30)
-    pulse_due = period - max(mem["last_pulse"], mem["last_audit"]) >= cfg.get("pulse_every", 7)
+    full_due = period - mem["last_audit"] >= cfg.get("audit_every", 50)
+    pulse_due = period - max(mem["last_pulse"], mem["last_audit"]) >= cfg.get("pulse_every", 5)
     handoff = ""
     budgets = cfg.get("budgets", {}); model = cfg.get("model", "claude-haiku-5-5"); horizon = cfg.get("horizon", "?")
     jobs = log_p.with_suffix(".jobs"); jobs.mkdir(exist_ok=True)
-    gap = cfg.get("min_periods_between_diagnoses", 21)
+    gap = cfg.get("min_periods_between_redesigns", cfg.get("min_periods_between_diagnoses", 20))
     mem.setdefault("pending", [])
     new_jobs = []
 
@@ -94,9 +95,25 @@ def main():
         except Exception: r = {}
         log.write(json.dumps({"t": time.time(), "period": j["period"], "delivered": period, "event": j["kind"], "id": j["id"],
                               "trigger": j.get("trigger"), "cost": r.get("total_cost_usd"), "turns": r.get("num_turns")}) + "\n")
+        if j["kind"] == "redesign":
+            rf = sw / "audits" / f"{j['id']}.md"
+            rec = rf.read_text() if rf.exists() else (r.get("result") or "(no record)")
+            handoff += (f"\n\nSYSTEM CADENCE: the designer redesigned the work system after diagnosis {j['after']} "
+                        f"(swarm/audits/{j['id']}.md). Adopt it from now on: re-read swarm/spec.md and swarm/rules/.\n\n{rec[-2000:]}")
+            continue
         if j["kind"] == "diagnosis":
-            handoff += (f"\n\nSYSTEM CADENCE: the diagnostician made a rule change after {j['after']}. Apply it from now on:\n"
-                        f"{(r.get('result') or '(no reply)')[-1500:]}")
+            df = sw / "audits" / f"{j['id']}.md"
+            diag = df.read_text() if df.exists() else (r.get("result") or "(no diagnosis)")
+            handoff += f"\n\nSYSTEM CADENCE: diagnosis {j['id']} (swarm/audits/{j['id']}.md); the designer is now reworking the design from it.\n\n{diag[-1200:]}"
+            rid = "R-" + j["id"][2:]
+            spawn(rid, "redesign",
+                  f"Use the obm-swarm-designer skill in REDESIGN mode, invoked by the system at {unit} {period} of {horizon} of the work the swarm in "
+                  f"swarm/ is doing. Diagnosis {j['id']} (swarm/audits/{j['id']}.md) says what is going wrong and why. Ground-truth measures: "
+                  f"swarm/metrics_system.md (written by the system). Read the diagnosis, the spec's KPIs against those measures, and the spec. "
+                  f"First ask whether the direction is right, then make the smallest design change that addresses the cause: an initiative, a KPI "
+                  f"or target, a criterion, a rule or brief. Never change anything in a way that stops the core work. Save new versions of "
+                  f"swarm/spec.md or the rule files (never overwrite; keep the old version beside it) and write the redesign record to "
+                  f"swarm/audits/{rid}.md. Reply with the change in under 150 words.", budgets.get("redesign", 1.5), 25, {"after": j["id"]})
             continue
         af = sw / "audits" / f"{j['id']}.md"
         report = af.read_text() if af.exists() else (r.get("result") or "(no report)")
@@ -106,14 +123,16 @@ def main():
         if "diagnosis needed: yes" in report.lower():
             if period - mem.get("last_diagnosis", -10**6) >= gap:
                 mem["last_diagnosis"] = period
-                spawn(f"D-{j['id']}", "diagnosis",
+                did = f"D-{j['id']}"
+                spawn(did, "diagnosis",
                       f"Use the obm-swarm-diagnostician skill, invoked by the system because {label} {j['id']} (swarm/audits/{j['id']}.md) says a "
-                      f"diagnosis is needed, at {unit} {period} of {horizon}. Ground-truth measures: swarm/metrics_system.md. Make ONE rule change "
-                      f"the orchestrator can apply next {unit}: write the new versioned rule file in swarm/rules/ and a short rule-change record in "
-                      f"swarm/rules/changes.md. Reply with the rule change in under 150 words.", budgets.get("diagnosis", 1.5), 20, {"after": j["id"]})
-                handoff += f"\n\nSYSTEM CADENCE: a diagnosis of this finding has started; its rule change will be handed to you when it is ready."
+                      f"diagnosis is needed, at {unit} {period} of {horizon}. Ground-truth measures: swarm/metrics_system.md; KPIs and targets: "
+                      f"swarm/spec.md. Find what is going wrong and why. Do not write a fix or change any rule, spec or KPI: the designer will "
+                      f"redesign from your diagnosis. Write swarm/audits/{did}.md and reply with it in under 200 words.",
+                      budgets.get("diagnosis", 1.0), 20, {"after": j["id"]})
+                handoff += f"\n\nSYSTEM CADENCE: a diagnosis of this finding has started; it and the designer's redesign will be handed to you when ready."
             else:
-                handoff += (f"\n\nSYSTEM CADENCE: no new rule change now: the last one was made at {unit} {mem['last_diagnosis']} and needs "
+                handoff += (f"\n\nSYSTEM CADENCE: no redesign now: the last one started at {unit} {mem['last_diagnosis']} and needs "
                             f"{gap} {unit}s before its effect can be judged. Use the pivots above instead.")
                 log.write(json.dumps({"t": time.time(), "period": period, "event": "diagnosis_deferred", "after": j["id"]}) + "\n")
     mem["pending"] = still + new_jobs; new_jobs = []
@@ -128,19 +147,19 @@ def main():
             mem["n_audit"] += 1; mem["last_audit"] = period; aid = f"A-{mem['n_audit']:03d}"
             spawn(aid, "audit", f"Use the obm-swarm-auditor skill for a FULL AUDIT, invoked by the system ({why}). This is audit {aid}, {common} Judge "
                   f"the outcome first: are the goal's main measures moving toward it, is capacity in use, is anything declining, has a target become "
-                  f"a ceiling? Then whether earlier pulse and audit findings were acted on, then whether the records are current. Never tell the "
+                  f"a ceiling? Judge against the KPIs and targets the designer set in swarm/spec.md. Is the direction right: would hitting the KPIs achieve the goal? Then whether earlier findings and redesigns were acted on and had the expected effect, then whether the records are current. Never tell the "
                   f"orchestrator to pause its core work to fix records. Write swarm/audits/{aid}.md: findings first, then at most three concrete "
                   f"actions for the orchestrator, then a last line exactly 'Diagnosis needed: yes' or 'Diagnosis needed: no'.",
                   budgets.get("audit", 1.5), 30, {"trigger": fired or "scheduled"})
         else:
             mem["n_pulse"] += 1; mem["last_pulse"] = period; aid = f"P-{mem['n_pulse']:03d}"
             spawn(aid, "pulse", f"Use the obm-swarm-auditor skill for a PULSE REVIEW, invoked by the system on its schedule. This is pulse {aid}, "
-                  f"{common} Read only swarm/metrics_system.md, the targets in swarm/spec.md and the last lines of the orchestrator's log. Answer: "
-                  f"are the numbers moving toward the goal; what changed since the last pulse, and why; is anything heading the wrong way. Write "
+                  f"{common} Read only swarm/metrics_system.md, the KPIs and targets in swarm/spec.md and the last lines of the orchestrator's log. Answer: "
+                  f"is each KPI on target, moving toward it, or outside its limits; what changed since the last pulse, and why; is anything heading the wrong way. Write "
                   f"swarm/audits/{aid}.md in under 250 words: the answers, then at most three pivots the orchestrator can make now (never a "
                   f"pause of its core work), then a last line exactly 'Diagnosis needed: yes' or 'Diagnosis needed: no'. A pulse answers 'yes' "
-                  f"only when the same problem appears in this pulse and the one before it (read the last pulse in swarm/audits/); a problem seen "
-                  f"once gets a pivot, not a rule change.", budgets.get("pulse", 0.6), 12, {"trigger": "scheduled"})
+                  f"when a KPI is outside its limits, or the same problem appears in this pulse and the one before it (read the last pulse in "
+                  f"swarm/audits/); a problem seen once inside the limits gets a pivot, not a redesign.", budgets.get("pulse", 0.6), 12, {"trigger": "scheduled"})
         mem["pending"] += new_jobs
         log.write(json.dumps({"t": time.time(), "period": period, "event": "started", "id": aid}) + "\n")
     handoff = handoff.strip()

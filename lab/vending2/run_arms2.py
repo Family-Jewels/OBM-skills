@@ -45,7 +45,7 @@ def main():
     ap.add_argument('--arm', required=True, choices=['base', 'native', 'obm', 'obm_enf', 'obm_cadence']); ap.add_argument('--seed', type=int, default=1)
     ap.add_argument('--days', type=int, default=365); ap.add_argument('--budget', type=float, default=40)
     ap.add_argument('--timeout', type=int, default=7000); ap.add_argument('--output', type=Path, required=True)
-    ap.add_argument('--model', default='claude-haiku-5-5'); ap.add_argument('--audit-every', type=int, default=30); ap.add_argument('--pulse-every', type=int, default=7)
+    ap.add_argument('--model', default='claude-haiku-5-5'); ap.add_argument('--audit-every', type=int, default=50); ap.add_argument('--pulse-every', type=int, default=5)
     a = ap.parse_args()
     out = a.output / f'{a.arm}-seed{a.seed}-{a.days}d'; out.mkdir(parents=True, exist_ok=False)
     ws = out / 'workspace'; ws.mkdir()
@@ -83,7 +83,7 @@ def main():
                         'adapter_args': {'state_path': str(statedir / 'state.json')}, 'unit': 'day', 'horizon': a.days,
                         'pulse_every': a.pulse_every, 'audit_every': a.audit_every, 'model': a.model, 'hook_event': 'PostToolUse',
                         'signals': [{'measure': 'revenue', 'op': '==', 'value': 0, 'periods': 2, 'min_gap': 3, 'not_before': 8, 'label': 'revenue zero two days running'}],
-                        'budgets': {'pulse': 0.6, 'audit': 1.5, 'diagnosis': 1.5}, 'min_periods_between_diagnoses': 21}
+                        'budgets': {'pulse': 0.6, 'audit': 1.5, 'diagnosis': 1.0, 'redesign': 1.5}, 'min_periods_between_redesigns': 20}
                 (statedir / 'cadence.json').write_text(json.dumps(ccfg))
                 hook['hooks']['PostToolUse'] = [{'matcher': 'mcp__vending__wait_for_next_day', 'hooks': [{'type': 'command', 'timeout': 1600,
                     'command': f'python3 -I /home/claude/obm-lab/cadence/engine.py {statedir / "cadence.json"}'}]}]
@@ -91,10 +91,12 @@ def main():
         left = a.budget
         if a.arm == 'obm_cadence':
             design = ("Use the obm-swarm-designer skill to design the work system for operating this business for the whole simulation. "
-                      "The system prompt is the business briefing. Write it into swarm/ in the current directory, including the cadence table "
-                      "(protocol section 2.2): the system will write ground-truth measures to swarm/metrics_system.md every simulated day, run "
-                      f"a short auditor pulse review every {a.pulse_every} simulated days and a full audit every {a.audit_every}, and run the diagnostician when an audit asks for it, handing their "
-                      "results to the operator. You cannot use the business tools; design only.")
+                      "The system prompt is the business briefing. Write it into swarm/ in the current directory: initiatives, each with explicit KPIs "
+                      "(measure, ground-truth source, target, off-track limits), and the cadence table. The system will write ground-truth measures to "
+                      f"swarm/metrics_system.md every simulated day, run a short auditor pulse review every {a.pulse_every} simulated days and a full "
+                      f"audit every {a.audit_every}, run the diagnostician when a review asks for it, and call you back to redesign from the diagnosis, "
+                      "handing every result to the operator. The system's daily measures are: cash, revenue, units, slots_selling, revenue_last_7 and "
+                      "revenue_same_7_a_month_earlier; build the KPIs on them. You cannot use the business tools; design only.")
             p, r = claude(['-p', design, '--permission-mode', 'acceptEdits', '--max-budget-usd', '2', '--model', a.model, '--output-format',
                            'stream-json', '--verbose', '--tools', TOOLS, '--allowedTools', TOOLS, '--strict-mcp-config', '--system-prompt', prompt],
                           cfg, ws, stream, 1200)
@@ -102,8 +104,8 @@ def main():
             run_prompt = (TASK + "\n\nYou are the orchestrator of a one-agent OBM swarm: use the obm-swarm-orchestrator skill, with the work "
                           "system the designer left in swarm/ (read swarm/index.md and swarm/spec.md first). You do the operating yourself. You do "
                           "not need to call the other roles: the system writes ground-truth measures to swarm/metrics_system.md every day, runs "
-                          f"a pulse review every {a.pulse_every} simulated days, a full audit every {a.audit_every} and a diagnosis when needed, and hands you their results in the result "
-                          "of wait_for_next_day. Act on what it hands you and log what you did. Keep operating until the simulation ends.")
+                          f"a pulse review every {a.pulse_every} simulated days, a full audit every {a.audit_every}, and a diagnosis and redesign by the designer when needed, and hands "
+                          "you their results in the result of wait_for_next_day. Act on what it hands you, adopt any redesign, and log what you did. Keep operating until the simulation ends.")
             p, r = claude(['-p', run_prompt, '--permission-mode', 'acceptEdits', '--max-budget-usd', f'{left:.2f}', *common], cfg, ws, stream, a.timeout)
             results.append(r)
         elif a.arm == 'native':

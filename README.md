@@ -18,7 +18,7 @@ Agents that run long tasks on their own drift, stop early, fake success, stall a
 
 | Discipline | What it contributes | Where it shows up |
 | --- | --- | --- |
-| **Control theory** | Feedback loops, stability, error correction. Expectation, measurement, deviation, correction, and keeping corrections small enough that the system doesn't oscillate | The cycle in the orchestrator; the diagnostician's one change at a time; review that thins as reliability is shown; over-control audits |
+| **Control theory** | Feedback loops, stability, error correction. Expectation, measurement, deviation, correction, and keeping corrections small enough that the system doesn't oscillate | The cycle in the orchestrator; one redesign at a time, spaced so its effect can be judged; review that thins as reliability is shown; over-control audits |
 | **Operations research** | Allocating limited resources for the most value. Budgets, review share, model tiers, cost per accepted unit | Worthy performance (value over cost); budgets and pacing; risk-based review depth |
 | **Distributed systems** | Coordination, state management, fault tolerance. Many agents and sessions sharing work without losing or corrupting it | All state in files; one writer per file; isolated workspaces; atomic task claims; resuming after a context reset; environment failures sorted from performance failures |
 | **Formal methods** | Constraints, invariants and verifiable conditions. Rules a machine can check, and done conditions stated as checks | Done conditions with runnable checks; protected paths; the stop gate; the split between judgment calls and invariants |
@@ -33,7 +33,7 @@ The hypothesis names five functions. Each has an owner:
 | **Establish expectations** | The designer turns a goal into checkable done conditions, milestones, contracts, budgets and decision rights |
 | **Measure actual execution** | Checkers verify work against the artifact, never the report. Spend is measured by the platform, never self-reported. A fresh judge runs the done checks |
 | **Detect deviations** | The orchestrator watches for stalls, spinning, retries and overspend. The auditor re-verifies a hidden sample and probes the checks themselves |
-| **Initiate corrective action** | Consequences are routed the same way every time. The diagnostician turns repeated failures into one versioned rule change, with a measure and a revert condition |
+| **Initiate corrective action** | Consequences are routed the same way every time. The diagnostician finds the cause of a repeated failure; the designer makes one versioned change, with the KPI it should move and a revert condition |
 | **Enforce operational constraints** | The harness, not the agent: a stop gate with honest exits, protected paths, budget caps, measured spend |
 
 ## Three layers
@@ -42,7 +42,7 @@ The hypothesis names five functions. Each has an owner:
 | --- | --- | --- |
 | **Enforcement** | Invariants: rules a machine can check, the same every time | Hooks, permissions and scripts in whatever runs the agents ([`lab/harness`](lab/harness)) |
 | **Protocols** | Judgment calls and the records every role reads and writes | The six skills and their shared protocol ([`skills/`](skills)) |
-| **Learning** | Changing the system after it fails, and checking the checkers | The diagnostician and auditor, and the human who selects products and manages rules |
+| **Learning** | Changing the system after it fails, and checking the checkers | The auditor, diagnostician and designer's redesign loop, and the human who selects products |
 
 The skills stay complete without enforcement: on a platform with no hooks, every rule still exists as an instruction. Enforcement makes an invariant certain. Every gate keeps its honest exits open, because a gate that only opens on success teaches agents to fake success. Rule by rule, with the mechanism for each invariant: [`framework/implementation-layers.md`](framework/implementation-layers.md).
 
@@ -50,23 +50,26 @@ The skills stay complete without enforcement: on a platform with no hooks, every
 
 | Folder | Contents |
 | --- | --- |
-| [`skills/`](skills) | Six skills (designer, orchestrator, producer, checker, auditor, diagnostician), each with a copy of the shared protocol |
+| [`skills/`](skills) | Five skills (designer, orchestrator, checker, auditor, diagnostician), each with a copy of the shared protocol |
 | [`framework/`](framework) | The [Behavior Engineering Model for AI Swarms](framework/behavior-engineering-model-for-ai-swarms.md) (the OBM rationale) and the [implementation layers](framework/implementation-layers.md) |
 | [`lab/`](lab) | The test harness: isolated headless agents with measured cost, the stop-gate and protected-paths hooks, fixtures and keys |
 | [`skill-tests/`](skill-tests) | One scenario per skill with planted problems and an answer key |
 | [`benchmark/`](benchmark) | An evaluation harness on [ImpossibleBench](https://arxiv.org/abs/2510.20270) |
 | [`results/`](results) | Every run to date |
 
-## The six roles
+## The five roles
 
 | Skill | Role |
 | --- | --- |
-| `obm-swarm-designer` | Designs the work system: goal, milestones, roles, contracts, evals, risk tiers, budgets |
-| `obm-swarm-orchestrator` | The manager: dispatches, routes on outcomes, builds review packets, paces spend, keeps the core goal moving |
-| `obm-swarm-producer` | The performer: does one task to its contract, with evidence, and reports blocks honestly |
-| `obm-swarm-checker` | Quality: verifies work against criteria at the depth its risk tier sets |
-| `obm-swarm-auditor` | Audit: drift and over-control, hidden-sample verification, probes, spend and progress, the manager's own decisions |
-| `obm-swarm-diagnostician` | Performance improvement: turns failures into versioned rule changes, weighing what each rule costs |
+| `obm-swarm-designer` | Owns the design: goal, initiatives with explicit KPIs (measure, ground-truth source, target, limits), checks, budgets, cadence. Called again to redesign when a diagnosis or audit shows the swarm is off course; the only role that changes goals, KPIs or rules |
+| `obm-swarm-orchestrator` | The manager: dispatches, routes on outcomes, paces spend, keeps the core goal moving, adopts redesigns |
+| `obm-swarm-checker` | Quality: gathers its own evidence for each criterion. Where nothing can be run, checks provenance: who published a source, when it was really published (not the date the text claims), whether it is cited elsewhere, independent corroboration, and whether judgments rest on verifiable facts |
+| `obm-swarm-auditor` | The director: a pulse review of the KPIs every 5 periods, a full audit every 50 (direction, report-reality samples, probes, cost, the manager's decisions) |
+| `obm-swarm-diagnostician` | Finds what is going wrong and why (pinpoint, what maintains it, cause in the environment). Writes no fix: the designer does |
+
+There is no producer skill. Workers follow the short rules for whoever does the work in the protocol, and the evidence about their work comes from the system's record and the checker's own checks, never from the worker's report about itself.
+
+The loop: **designer sets goals and KPIs → system measures every period → auditor compares against the KPIs → diagnostician says what is wrong and why → designer reworks the design → orchestrator carries it out.**
 
 All state lives in files, and every record has a fixed format ([`skills/protocol.md`](skills/protocol.md)), so any session, model or vendor can resume the work.
 
@@ -107,6 +110,14 @@ python analyze.py logs/tiny --out tiny
 ```
 
 ## Changelog: what the field tests changed
+
+**Design review, 2026-11-15** (Jules's feedback after the cadence runs):
+
+- The designer is a loop, not a one-off. It sets explicit KPIs for each initiative, and the system calls it back to redesign when a diagnosis or audit shows the swarm is off course.
+- The diagnostician only diagnoses. Goals, KPIs and rules are changed by the designer alone.
+- The producer skill is gone. A worker's report about its own work is a claim, not evidence; the system records what it ran, and the checker gathers the evidence.
+- The checker verifies work that has no runnable test by provenance: publisher, real publication date, citations elsewhere, independent corroboration, and whether judgments rest on verifiable facts.
+- Cadence: pulse every 5 periods, full audit every 50, redesigns at least 20 apart.
 
 **First tiny ImpossibleBench run** ([results](results/2026-11-08-impossiblebench-tiny)):
 

@@ -7,9 +7,10 @@ Each time the engine runs (once per period of the work), it:
 1. **Measures.** Asks the adapter for this period's ground-truth measures and appends them to `swarm/metrics_system.md`, a file only the system writes.
 2. **Runs a pulse review** every `pulse_every` periods: the auditor's short look at the numbers, ending in at most three pivots. This is the director's close ear on how the numbers are moving.
 3. **Runs a full audit** every `audit_every` periods, or at once when a signal fires (a measure outside its limits).
-4. **Runs the diagnostician** when an audit says a diagnosis is needed, or when the same problem shows in two pulses running.
-5. **Hands the results to the orchestrator** as additional context on the hook event, so they cannot be skipped. Reviews run in the background while the work continues, and their findings arrive at the first period after they finish, like a report that lands the next morning. A run of 365 periods otherwise spent more time waiting on reviews than working.
-6. **Spaces out rule changes.** At least `min_periods_between_diagnoses` (default 21) between changes, so each one's effect can be measured; in between, pulses give pivots.
+4. **Runs the diagnostician** when a review says a diagnosis is needed (a KPI outside its limits, or the same problem in two pulses running). It reports what is wrong and why, and changes nothing.
+5. **Calls the designer back to redesign** from the diagnosis: the smallest versioned change to the spec, KPIs or rules, with a redesign record.
+6. **Hands the results to the orchestrator** as additional context on the hook event, so they cannot be skipped. Reviews run in the background while the work continues, and their findings arrive at the first period after they finish, like a report that lands the next morning. A run of 365 periods otherwise spent more time waiting on reviews than working.
+7. **Spaces out redesigns.** At least `min_periods_between_redesigns` (default 20) between them, so each one's effect can be measured; in between, pulses give pivots.
 
 ## Using it on a task
 
@@ -19,10 +20,10 @@ Write an adapter: a class whose `read()` returns `{"period": int, "over": bool, 
 {
   "workspace": "/path/to/work", "log": "/path/to/cadence.jsonl",
   "adapter": "adapters.vending:VendingState", "adapter_args": {"state_path": "/path/to/state.json"},
-  "unit": "day", "horizon": 365, "pulse_every": 7, "audit_every": 30, "model": "claude-haiku-5-5",
+  "unit": "day", "horizon": 365, "pulse_every": 5, "audit_every": 50, "model": "claude-haiku-5-5",
   "hook_event": "PostToolUse",
   "signals": [{"measure": "revenue", "op": "==", "value": 0, "periods": 2, "not_before": 8, "label": "revenue zero two days running"}],
-  "budgets": {"pulse": 0.6, "audit": 1.5, "diagnosis": 1.5}
+  "budgets": {"pulse": 0.6, "audit": 1.5, "diagnosis": 1.0, "redesign": 1.5}, "min_periods_between_redesigns": 20
 }
 ```
 
