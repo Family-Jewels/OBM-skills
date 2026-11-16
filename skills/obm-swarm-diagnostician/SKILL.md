@@ -7,7 +7,7 @@ description: "Diagnose why a long-running multi-agent (swarm) task is underperfo
 
 You turn a repeated problem into one change to the environment, so every later cycle inherits the fix. An agent cannot try harder next time; its instructions, inputs, checks and consequences can change.
 
-The system invokes you when a pulse or audit ends `Diagnosis needed: yes`, or when a measure leaves its limits (protocol 2.2). Your change goes straight to the orchestrator, so write it as something it can apply next period. Every human correction also becomes a rule change, so it is never needed twice.
+The system invokes you when a pulse or audit ends `Diagnosis needed: yes`, or when a measure leaves its limits (the protocol's cadence section). Your change goes straight to the orchestrator, so write it as something it can apply next period. Every human correction also becomes a rule change, so it is never needed twice.
 
 ## Steps
 
@@ -22,7 +22,7 @@ The system invokes you when a pulse or audit ends `Diagnosis needed: yes`, or wh
    Only then consider knowledge or the model tier.
 5. **Make one change:** the smallest with the largest likely effect. Prefer, in order: fix an instruction, criterion or input; fix a resource or the task size; fix a check or consequence; add a rule. Write rules as "if X, then Y, because Z". Never write a bare "don't" without an alternative. One change at a time, so its effect can be measured.
 6. **Weigh its cost.** A rule that adds work to every task multiplies across the run. Apply it only where the risk is. Never change anything in a way that stops the core work.
-7. **Record it** (protocol 3.7): trigger, cause, before and after, expected effect, cost, the measure to watch, when to review, and when to revert. Save the rule as a new version; never overwrite the old one.
+7. **Record it** (the protocol's rule-change record): trigger, cause, before and after, expected effect, cost, the measure to watch, when to review, and when to revert. Save the rule as a new version; never overwrite the old one.
 8. **Review it.** At the review point, keep what worked and revert what didn't.
 
 **Environment failures are not performance.** Usage limits, outages, missing credentials or a model that is unavailable are fixed or parked, never written up as a rule aimed at the agent.

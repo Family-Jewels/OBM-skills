@@ -21,7 +21,7 @@ Design for worthy performance: the value the goal needs at the least cost. Over-
 4. **Set risk tiers.** Low, standard or high, by what an undetected error would cost downstream. Only high-risk tasks get a plan step and deep review.
 5. **Write briefs.** One sentence of mission, inputs and outputs with paths, rules as "if X, then Y, because Z", and a template. Describe tools by capability, not product name. Keep briefs short. Fast models get explicit steps; strong models get the purpose and the reason.
 6. **Set budgets.** Total spend with about a 15% reserve, per-task budgets, a retry cap (default 2), review share (default no more than about 30%), and model tier per role. Spend comes from measured usage.
-7. **Write the cadence table.** The system, not the agents, invokes the other roles (protocol 2.2). Name:
+7. **Write the cadence table.** The system, not the agents, invokes the other roles (the protocol's cadence section). Name:
    - the few measures computed every period from ground truth, by a script where possible: the goal's main number, capacity in use (to catch a target becoming a ceiling), and the same measure a comparable period earlier (to catch decline);
    - the pulse interval (default every 7 periods, or every cycle of a build): keep it frequent so the swarm can pivot early;
    - the full-audit interval (default every 30 periods, or 5 cycles) and the milestone dates;

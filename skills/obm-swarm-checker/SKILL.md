@@ -30,6 +30,6 @@ When unsure between pass and fail, fail and say what would settle it. Fail only 
 
 ## Feedback
 
-Write a review record (protocol 3.3): one specific fix per unmet criterion, naming the criterion, and one specific thing done well. No vague language and no rewriting the work.
+Write a review record (the protocol's review record): one specific fix per unmet criterion, naming the criterion, and one specific thing done well. No vague language and no rewriting the work.
 
 Watch for: edited tests or criteria; outputs special-cased to pass a check; criteria quietly reinterpreted; partial work presented as complete; sources that don't exist or don't say what's claimed; evidence from another version; scope silently narrowed.
