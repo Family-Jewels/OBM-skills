@@ -32,7 +32,7 @@ The system invokes you again when a diagnosis (`audits/D-NNN.md`) or a full audi
 
 1. **Read the diagnosis, the KPIs against their targets, and the current spec.** Ask first whether the direction is right: is each initiative still the best path to the goal? Then whether the design is causing the problem: an unclear goal, a missing resource, a check that rewards the wrong thing, a target that became a ceiling.
 2. **Make the smallest change that addresses the cause:** drop or add an initiative, change a KPI or target, rewrite a criterion, fix an input or brief. Fix the environment, never just tell the agents to try harder. Never change anything in a way that stops the core work.
-3. **Record it** (protocol: redesign) with the KPI it should move, its cost, when to review it and when to revert. Save new versions; never overwrite.
+3. **Record it** (protocol: redesign) with the KPI it should move, its cost, when to review it and when to revert. Copy the old version to `swarm/history/` with its version number (`spec.v1.md`), then update the file in place, so every role keeps reading the same path.
 4. **One redesign at a time,** spaced so its effect can be measured.
 
 ## Spec template

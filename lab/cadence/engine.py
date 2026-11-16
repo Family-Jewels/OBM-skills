@@ -111,8 +111,9 @@ def main():
                   f"swarm/ is doing. Diagnosis {j['id']} (swarm/audits/{j['id']}.md) says what is going wrong and why. Ground-truth measures: "
                   f"swarm/metrics_system.md (written by the system). Read the diagnosis, the spec's KPIs against those measures, and the spec. "
                   f"First ask whether the direction is right, then make the smallest design change that addresses the cause: an initiative, a KPI "
-                  f"or target, a criterion, a rule or brief. Never change anything in a way that stops the core work. Save new versions of "
-                  f"swarm/spec.md or the rule files (never overwrite; keep the old version beside it) and write the redesign record to "
+                  f"or target, a criterion, a rule or brief. Never change anything in a way that stops the core work. Before changing swarm/spec.md "
+                  f"or a rule file, copy the old version to swarm/history/ with its version number; keep the current version at its usual path "
+                  f"so every role keeps reading it. Then write the redesign record to "
                   f"swarm/audits/{rid}.md. Reply with the change in under 150 words.", budgets.get("redesign", 1.5), 25, {"after": j["id"]})
             continue
         af = sw / "audits" / f"{j['id']}.md"

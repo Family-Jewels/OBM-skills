@@ -31,6 +31,7 @@ swarm/
   queue/decisions.md  parked decisions
   audits/           pulses (P-NNN), audits (A-NNN), diagnoses (D-NNN), redesigns (R-NNN)
   metrics.md        KPIs and scorecard, written from ground truth (section 8)
+  history/          earlier versions of the spec and rules; the current version always stays at its usual path
 ```
 
 - **One writer per file.** Others propose changes through their own records.
