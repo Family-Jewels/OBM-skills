@@ -12,7 +12,8 @@ or a scheduler). Each time it runs:
 
 usage: engine.py <config.json>      (reads the hook's JSON on stdin and ignores it)
 Config keys: workspace, log, adapter ("module.path:Class"), adapter_args, unit ("day", "cycle", ...), horizon,
-pulse_every, audit_every, signals ([{measure, op, value, periods, label, not_before, min_gap}]), model, hook_event (default PostToolUse),
+pulse_every, audit_every, min_periods_between_diagnoses (default 21: a rule must have time to show its effect),
+signals ([{measure, op, value, periods, label, not_before, min_gap}]), model, hook_event (default PostToolUse),
 budgets ({pulse, audit, diagnosis} in USD).
 """
 import importlib, json, operator, subprocess, sys, time
@@ -64,8 +65,8 @@ def main():
     if not over and (full_due or fired or pulse_due):
         (sw / "audits").mkdir(exist_ok=True)
         budgets = cfg.get("budgets", {}); model = cfg.get("model", "claude-haiku-5-5"); horizon = cfg.get("horizon", "?")
-        def run(prompt, budget, timeout):
-            p = subprocess.run(["claude", "-p", prompt, "--model", model, "--output-format", "json", "--tools", "Read,Write,Edit,Glob,Grep,Skill",
+        def run(prompt, budget, timeout, turns):
+            p = subprocess.run(["claude", "-p", prompt, "--model", model, "--output-format", "json", "--max-turns", str(turns), "--tools", "Read,Write,Edit,Glob,Grep,Skill",
                                 "--allowedTools", "Read,Write,Edit,Glob,Grep,Skill", "--strict-mcp-config", "--permission-mode", "acceptEdits",
                                 "--max-budget-usd", str(budget), "--no-session-persistence"], cwd=ws, capture_output=True, text=True, timeout=timeout)
             try: return json.loads(p.stdout)
@@ -80,7 +81,7 @@ def main():
                     f"a ceiling? Then whether earlier pulse and audit findings were acted on, then whether the records are current. Never tell the "
                     f"orchestrator to pause its core work to fix records. Write swarm/audits/{aid}.md: findings first, then at most three concrete "
                     f"actions for the orchestrator, then a last line exactly 'Diagnosis needed: yes' or 'Diagnosis needed: no'.",
-                    budgets.get("audit", 1.5), 900)
+                    budgets.get("audit", 1.5), 600, 30)
         else:
             mem["n_pulse"] += 1; mem["last_pulse"] = period; kind, aid = "pulse", f"P-{mem['n_pulse']:03d}"
             r = run(f"Use the obm-swarm-auditor skill for a PULSE REVIEW, invoked by the system on its schedule. This is pulse {aid}, {common} "
@@ -89,18 +90,25 @@ def main():
                     f"swarm/audits/{aid}.md in under 250 words: the answers, then at most three pivots the orchestrator can make now (never a "
                     f"pause of its core work), then a last line exactly 'Diagnosis needed: yes' or 'Diagnosis needed: no'. A pulse answers 'yes' only "
                     f"when the same problem appears in this pulse and the one before it (read the last pulse in swarm/audits/); a problem seen "
-                    f"once gets a pivot, not a rule change.", budgets.get("pulse", 0.6), 400)
+                    f"once gets a pivot, not a rule change.", budgets.get("pulse", 0.6), 240, 12)
         log.write(json.dumps({"t": time.time(), "period": period, "event": kind, "trigger": fired or "scheduled", "id": aid,
                               "cost": r.get("total_cost_usd"), "turns": r.get("num_turns")}) + "\n")
         af = sw / "audits" / f"{aid}.md"
         report = af.read_text() if af.exists() else (r.get("result") or "(no report)")
         label = "full audit" if kind == "audit" else "pulse review"
         handoff = f"SYSTEM CADENCE: {label} {aid} ran at {unit} {period} (swarm/audits/{aid}.md). Act on it this {unit} and log what you did.\n\n{report[-3500:]}"
-        if "diagnosis needed: yes" in report.lower():
+        gap = cfg.get("min_periods_between_diagnoses", 21)
+        diag_ok = period - mem.get("last_diagnosis", -10**6) >= gap
+        if "diagnosis needed: yes" in report.lower() and not diag_ok:
+            handoff += (f"\n\nSYSTEM CADENCE: no new rule change this {unit}: the last one was made at {unit} {mem['last_diagnosis']} and "
+                        f"needs {gap} {unit}s before its effect can be judged. Use the pivots above instead.")
+            log.write(json.dumps({"t": time.time(), "period": period, "event": "diagnosis_deferred", "after": aid}) + "\n")
+        if "diagnosis needed: yes" in report.lower() and diag_ok:
+            mem["last_diagnosis"] = period
             r2 = run(f"Use the obm-swarm-diagnostician skill, invoked by the system because {label} {aid} (swarm/audits/{aid}.md) says a diagnosis "
                      f"is needed, at {unit} {period} of {horizon}. Ground-truth measures: swarm/metrics_system.md. Make ONE rule change the "
                      f"orchestrator can apply next {unit}: write the new versioned rule file in swarm/rules/ and a short rule-change record in "
-                     f"swarm/rules/changes.md. Reply with the rule change in under 150 words.", budgets.get("diagnosis", 1.5), 600)
+                     f"swarm/rules/changes.md. Reply with the rule change in under 150 words.", budgets.get("diagnosis", 1.5), 400, 20)
             log.write(json.dumps({"t": time.time(), "period": period, "event": "diagnosis", "after": aid, "cost": r2.get("total_cost_usd"),
                                   "turns": r2.get("num_turns")}) + "\n")
             handoff += f"\n\nSYSTEM CADENCE: the diagnostician made a rule change after {aid}. Apply it from now on:\n{(r2.get('result') or '(no reply)')[-1500:]}"

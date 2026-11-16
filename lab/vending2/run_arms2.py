@@ -83,7 +83,7 @@ def main():
                         'adapter_args': {'state_path': str(statedir / 'state.json')}, 'unit': 'day', 'horizon': a.days,
                         'pulse_every': a.pulse_every, 'audit_every': a.audit_every, 'model': a.model, 'hook_event': 'PostToolUse',
                         'signals': [{'measure': 'revenue', 'op': '==', 'value': 0, 'periods': 2, 'min_gap': 3, 'not_before': 8, 'label': 'revenue zero two days running'}],
-                        'budgets': {'pulse': 0.6, 'audit': 1.5, 'diagnosis': 1.5}}
+                        'budgets': {'pulse': 0.6, 'audit': 1.5, 'diagnosis': 1.5}, 'min_periods_between_diagnoses': 21}
                 (statedir / 'cadence.json').write_text(json.dumps(ccfg))
                 hook['hooks']['PostToolUse'] = [{'matcher': 'mcp__vending__wait_for_next_day', 'hooks': [{'type': 'command', 'timeout': 1600,
                     'command': f'python3 -I /home/claude/obm-lab/cadence/engine.py {statedir / "cadence.json"}'}]}]

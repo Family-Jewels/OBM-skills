@@ -6,7 +6,7 @@ Harness: [`../../lab/vending2`](../../lab/vending2). One run per usage window. U
 | --- | ---: | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
 | obm_enf | €9,292.79 | 365 of 365 days | $10.25 | 2,233 | 7.6 | €5,347 / €7,587 / €5,784 / €5,390 | 0 | 0 | 2 (designer, orchestrator) |
 | native (/plan + /goal) | €9,442.60 | 365 of 365 days | $11.45 | 2,320 | 7.5 | €7,971 / €8,423 / €6,340 / €3,298 | n/a | 0 | 0 |
-| obm_cadence (replaces obm) | pending | | | | | | | | |
+| obm_cadence (replaces obm) | not scored: harness timeout at day 217 (cash €9,698) | | | | 9.6 | €7,427 / €9,872 / partial | | | |
 | base | pending | | | | | | | | |
 
 ## Run 1: OBM skills + stop gate
@@ -30,3 +30,15 @@ Completed the year with €9,442.60, within €150 of run 1. Plan mode blocked e
 Run 1 showed the skills being set up and then abandoned, because each role relied on the others to call it. Run 3 now tests the alternative: the harness runs the cadence (daily ground-truth measures, an audit every 30 simulated days, a diagnosis when the audit asks for one, all handed back to the operator in the day-advance result). Harness: `lab/vending2/cadence.py`. The skills were updated to match (protocol section 2.2).
 
 A first 35-day smoke test of this arm found a serious problem: the day-30 audit told the operator to stop buying until its records were complete, and every machine was empty within four days. The auditor and orchestrator skills now judge the business outcome first and never pause the core work to fix records.
+
+## Run 3: OBM with the system running the cadence, cut off by the harness (not scored)
+
+The run was stopped by the harness's own wall-clock limit at simulated day 217, with €9,698 in cash, ahead of every other arm at that point (run 1 and run 2 finished the full year at about €9,300 to €9,400). The benchmark labels it "stopped before the horizon", but the agent did not stop: the cadence work runs inside the operator's turn, and 29 pulses, 7 audits and 34 diagnoses added more than the limit allowed. It is an environment failure and is not scored. The run's audits and cadence log are kept in `obm_cadence-seed1-365d-harness-timeout/`.
+
+**What it showed before the cutoff:**
+
+- The system kept the skills alive. Unlike run 1, where the swarm was abandoned after day 15, every scheduled pulse and audit ran and was handed to the operator.
+- Capacity in use rose: 9.6 stocked slots a day, against 7.5 to 7.6 for runs 1 and 2. Revenue in the second quarter (€9,872) was the highest of any arm.
+- Rules changed too often: almost every weekly pulse asked for a diagnosis, because a persisting problem counts as a repeat, and the run collected 39 rule files. Rules changed faster than their effect could be measured.
+
+**Fixes before the rerun (harness, not skills):** at least 21 periods between rule changes, with pivots in between; and turn limits on each review so the cadence pauses stay short.
