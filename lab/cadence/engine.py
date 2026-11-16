@@ -109,6 +109,7 @@ def main():
             rf = sw / "audits" / f"{j['id']}.md"
             rec = rf.read_text() if rf.exists() else (r.get("result") or "(no record)")
             charts.new_phase(mem, j["id"], period)
+            mem["last_adopted"] = period  # spacing counts from adoption, so each change gets its full window
             handoff += ((f"\n\nSYSTEM CADENCE: the plan was revised after diagnosis {j['after']} (swarm/audits/{j['id']}.md). "
                          f"Follow it from now on: re-read swarm/plan.md.\n\n{rec[-2000:]}") if plain else
                         (f"\n\nSYSTEM CADENCE: the designer redesigned the work system after diagnosis {j['after']} "
@@ -145,7 +146,9 @@ def main():
         handoff += (f"\n\nSYSTEM CADENCE: {label} {j['id']} reviewed the work as of {unit} {j['period']} (swarm/audits/{j['id']}.md). "
                     f"Act on it this {unit} and log what you did.\n\n{report[-3500:]}")
         if "diagnosis needed: yes" in report.lower():
-            if period - mem.get("last_diagnosis", -10**6) >= gap:
+            busy = any(p.get("kind") in ("diagnosis", "redesign") for p in mem["pending"] + new_jobs)
+            since = max(mem.get("last_diagnosis", -10**6), mem.get("last_adopted", -10**6))
+            if not busy and period - since >= gap:
                 mem["last_diagnosis"] = period
                 did = f"D-{j['id']}"
                 if plain:
@@ -163,8 +166,8 @@ def main():
                           budgets.get("diagnosis", 1.0), 20, {"after": j["id"]})
                 handoff += f"\n\nSYSTEM CADENCE: a diagnosis of this finding has started; it and the designer's redesign will be handed to you when ready."
             else:
-                handoff += (f"\n\nSYSTEM CADENCE: no redesign now: the last one started at {unit} {mem['last_diagnosis']} and needs "
-                            f"{gap} {unit}s before its effect can be judged. Use the pivots above instead.")
+                handoff += (f"\n\nSYSTEM CADENCE: no redesign now: one is in progress or was adopted less than {gap} {unit}s ago "
+                            f"(last adopted at {unit} {mem.get('last_adopted', 'none')}), so its effect cannot be judged yet. Use the pivots above instead.")
                 log.write(json.dumps({"t": time.time(), "period": period, "event": "diagnosis_deferred", "after": j["id"]}) + "\n")
     mem["pending"] = still + new_jobs; new_jobs = []
 
