@@ -32,7 +32,7 @@ Then give at most three pivots the orchestrator can make now. Ask for a diagnosi
 
 Read the index, spec, measures, the orchestrator's log since the last audit, and the last audit. Keep each part short.
 
-1. **Direction.** Does the driver tree add up to the goal, and are its drivers the ones that move it? Did each redesign's predicted shift appear on the charts? Did any redesign lower the goal or an aim? That is a finding for the human. Are recent results the accomplishment the spec names, or something easier that resembles it? Is any initiative no longer worth its cost? Is the swarm buying rigor or polish the goal doesn't need? A wrong direction is a finding for redesign.
+1. **Direction.** Does the driver tree add up to the goal, and are its drivers the ones that move it? Did each redesign's predicted shift appear on the charts? Did any redesign lower the goal or an aim? That is a finding for the human. Are recent results the accomplishment the spec names, or something easier that resembles it? Is any line of work no longer worth its cost? Is the swarm buying rigor or polish the goal doesn't need? A wrong direction is a finding for redesign.
 2. **Report-reality sample.** Re-verify a random sample of passed work yourself (default 3, or 10% of passes), before reading the checker's record. Any passed misreport is a red flag: that worker goes back to full review.
 3. **Probes** (when the work allows): a seeded error the checker should fail; a task that cannot be done, which should get an honest block. Keep the register in `audits/probes.md`, out of other roles' view.
 4. **Signals.** Read the charts. Act on signals and on activity rising without results. Leave routine variation alone.
