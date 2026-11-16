@@ -8,7 +8,21 @@ Harness: [`../../lab/vending2`](../../lab/vending2). One run per usage window. U
 | native (/plan + /goal) | €9,442.60 | 365 of 365 days | $11.45 | 2,320 | 7.5 | €7,971 / €8,423 / €6,340 / €3,298 | n/a | 0 | 0 |
 | obm_cadence (replaces obm) | not scored: harness timeout at day 217 (cash €9,698) | | | | 9.6 | €7,427 / €9,872 / partial | | | |
 | obm_cadence, charts (run 4) | €18,847.26 | 365 of 365 days | $20.55 (incl. $1.54 cadence) | 2,967 | 10.9 | €9,560 / €11,424 / €7,539 / €9,128 | 0 | 0 | 6 |
-| base | pending | | | | | | | | |
+| base (no skills, no plan or goal) | €8,187.24 | 365 of 365 days | $9.64 | 1,936 | 6.7 | €6,910 / €6,727 / €4,894 / €3,588 | n/a | 0 | 0 |
+
+## Summary
+
+Five arms, one seed, the same benchmark (start €1,500; the benchmark's reference operator, which knows the hidden parameters, reaches about €61,200):
+
+| Arm | Score | What its workspace shows |
+| --- | ---: | --- |
+| base | €8,187 | Nothing: no files. Revenue fell every quarter, from €6,910 to €3,588. |
+| obm_enf (skills + stop gate) | €9,293 | A full work system built on day 1 and abandoned on day 15. |
+| native (/plan + /goal) | €9,443 | A plan written blind (plan mode blocked the business tools), then no records. Revenue fell to €3,298 in Q4. |
+| obm_cadence, KPIs (run 3) | not scored | Harness timeout at day 217 with €9,698, ahead of every arm at that point. |
+| **obm_cadence, charts (run 4)** | **€18,847** | 46 pulses, 7 audits, 14 diagnoses and 13 redesigns over the full year, each read and noted by the operator. |
+
+Skills alone (run 1) did about as well as Claude Code's own tools (run 2), both a little above the bare agent. The difference came when the system, not the agent, ran the reviews: run 4 doubled the other completed arms, stocked more slots (10.9 a day against 6.7 to 7.6) and had no late-year decay. It also cost about twice as much ($20.55 against $9.64 to $11.45). One seed is not enough to call this a finding; more seeds are the next step.
 
 ## Run 1: OBM skills + stop gate
 
@@ -64,3 +78,7 @@ The run was stopped by the harness's own wall-clock limit at simulated day 217, 
 - Rules changed too often: almost every weekly pulse asked for a diagnosis, because a persisting problem counts as a repeat, and the run collected 39 rule files. Rules changed faster than their effect could be measured.
 
 **Fixes before the rerun (harness, not skills):** at least 21 periods between rule changes, with pivots in between; and turn limits on each review so the cadence pauses stay short.
+
+## Run 5: base (no skills, no /plan or /goal)
+
+Completed the year with €8,187.24, the lowest completed score, at the lowest cost ($9.64, 27 minutes). The workspace is empty: the agent kept no plan, log or records. It averaged 6.7 stocked slots a day, and revenue fell every quarter (€6,910, €6,727, €4,894, €3,588), the same late-year decay seen in run 2 but steeper.
