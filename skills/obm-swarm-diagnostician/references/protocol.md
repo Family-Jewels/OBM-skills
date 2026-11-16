@@ -60,7 +60,7 @@ The orchestrator acts on anything handed to it in the same period and logs what 
 ### 4.1 Task (one line of board.jsonl)
 
 ```json
-{"id": "T-0042", "initiative": "I-2", "milestone": "M2", "title": "...", "pinpoint": "the product this task leaves behind",
+{"id": "T-0042", "driver": "slots_selling", "milestone": "M2", "title": "...", "pinpoint": "the product this task leaves behind",
  "acceptance": ["checkable criterion"], "inputs": ["..."], "risk_tier": "low|standard|high", "model_tier": "fast|strong",
  "status": "open", "attempts": 0, "retry_cap": 2, "budget": "...", "review_mode": "full|sampled"}
 ```
