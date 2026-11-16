@@ -3,10 +3,12 @@
 
 Run it as a hook that fires once per period of the work (for example, a PostToolUse hook on the tool that ends a period,
 or a scheduler). Each time it runs:
-  1. Measurement (no model): asks the task's adapter for this period's ground-truth measures and appends them to
-     swarm/metrics_system.md.
+  1. Measurement (no model): asks the task's adapter for this period's ground-truth measures, appends them to
+     swarm/metrics_system.md, and rewrites swarm/charts.md: process behavior charts with limits computed from the data,
+     their signals, and the gap to an exemplar (charts.py).
   2. Pulse review every `pulse_every` periods: a short auditor review of the numbers, ending in at most three pivots.
-  3. Full audit every `audit_every` periods, or at once when a signal rule fires (a measure out of its limits).
+  3. Full audit every `audit_every` periods, or at once when a chart signals a change in the wrong direction or an
+     alarm rule fires.
   4. Diagnosis when a pulse or audit ends with "Diagnosis needed: yes": what is going wrong and why, no fix.
   5. Redesign: the designer reads the diagnosis and reworks the spec, KPIs or rules (spaced so each change can be judged).
   6. Hand-off: reviews run in the background while the work continues; their findings and any redesign go back to
@@ -16,9 +18,12 @@ usage: engine.py <config.json>      (reads the hook's JSON on stdin and ignores 
 Config keys: workspace, log, adapter ("module.path:Class"), adapter_args, unit ("day", "cycle", ...), horizon,
 pulse_every (default 5), audit_every (default 50), min_periods_between_redesigns (default 20: a change must have time
 to show its effect), signals ([{measure, op, value, periods, label, not_before, min_gap}]), model, hook_event (default
-PostToolUse), budgets ({pulse, audit, diagnosis, redesign} in USD).
+PostToolUse), budgets ({pulse, audit, diagnosis, redesign} in USD), charts ({measures: [{name, from, diff, better}],
+not_before, min_points, baseline_points}), exemplar ({measure, points: {period: value}, origin, source}).
 """
 import importlib, json, operator, subprocess, sys, time
+sys.path.insert(0, str(__import__("pathlib").Path(__file__).resolve().parent))
+import charts
 from pathlib import Path
 
 OPS = {"==": operator.eq, "<": operator.lt, "<=": operator.le, ">": operator.gt, ">=": operator.ge, "!=": operator.ne}
@@ -50,8 +55,10 @@ def main():
                        + " |\n| --- |" + " --- |" * len(measures) + "\n")
     with met.open("a") as f:
         f.write(f"| {period} | " + " | ".join(str(v) for v in measures.values()) + " |\n")
+    cmd_md, chart_bad = charts.update(cfg, mem, period, measures, unit)
+    (sw / "charts.md").write_text(cmd_md)
     log = log_p.open("a")
-    log.write(json.dumps({"t": time.time(), "period": period, "event": "measure"}) + "\n")
+    log.write(json.dumps({"t": time.time(), "period": period, "event": "measure", "chart_signals": chart_bad}) + "\n")
 
     fired = None
     for s in cfg.get("signals", []):
@@ -61,6 +68,8 @@ def main():
         if len(last) == s.get("periods", 1) and all(v is not None and OPS[s["op"]](v, s["value"]) for v in last):
             if period - max(mem["last_audit"], mem["last_pulse"]) >= s.get("min_gap", 3):
                 fired = s.get("label", f"{s['measure']} {s['op']} {s['value']}"); break
+    if not fired and chart_bad and period - max(mem["last_audit"], mem["last_pulse"]) >= cfg.get("chart_min_gap", 5):
+        fired = "chart signal, wrong direction: " + "; ".join(chart_bad)
     full_due = period - mem["last_audit"] >= cfg.get("audit_every", 50)
     pulse_due = period - max(mem["last_pulse"], mem["last_audit"]) >= cfg.get("pulse_every", 5)
     handoff = ""
@@ -98,6 +107,7 @@ def main():
         if j["kind"] == "redesign":
             rf = sw / "audits" / f"{j['id']}.md"
             rec = rf.read_text() if rf.exists() else (r.get("result") or "(no record)")
+            charts.new_phase(mem, j["id"], period)
             handoff += (f"\n\nSYSTEM CADENCE: the designer redesigned the work system after diagnosis {j['after']} "
                         f"(swarm/audits/{j['id']}.md). Adopt it from now on: re-read swarm/spec.md and swarm/rules/.\n\n{rec[-2000:]}")
             continue
@@ -108,10 +118,12 @@ def main():
             rid = "R-" + j["id"][2:]
             spawn(rid, "redesign",
                   f"Use the obm-swarm-designer skill in REDESIGN mode, invoked by the system at {unit} {period} of {horizon} of the work the swarm in "
-                  f"swarm/ is doing. Diagnosis {j['id']} (swarm/audits/{j['id']}.md) says what is going wrong and why. Ground-truth measures: "
-                  f"swarm/metrics_system.md (written by the system). Read the diagnosis, the spec's KPIs against those measures, and the spec. "
-                  f"First ask whether the direction is right, then make the smallest design change that addresses the cause: an initiative, a KPI "
-                  f"or target, a criterion, a rule or brief. Never change anything in a way that stops the core work. Before changing swarm/spec.md "
+                  f"swarm/ is doing. Diagnosis {j['id']} (swarm/audits/{j['id']}.md) says what is going wrong and why. The system's charts "
+                  f"(swarm/charts.md: limits computed from the data, signals, gap to the exemplar) and the driver tree in swarm/spec.md show "
+                  f"where. First ask whether the direction is right, then make the smallest design change that addresses the cause: which "
+                  f"driver to push on, a criterion, a rule or brief, or the tree itself. The goal is the human's: never lower it or an aim. "
+                  f"State a prediction in the record: which tree measure should shift, in which direction, by which {unit}; the charts will "
+                  f"show whether it did. Never change anything in a way that stops the core work. Before changing swarm/spec.md "
                   f"or a rule file, copy the old version to swarm/history/ with its version number; keep the current version at its usual path "
                   f"so every role keeps reading it. Then write the redesign record to "
                   f"swarm/audits/{rid}.md. Reply with the change in under 150 words.", budgets.get("redesign", 1.5), 25, {"after": j["id"]})
@@ -127,8 +139,8 @@ def main():
                 did = f"D-{j['id']}"
                 spawn(did, "diagnosis",
                       f"Use the obm-swarm-diagnostician skill, invoked by the system because {label} {j['id']} (swarm/audits/{j['id']}.md) says a "
-                      f"diagnosis is needed, at {unit} {period} of {horizon}. Ground-truth measures: swarm/metrics_system.md; KPIs and targets: "
-                      f"swarm/spec.md. Find what is going wrong and why. Do not write a fix or change any rule, spec or KPI: the designer will "
+                      f"diagnosis is needed, at {unit} {period} of {horizon}. Charts (limits computed by the system): swarm/charts.md; the driver "
+                      f"tree: swarm/spec.md. Walk the tree from the top measure down to the driver that moved, then find why. Do not write a fix or change any rule, spec or KPI: the designer will "
                       f"redesign from your diagnosis. Write swarm/audits/{did}.md and reply with it in under 200 words.",
                       budgets.get("diagnosis", 1.0), 20, {"after": j["id"]})
                 handoff += f"\n\nSYSTEM CADENCE: a diagnosis of this finding has started; it and the designer's redesign will be handed to you when ready."
@@ -143,24 +155,24 @@ def main():
         (sw / "audits").mkdir(exist_ok=True)
         why = f"because a signal fired: {fired}" if fired else "on its schedule"
         common = (f"at {unit} {period} of {horizon} of the work the swarm in swarm/ is doing. You cannot act on the work itself; review the "
-                  f"records. The ground-truth measures are in swarm/metrics_system.md, written by the system every {unit}, never by an agent.")
+                  f"records. The ground-truth measures (swarm/metrics_system.md) and charts (swarm/charts.md) are written by the system every {unit}, never by an agent.")
         if full_due or fired:
             mem["n_audit"] += 1; mem["last_audit"] = period; aid = f"A-{mem['n_audit']:03d}"
             spawn(aid, "audit", f"Use the obm-swarm-auditor skill for a FULL AUDIT, invoked by the system ({why}). This is audit {aid}, {common} Judge "
                   f"the outcome first: are the goal's main measures moving toward it, is capacity in use, is anything declining, has a target become "
-                  f"a ceiling? Judge against the KPIs and targets the designer set in swarm/spec.md. Is the direction right: would hitting the KPIs achieve the goal? Then whether earlier findings and redesigns were acted on and had the expected effect, then whether the records are current. Never tell the "
+                  f"a ceiling? Read swarm/charts.md (limits computed by the system from the data, signals, gap to the exemplar) against the driver tree in swarm/spec.md. Is the direction right: does the tree add up to the goal, and are its drivers the ones that move it? Did each redesign's predicted shift appear on the charts by its date? Did any redesign lower the goal or an aim? Then whether earlier findings were acted on, then whether the records are current. Never tell the "
                   f"orchestrator to pause its core work to fix records. Write swarm/audits/{aid}.md: findings first, then at most three concrete "
                   f"actions for the orchestrator, then a last line exactly 'Diagnosis needed: yes' or 'Diagnosis needed: no'.",
                   budgets.get("audit", 1.5), 30, {"trigger": fired or "scheduled"})
         else:
             mem["n_pulse"] += 1; mem["last_pulse"] = period; aid = f"P-{mem['n_pulse']:03d}"
             spawn(aid, "pulse", f"Use the obm-swarm-auditor skill for a PULSE REVIEW, invoked by the system on its schedule. This is pulse {aid}, "
-                  f"{common} Read only swarm/metrics_system.md, the KPIs and targets in swarm/spec.md and the last lines of the orchestrator's log. Answer: "
-                  f"is each KPI on target, moving toward it, or outside its limits; what changed since the last pulse, and why; is anything heading the wrong way. Write "
+                  f"{common} Read only swarm/charts.md (limits computed by the system), the driver tree in swarm/spec.md and the last lines of the "
+                  f"orchestrator's log. Answer: which measures show a signal and which only routine variation (never react to routine variation); what changed since the last pulse, and why; is anything heading the wrong way. Write "
                   f"swarm/audits/{aid}.md in under 250 words: the answers, then at most three pivots the orchestrator can make now (never a "
                   f"pause of its core work), then a last line exactly 'Diagnosis needed: yes' or 'Diagnosis needed: no'. A pulse answers 'yes' "
-                  f"when a KPI is outside its limits, or the same problem appears in this pulse and the one before it (read the last pulse in "
-                  f"swarm/audits/); a problem seen once inside the limits gets a pivot, not a redesign.", budgets.get("pulse", 0.6), 12, {"trigger": "scheduled"})
+                  f"when a chart signals a change in the wrong direction, when a redesign's predicted shift has not appeared by its date, or when "
+                  f"the gap to the exemplar is above 2 and no measure has signalled an improvement in the last 30 {unit}s. Otherwise 'no'.", budgets.get("pulse", 0.6), 12, {"trigger": "scheduled"})
         mem["pending"] += new_jobs
         log.write(json.dumps({"t": time.time(), "period": period, "event": "started", "id": aid}) + "\n")
     handoff = handoff.strip()

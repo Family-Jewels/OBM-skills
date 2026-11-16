@@ -33,7 +33,7 @@ The hypothesis names five functions. Each has an owner:
 | **Establish expectations** | The designer turns a goal into checkable done conditions, milestones, contracts, budgets and decision rights |
 | **Measure actual execution** | Checkers verify work against the artifact, never the report. Spend is measured by the platform, never self-reported. A fresh judge runs the done checks |
 | **Detect deviations** | The orchestrator watches for stalls, spinning, retries and overspend. The auditor re-verifies a hidden sample and probes the checks themselves |
-| **Initiate corrective action** | Consequences are routed the same way every time. The diagnostician finds the cause of a repeated failure; the designer makes one versioned change, with the KPI it should move and a revert condition |
+| **Initiate corrective action** | Consequences are routed the same way every time. The diagnostician finds the cause of a repeated failure; the designer makes one versioned change, with a prediction the charts can test and a revert condition |
 | **Enforce operational constraints** | The harness, not the agent: a stop gate with honest exits, protected paths, budget caps, measured spend |
 
 ## Three layers
@@ -61,15 +61,15 @@ The skills stay complete without enforcement: on a platform with no hooks, every
 
 | Skill | Role |
 | --- | --- |
-| `obm-swarm-designer` | Owns the design: goal, initiatives with explicit KPIs (measure, ground-truth source, target, limits), checks, budgets, cadence. Called again to redesign when a diagnosis or audit shows the swarm is off course; the only role that changes goals, KPIs or rules |
+| `obm-swarm-designer` | Owns the design: a driver tree from the goal's main measure down to the drivers the swarm controls, the exemplar, checks, budgets, cadence. Called again to redesign when a diagnosis or audit shows the swarm is off course; the only role that changes the tree, checks or rules; the goal itself is the human's |
 | `obm-swarm-orchestrator` | The manager: dispatches, routes on outcomes, paces spend, keeps the core goal moving, adopts redesigns |
 | `obm-swarm-checker` | Quality: gathers its own evidence for each criterion. Where nothing can be run, checks provenance: who published a source, when it was really published (not the date the text claims), whether it is cited elsewhere, independent corroboration, and whether judgments rest on verifiable facts |
-| `obm-swarm-auditor` | The director: a pulse review of the KPIs every 5 periods, a full audit every 50 (direction, report-reality samples, probes, cost, the manager's decisions) |
+| `obm-swarm-auditor` | The director: a pulse review of the system's charts every 5 periods, a full audit every 50 (direction, report-reality samples, probes, cost, the manager's decisions) |
 | `obm-swarm-diagnostician` | Finds what is going wrong and why (pinpoint, what maintains it, cause in the environment). Writes no fix: the designer does |
 
 There is no producer skill. Workers follow the short rules for whoever does the work in the protocol, and the evidence about their work comes from the system's record and the checker's own checks, never from the worker's report about itself.
 
-The loop: **designer sets goals and KPIs → system measures every period → auditor compares against the KPIs → diagnostician says what is wrong and why → designer reworks the design → orchestrator carries it out.**
+The loop: **designer builds the driver tree → system charts every measure with limits computed from the data → auditor separates signals from routine variation → diagnostician walks the tree to what moved and why → designer reworks the design, with a prediction → the charts show whether it worked.**
 
 All state lives in files, and every record has a fixed format ([`skills/protocol.md`](skills/protocol.md)), so any session, model or vendor can resume the work.
 
@@ -113,8 +113,9 @@ python analyze.py logs/tiny --out tiny
 
 **Design review, 2026-11-15** (Jules's feedback after the cadence runs):
 
-- The designer is a loop, not a one-off. It sets explicit KPIs for each initiative, and the system calls it back to redesign when a diagnosis or audit shows the swarm is off course.
-- The diagnostician only diagnoses. Goals, KPIs and rules are changed by the designer alone.
+- The designer is a loop, not a one-off: the system calls it back to redesign when a diagnosis or audit shows the swarm is off course.
+- Measurement: KPIs with designer-set targets were replaced by a driver tree, process behavior charts (XmR limits computed by the system from each measure's own data, so no agent sets its own limits) and Gilbert's PIP against an exemplar. Each redesign states a prediction that the charts test against the limits from before it.
+- The diagnostician only diagnoses. The tree, checks and rules are changed by the designer alone; the goal is the human's.
 - The producer skill is gone. A worker's report about its own work is a claim, not evidence; the system records what it ran, and the checker gathers the evidence.
 - The checker verifies work that has no runnable test by provenance: publisher, real publication date, citations elsewhere, independent corroboration, and whether judgments rest on verifiable facts.
 - Cadence: pulse every 5 periods, full audit every 50, redesigns at least 20 apart.

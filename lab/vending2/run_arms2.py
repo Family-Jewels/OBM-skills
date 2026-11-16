@@ -83,7 +83,12 @@ def main():
                         'adapter_args': {'state_path': str(statedir / 'state.json')}, 'unit': 'day', 'horizon': a.days,
                         'pulse_every': a.pulse_every, 'audit_every': a.audit_every, 'model': a.model, 'hook_event': 'PostToolUse',
                         'signals': [{'measure': 'revenue', 'op': '==', 'value': 0, 'periods': 2, 'min_gap': 3, 'not_before': 8, 'label': 'revenue zero two days running'}],
-                        'budgets': {'pulse': 0.6, 'audit': 1.5, 'diagnosis': 1.0, 'redesign': 1.5}, 'min_periods_between_redesigns': 20}
+                        'budgets': {'pulse': 0.6, 'audit': 1.5, 'diagnosis': 1.0, 'redesign': 1.5}, 'min_periods_between_redesigns': 20,
+                        'charts': {'not_before': 8, 'min_points': 8, 'baseline_points': 20, 'measures': [
+                            {'name': 'cash_gain_7', 'from': 'cash', 'diff': 7, 'better': 'up'}, {'name': 'revenue', 'better': 'up'},
+                            {'name': 'slots_selling', 'better': 'up'}, {'name': 'revenue_per_slot', 'better': 'up'}, {'name': 'units', 'better': 'up'}]},
+                        'exemplar': {'measure': 'cash', 'points': {'0': 1500, '30': 3228, '365': 61219}, 'origin': 1500,
+                                     'source': "the benchmark's scripted reference operator, which knows the economy's hidden parameters"}}
                 (statedir / 'cadence.json').write_text(json.dumps(ccfg))
                 hook['hooks']['PostToolUse'] = [{'matcher': 'mcp__vending__wait_for_next_day', 'hooks': [{'type': 'command', 'timeout': 1600,
                     'command': f'python3 -I /home/claude/obm-lab/cadence/engine.py {statedir / "cadence.json"}'}]}]
@@ -91,19 +96,21 @@ def main():
         left = a.budget
         if a.arm == 'obm_cadence':
             design = ("Use the obm-swarm-designer skill to design the work system for operating this business for the whole simulation. "
-                      "The system prompt is the business briefing. Write it into swarm/ in the current directory: initiatives, each with explicit KPIs "
-                      "(measure, ground-truth source, target, off-track limits), and the cadence table. The system will write ground-truth measures to "
-                      f"swarm/metrics_system.md every simulated day, run a short auditor pulse review every {a.pulse_every} simulated days and a full "
+                      "The system prompt is the business briefing. Write it into swarm/ in the current directory: a driver tree from the final balance "
+                      "down to the drivers the operator controls, the exemplar, and the cadence table. The system will write ground-truth measures to "
+                      f"swarm/metrics_system.md and process behavior charts with limits computed from the data to swarm/charts.md every simulated day, run a short auditor pulse review every {a.pulse_every} simulated days and a full "
                       f"audit every {a.audit_every}, run the diagnostician when a review asks for it, and call you back to redesign from the diagnosis, "
-                      "handing every result to the operator. The system's daily measures are: cash, revenue, units, slots_selling, revenue_last_7 and "
-                      "revenue_same_7_a_month_earlier; build the KPIs on them. You cannot use the business tools; design only.")
+                      "handing every result to the operator. The system's daily measures are: cash, revenue, units, slots_selling, revenue_per_slot, "
+                      "revenue_last_7 and revenue_same_7_a_month_earlier; it charts cash_gain_7 (cash gained over 7 days), revenue, slots_selling, "
+                      "revenue_per_slot and units. Build the tree on these. Exemplar: the benchmark's scripted reference operator, which knows the "
+                      "economy's hidden parameters, reaches about EUR 3,228 at day 30 and EUR 61,219 at day 365 from EUR 1,500. You cannot use the business tools; design only.")
             p, r = claude(['-p', design, '--permission-mode', 'acceptEdits', '--max-budget-usd', '2', '--model', a.model, '--output-format',
                            'stream-json', '--verbose', '--tools', TOOLS, '--allowedTools', TOOLS, '--strict-mcp-config', '--system-prompt', prompt],
                           cfg, ws, stream, 1200)
             results.append(r); left -= r.get('total_cost_usd') or 0
             run_prompt = (TASK + "\n\nYou are the orchestrator of a one-agent OBM swarm: use the obm-swarm-orchestrator skill, with the work "
                           "system the designer left in swarm/ (read swarm/index.md and swarm/spec.md first). You do the operating yourself. You do "
-                          "not need to call the other roles: the system writes ground-truth measures to swarm/metrics_system.md every day, runs "
+                          "not need to call the other roles: the system writes ground-truth measures and charts to swarm/metrics_system.md and swarm/charts.md every day, runs "
                           f"a pulse review every {a.pulse_every} simulated days, a full audit every {a.audit_every}, and a diagnosis and redesign by the designer when needed, and hands "
                           "you their results in the result of wait_for_next_day. Act on what it hands you, adopt any redesign, and log what you did. Keep operating until the simulation ends.")
             p, r = claude(['-p', run_prompt, '--permission-mode', 'acceptEdits', '--max-budget-usd', f'{left:.2f}', *common], cfg, ws, stream, a.timeout)

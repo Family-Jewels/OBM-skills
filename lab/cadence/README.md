@@ -4,11 +4,11 @@ In long runs, roles told to call each other stop doing it within days. This engi
 
 Each time the engine runs (once per period of the work), it:
 
-1. **Measures.** Asks the adapter for this period's ground-truth measures and appends them to `swarm/metrics_system.md`, a file only the system writes.
+1. **Measures and charts.** Asks the adapter for this period's ground-truth measures, appends them to `swarm/metrics_system.md`, and rewrites `swarm/charts.md` (`charts.py`): process behavior charts whose limits are computed from each measure's own data (centre ± 2.66 × average moving range), the signals (a point beyond a limit, or 8 in a row on one side), the gap to an exemplar (PIP) and the swarm's own best. Both files are written only by the system. A signal in the wrong direction triggers an audit. When a redesign is adopted, the old limits are kept to test it.
 2. **Runs a pulse review** every `pulse_every` periods: the auditor's short look at the numbers, ending in at most three pivots. This is the director's close ear on how the numbers are moving.
 3. **Runs a full audit** every `audit_every` periods, or at once when a signal fires (a measure outside its limits).
-4. **Runs the diagnostician** when a review says a diagnosis is needed (a KPI outside its limits, or the same problem in two pulses running). It reports what is wrong and why, and changes nothing.
-5. **Calls the designer back to redesign** from the diagnosis: the smallest versioned change to the spec, KPIs or rules, with a redesign record.
+4. **Runs the diagnostician** when a review says a diagnosis is needed (a chart signal in the wrong direction, a redesign whose predicted shift did not appear, or a large gap to the exemplar with no improvement). It reports what is wrong and why, and changes nothing.
+5. **Calls the designer back to redesign** from the diagnosis: the smallest versioned change to the spec, driver tree or rules, with a redesign record that predicts which charted measure will shift.
 6. **Hands the results to the orchestrator** as additional context on the hook event, so they cannot be skipped. Reviews run in the background while the work continues, and their findings arrive at the first period after they finish, like a report that lands the next morning. A run of 365 periods otherwise spent more time waiting on reviews than working.
 7. **Spaces out redesigns.** At least `min_periods_between_redesigns` (default 20) between them, so each one's effect can be measured; in between, pulses give pivots.
 

@@ -8,11 +8,11 @@ The aim is worthy performance: the most value toward the goal for the least cost
 
 | Role | Does | Never |
 | --- | --- | --- |
-| Designer | Sets the goal, initiatives, KPIs, checks, budgets and cadence; reworks the design when the evidence says it is off course | Does the work |
+| Designer | Turns the human's goal into a driver tree, checks, budgets and cadence; reworks the design when the evidence says it is off course | Does the work; lowers the goal |
 | Orchestrator | Runs the work: dispatches, routes outcomes, paces spend, keeps the core moving | Grades work; changes the design |
 | Worker | Any agent doing a task (no skill of its own): follows section 5 | Grades its own work; edits tests, criteria, measures or records |
 | Checker | Verifies work against criteria, gathering the evidence itself | Checks its own work; adds criteria; softens a verdict |
-| Auditor | Pulse reviews of the KPIs; full audits of direction, honesty, cost and records | Waits for the orchestrator's approval |
+| Auditor | Pulse reviews of the charts; full audits of direction, honesty, cost and records | Waits for the orchestrator's approval |
 | Diagnostician | Finds what is going wrong and why | Writes the fix (the designer does) |
 
 Workers and checkers run in separate contexts. With only one agent, see section 9.
@@ -23,14 +23,14 @@ All state lives in files, so any agent can resume from them alone.
 
 ```
 swarm/
-  index.md          one page: goal, initiatives and their KPIs, what passed, open decisions, active rules. Orchestrator writes it; everyone reads it first
-  spec.md           goal, initiatives with KPIs, done criteria, milestones, budgets, decision rights, cadence. Versioned; only the designer changes it
+  index.md          one page: goal, the drivers being pushed on, what passed, open decisions, active rules. Orchestrator writes it; everyone reads it first
+  spec.md           goal, driver tree, exemplar, done criteria, milestones, budgets, decision rights, cadence. Versioned; only the designer changes it
   board.jsonl       one task per line (4.1)
   rules/            versioned briefs; only the designer changes them
   log/              progress.md, reviews/, runs.jsonl (measured spend), work.jsonl (what the system recorded of each worker's actions)
   queue/decisions.md  parked decisions
   audits/           pulses (P-NNN), audits (A-NNN), diagnoses (D-NNN), redesigns (R-NNN)
-  metrics.md        KPIs and scorecard, written from ground truth (section 8)
+  metrics_system.md, charts.md   measures and process behavior charts, written by the system only (section 8)
   history/          earlier versions of the spec and rules; the current version always stays at its usual path
 ```
 
@@ -45,11 +45,11 @@ Roles never depend on each other to remember. In long runs, agents told to call 
 
 | Role | Trigger (defaults) | Writes |
 | --- | --- | --- |
-| Designer | At the start; and when a diagnosis or full audit says the design is off course | spec, KPIs, briefs, cadence; later a redesign record and new versions |
-| Measurement (a script where possible) | Every period | `metrics.md` lines from ground truth |
+| Designer | At the start; and when a diagnosis or full audit says the design is off course | spec with driver tree, briefs, cadence; later a redesign record and new versions |
+| Measurement (the system) | Every period | `metrics_system.md` and `charts.md`: measures, limits computed from the data, signals, gap to the exemplar |
 | Checker | Each submission, or a random sample | review records, with the evidence it gathered |
-| Auditor, pulse | Every 5 cycles or periods | `audits/P-NNN.md`: KPIs against targets, and up to three pivots |
-| Auditor, full audit | Every 50 cycles or periods, at milestones, before done, and when a KPI leaves its limits | `audits/A-NNN.md` |
+| Auditor, pulse | Every 5 cycles or periods | `audits/P-NNN.md`: signals versus routine variation, and up to three pivots |
+| Auditor, full audit | Every 50 cycles or periods, at milestones, before done, and when a chart signals a change in the wrong direction | `audits/A-NNN.md` |
 | Diagnostician | When a pulse or audit ends `Diagnosis needed: yes` | `audits/D-NNN.md`: what is wrong and why |
 | Designer, redesign | After a diagnosis, or when a full audit finds the direction wrong | `audits/R-NNN.md` and new spec or rule versions |
 
@@ -87,8 +87,8 @@ Fix: <one specific fix per unmet criterion>
 ### 4.5 Redesign (R-NNN)
 
 ```
-Trigger: <diagnosis or audit>   Change: <spec, KPI, initiative or rule, version before -> after>
-Why: ...   Expected effect on which KPI: ...   Cost: ...   Review at: ...   Revert if: ...
+Trigger: <diagnosis or audit>   Change: <spec, driver, tree or rule, version before -> after>
+Why: ...   Prediction: <measure> shifts <up/down> by <period>   Cost: ...   Revert if: ...
 ```
 
 ### 4.6 Decision request (parked; work continues)
@@ -130,9 +130,12 @@ Why: ...   Expected effect on which KPI: ...   Cost: ...   Review at: ...   Reve
 
 Every submission at first, after a fail or misreport, and for milestone and final products. After 5 first-pass successes in a row, 1 in 3 at random; after 10 more, 1 in 5. Sampling changes how often, never how carefully. Review stays within the spec's share of spend (default about 30%).
 
-## 8. KPIs and scorecard (metrics.md)
+## 8. Measurement: driver tree, charts and the exemplar
 
-Each initiative has KPIs set by the designer: the measure, its ground-truth source, its target and its limits. The system writes them every period, alongside: accepted units, first-pass rate, misreports, cost per accepted unit, review share, capacity in use, and the same measure a comparable period earlier. Read them as trends: act on signals, not routine variation.
+- **Driver tree.** The designer breaks the goal's main measure into the measures that produce it, down to drivers the swarm controls, each with a ground-truth source and a better direction. Useful additions: accepted units, first-pass rate, misreports, cost per accepted unit, review share, capacity in use.
+- **Process behavior charts.** The system charts each measure every period. Limits come from the measure's own data (centre ± 2.66 × average moving range), never from an agent. A signal is a point beyond a limit or 8 in a row on one side of the centre. Everything else is routine variation: do not react to it.
+- **Redesigns are tested on the charts.** After a redesign the old limits are kept: a real effect shows as a signal against them by the predicted period.
+- **Gap to the exemplar (PIP).** Exemplar performance divided by the swarm's, where an exemplar is known; otherwise the swarm's own best period. A large gap with no improving signal is a reason to diagnose.
 
 ## 9. Single-agent mode
 
