@@ -7,6 +7,7 @@ Harness: [`../../lab/vending2`](../../lab/vending2). One run per usage window. U
 | obm_enf | €9,292.79 | 365 of 365 days | $10.25 | 2,233 | 7.6 | €5,347 / €7,587 / €5,784 / €5,390 | 0 | 0 | 2 (designer, orchestrator) |
 | native (/plan + /goal) | €9,442.60 | 365 of 365 days | $11.45 | 2,320 | 7.5 | €7,971 / €8,423 / €6,340 / €3,298 | n/a | 0 | 0 |
 | obm_cadence (replaces obm) | not scored: harness timeout at day 217 (cash €9,698) | | | | 9.6 | €7,427 / €9,872 / partial | | | |
+| obm_cadence, charts (run 4) | €18,847.26 | 365 of 365 days | $20.55 (incl. $1.54 cadence) | 2,967 | 10.9 | €9,560 / €11,424 / €7,539 / €9,128 | 0 | 0 | 6 |
 | base | pending | | | | | | | | |
 
 ## Run 1: OBM skills + stop gate
@@ -30,6 +31,27 @@ Completed the year with €9,442.60, within €150 of run 1. Plan mode blocked e
 Run 1 showed the skills being set up and then abandoned, because each role relied on the others to call it. Run 3 now tests the alternative: the harness runs the cadence (daily ground-truth measures, an audit every 30 simulated days, a diagnosis when the audit asks for one, all handed back to the operator in the day-advance result). Harness: `lab/vending2/cadence.py`. The skills were updated to match (protocol section 2.2).
 
 A first 35-day smoke test of this arm found a serious problem: the day-30 audit told the operator to stop buying until its records were complete, and every machine was empty within four days. The auditor and orchestrator skills now judge the business outcome first and never pause the core work to fix records.
+
+
+## Run 4: OBM with the cadence and process behavior charts, full year
+
+Completed the year with **€18,847.26**, about twice runs 1 and 2 (€9,293 and €9,443). Same harness as run 3, with the 5/50 cadence, charts in place of KPIs, the diagnose-then-redesign loop and the benchmark's reference operator as the exemplar. Cost $20.55, of which the cadence reviews were $1.54. Runtime 87 minutes.
+
+- **Capacity in use** averaged 10.9 stocked slots a day (runs 1 and 2: 7.5 to 7.6). Revenue was higher than both other arms in every quarter, with no late-year decay: Q4 (€9,128) recovered from a Q3 dip.
+- **The cadence ran all year:** 46 pulses, 7 full audits (5 scheduled, 2 triggered by a wrong-direction chart signal on days 300 and 336), 14 diagnoses, 24 diagnosis requests deferred by the spacing rule, and 13 redesigns (spec v1 to v12, operator brief v1 to v10, every old version kept in `history/`).
+- **The operator acted on what it was handed.** Each pulse, audit, diagnosis and redesign is noted in its progress log on the day it arrived, with the pivots it applied or why it didn't.
+- **Redesign predictions mostly did not hold.** Most redesigns predicted a rise in stocked selling slots; the charts showed no upward shift for most of them, and later records say so plainly (R-P-029 corrects a wrong baseline; R-P-038 declines to change rules while an earlier prediction is still being judged). The loop was honest about its misses, but it never found the change that moved the top measure. The recurring cause it diagnosed: one slot per restock call, with depot stock-outs and late drinks deliveries.
+- **Gap to the exemplar:** PIP 3.4 at day 365 (the reference operator, which knows the hidden parameters, gained 3.4 times as much).
+
+**Weaknesses this run exposed:**
+
+- The charts have no notion of season. The holiday demand drop in the last two weeks (the benchmark's multiplier falls to 0.05) showed as wrong-direction signals and triggered an audit and a diagnosis. Seasonal demand needs either a seasonal baseline or a measure that is not affected by it (sales per stocked slot against expected demand).
+- Two redesigns landed 11 days apart (R-P-041 on day 327, R-P-042 on day 332, adopted); the spacing check counts from when a redesign starts rather than when the previous one was adopted.
+- The operator stopped restocking in the last two weeks; with holiday demand near zero that cost little.
+
+Records: `obm_cadence-seed1-365d/` (result, cadence log, final spec, charts, rules, every pulse, audit, diagnosis and redesign, and earlier versions).
+
+One seed: twice the score of the other arms is a large difference, but it needs other seeds before it is a finding.
 
 ## Run 3: OBM with the system running the cadence, cut off by the harness (not scored)
 
