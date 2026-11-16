@@ -100,7 +100,8 @@ def update(cfg, mem, period, measures, unit):
             pip = round((e - o) / (a - o), 1) if a - o > 0 else None
             md += ["", "## Gap to the exemplar (PIP = exemplar gain / actual gain)", "",
                    f"{ex['measure']} at {unit} {period}: actual {a}, exemplar {round(e, 2)} ({ex.get('source', 'exemplar')}). "
-                   + (f"PIP = {pip}: the exemplar has gained {pip}x as much." if pip else "No gain yet against the starting point.")]
+                   + (f"PIP = {pip}: the exemplar has gained {pip}x as much." if pip else
+                      f"PIP not defined yet: the exemplar has gained {round(e - o, 2)} from {o}; the swarm has gained {round(a - o, 2)}.")]
     best = []
     for sp in specs:
         ser = st["series"].get(sp["name"], [])
