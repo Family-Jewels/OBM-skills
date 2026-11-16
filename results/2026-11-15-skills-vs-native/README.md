@@ -8,6 +8,7 @@ Harness: [`../../lab/vending2`](../../lab/vending2). One run per usage window. U
 | native (/plan + /goal) | €9,442.60 | 365 of 365 days | $11.45 | 2,320 | 7.5 | €7,971 / €8,423 / €6,340 / €3,298 | n/a | 0 | 0 |
 | obm_cadence (replaces obm) | not scored: harness timeout at day 217 (cash €9,698) | | | | 9.6 | €7,427 / €9,872 / partial | | | |
 | obm_cadence, charts (run 4) | €18,847.26 | 365 of 365 days | $20.55 (incl. $1.54 cadence) | 2,967 | 10.9 | €9,560 / €11,424 / €7,539 / €9,128 | 0 | 0 | 6 |
+| native + system reviews (run 6) | €11,890.10 | 365 of 365 days | $19.47 (incl. $1.03 reviews) | 2,374 | 8.7 | €8,307 / €6,723 / €5,996 / €8,782 | n/a | 0 | 0 |
 | base (no skills, no plan or goal) | €8,187.24 | 365 of 365 days | $9.64 | 1,936 | 6.7 | €6,910 / €6,727 / €4,894 / €3,588 | n/a | 0 | 0 |
 
 ## Summary
@@ -20,6 +21,7 @@ Five arms, one seed, the same benchmark (start €1,500; the benchmark's referen
 | obm_enf (skills + stop gate) | €9,293 | A full work system built on day 1 and abandoned on day 15. |
 | native (/plan + /goal) | €9,443 | A plan written blind (plan mode blocked the business tools), then no records. Revenue fell to €3,298 in Q4. |
 | obm_cadence, KPIs (run 3) | not scored | Harness timeout at day 217 with €9,698, ahead of every arm at that point. |
+| native + system reviews (run 6) | €11,890 | The same reviews, charts and loop as run 4, without the skills. Its 14 plan revisions drifted into record-keeping and spending freezes. |
 | **obm_cadence, charts (run 4)** | **€18,847** | 46 pulses, 7 audits, 14 diagnoses and 13 redesigns over the full year, each read and noted by the operator. |
 
 Skills alone (run 1) did about as well as Claude Code's own tools (run 2), both a little above the bare agent. The difference came when the system, not the agent, ran the reviews: run 4 doubled the other completed arms, stocked more slots (10.9 a day against 6.7 to 7.6) and had no late-year decay. It also cost about twice as much ($20.55 against $9.64 to $11.45). One seed is not enough to call this a finding; more seeds are the next step.
@@ -82,3 +84,24 @@ The run was stopped by the harness's own wall-clock limit at simulated day 217, 
 ## Run 5: base (no skills, no /plan or /goal)
 
 Completed the year with €8,187.24, the lowest completed score, at the lowest cost ($9.64, 27 minutes). The workspace is empty: the agent kept no plan, log or records. It averaged 6.7 stocked slots a day, and revenue fell every quarter (€6,910, €6,727, €4,894, €3,588), the same late-year decay seen in run 2 but steeper.
+
+## Run 6: Claude Code native (/plan + /goal) with the system running the reviews
+
+The direct comparison with run 4. The harness ran the identical cadence: the same charts and exemplar, a check every 5 days, a full review every 50, a diagnosis when a review asked for one, and a plan revision from it, at least 20 days apart, all handed to the operator in the day-advance result. The only difference is that no OBM skills were installed. The work system was the plan Claude wrote in plan mode (kept as `swarm/plan.md`), and the reviewers got plain instructions: check how it is going, find what is wrong, revise the plan. The operator ran under /goal rather than the stop gate (which never refused a stop in run 4).
+
+Completed the year with **€11,890.10**: more than every arm without system-run reviews (€8,187 to €9,443), but €6,957 short of run 4 (€18,847). Cost $19.47, close to run 4's $20.55; the reviews cost $1.03. PIP 5.7, against 3.4 for run 4.
+
+| | Run 4: skills + system reviews | Run 6: native + system reviews |
+| --- | ---: | ---: |
+| Score | €18,847 | €11,890 |
+| Stocked slots/day | 10.9 | 8.7 |
+| Revenue by quarter | €9,560 / €11,424 / €7,539 / €9,128 | €8,307 / €6,723 / €5,996 / €8,782 |
+| Checks / full reviews / diagnoses / revisions | 46 / 7 / 14 / 13 | 50 / 6 / 15 / 14 |
+| Diagnoses deferred by spacing | 24 | 40 |
+| Cost | $20.55 | $19.47 |
+
+**What the workspace shows.** The reviews ran just as reliably, and the operator received all of them. The difference is in what the reviewers asked for. Without the skills, the plan revisions turned toward record-keeping and spending control: reconcile spend before ordering (v4), a purchase gate (v7, v8), a standing freeze on orders until records were complete (v9), a self-enforcing freeze (v10), a total freeze on orders and campaigns (v12). The freeze was replaced with a capped restock only at v15 on day 317. Revenue fell from about €2,850 a month in the first four months to €1,640 to €2,310 in months five to nine, and recovered to €3,000 to €3,300 after the freeze was lifted. That is the same failure the 35-day smoke test of the skills found and fixed (an audit that paused buying until records were complete); the auditor and orchestrator skills now say to judge the outcome first and never pause the core work to fix records. Without those rules, the plain reviewers fell into it over and over.
+
+**What this says.** On this seed, running the reviews from the system lifted Claude Code's native tools by about €2,450 (run 2 to run 6). Adding the skills to the same reviews lifted it by another €6,950 (run 6 to run 4). Most of the gain came from what the skills tell the reviewers to look at, not just from having reviews at all. One seed each; this needs more seeds.
+
+Records: `native_cadence-seed1-365d/` (result, cadence log, every plan version, every review, diagnosis and revision).
