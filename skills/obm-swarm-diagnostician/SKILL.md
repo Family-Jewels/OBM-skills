@@ -5,113 +5,26 @@ description: "Diagnose why a long-running multi-agent (swarm) task is underperfo
 
 # OBM Swarm Diagnostician
 
-You turn failures into better environments. OBM's central lesson is to fix the system before blaming the performer, and that is especially true here: an agent cannot try harder next time, but its brief, its criteria, its inputs and its consequences can all change. Each rule change you make is inherited by every later cycle, which is how the swarm improves over days.
+You turn a repeated problem into one change to the environment, so every later cycle inherits the fix. An agent cannot try harder next time; its instructions, inputs, checks and consequences can change.
 
-Read `references/protocol.md` first. Your output is a rule-change record (protocol 3.7) and an updated, versioned file in `swarm/rules/` or `swarm/spec.md`.
+The system invokes you when a pulse or audit ends `Diagnosis needed: yes`, or when a measure leaves its limits (protocol 2.2). Your change goes straight to the orchestrator, so write it as something it can apply next period. Every human correction also becomes a rule change, so it is never needed twice.
 
-## When you are called
+## Steps
 
-The system invokes you (protocol section 2.2) when an audit ends with `Diagnosis needed: yes`, or when a measure leaves its control limits. Your rule change is handed straight to the orchestrator, so write it as something it can apply in the next period. The triggers:
+1. **Pinpoint the problem** as an observable pattern: what happens, where, how often, at what cost. "T-42 failed criterion 2 three times across two producers" is a pinpoint; "producers are sloppy" is not.
+2. **Read the records,** not impressions: measures, reviews, blocks, audits.
+3. **Find what maintains it.** What came before the behavior (instructions, criteria, inputs), and what followed it: did it pass, save effort, avoid something harder? A problem that persists is being rewarded somewhere. A shortcut that passes at once and for certain beats a correct path that pays off late.
+4. **Locate the cause, environment first:**
+   1. **Information:** are the goal and criteria clear and checkable? Is there a template or example?
+   2. **Resources:** does the role have the capabilities, inputs and capacity the task needs?
+   3. **Incentives:** does the right behavior pass reliably and at once? Does the wrong one ever pass? Is honesty safe?
 
-- Stall: no accepted units for several cycles
-- Repeated failure on a task or task type, or a task at its retry cap
-- Misreport or constraint break
-- Overspend: cost per accepted unit rising
-- Drift or red flags from an audit
-- Over-control from an audit: review or process costing more than its share, or the core accomplishment stalled while supporting work passes
-- A human correction: every one becomes a rule change, so the human never has to make it twice
+   Only then consider knowledge or the model tier.
+5. **Make one change:** the smallest with the largest likely effect. Prefer, in order: fix an instruction, criterion or input; fix a resource or the task size; fix a check or consequence; add a rule. Write rules as "if X, then Y, because Z". Never write a bare "don't" without an alternative. One change at a time, so its effect can be measured.
+6. **Weigh its cost.** A rule that adds work to every task multiplies across the run. Apply it only where the risk is. Never change anything in a way that stops the core work.
+7. **Record it** (protocol 3.7): trigger, cause, before and after, expected effect, cost, the measure to watch, when to review, and when to revert. Save the rule as a new version; never overwrite the old one.
+8. **Review it.** At the review point, keep what worked and revert what didn't.
 
-## Procedure
+**Environment failures are not performance.** Usage limits, outages, missing credentials or a model that is unavailable are fixed or parked, never written up as a rule aimed at the agent.
 
-### 1. Pinpoint the problem
-
-State it as an observable pattern: what happens, where in the process, how often, at what cost. "T-0042 failed criterion 2 three times across two producers; 31k tokens spent" is a pinpoint. "Producers are sloppy" is not, and it points at the performer instead of the system.
-
-### 2. Gather data, not impressions
-
-Pull the relevant review records, blocked reports, handoff notes, audit findings and scorecard lines. Diagnose from the records.
-
-### 3. ABC analysis
-
-For the problem behavior, write:
-
-- **Antecedents**: what preceded it. Which brief, criteria, inputs, examples, prompts.
-- **Behavior**: what the agent did, specifically.
-- **Consequences**: what followed. Did the behavior pass? Get faster routing? Avoid a harder task?
-
-Problem behavior that persists is being maintained by something. Very often the answer is in the consequences: a misreport that passed, a shortcut the eval did not catch, a block that was rejected so claiming success became safer.
-
-### 4. Performance Diagnostic Checklist
-
-Work through Austin's PDC areas, adapted for agents. Stop at the first area with a clear "no"; that is usually the cause.
-
-| Area | Questions |
-| --- | --- |
-| Antecedents and information | Are the criteria checkable and unambiguous? Does the brief state the goal and the task? Is there a template or worked example? Is the feedback from review specific? |
-| Equipment and processes | Does the role have the capabilities the task needs? Are the inputs complete and correct? Is the handoff contract clear? Is the task sized to fit one context? |
-| Knowledge and skills | Can the assigned model tier do this task type at all? Does the brief carry the domain rules, with reasons? |
-| Consequences | Does the desired behavior pass reliably and immediately? Does the undesired behavior ever pass? Is honest blocking rewarded and misreporting costly? |
-
-### 5. Locate the BEM cell
-
-Map the finding to Gilbert's six cells. Check the environment row first; those fixes are cheaper and more powerful.
-
-1. Information, 2. Resources, 3. Incentives (environment)
-4. Knowledge, 5. Capacity, 6. Motives (individual)
-
-### 6. PIC/NIC check
-
-For the behavior you want, and the one you don't, ask Daniels' questions about its consequence: is it Positive or Negative, Immediate or Future, Certain or Uncertain? Desired behavior should meet positive, immediate, certain consequences; undesired behavior should not. If a shortcut passes immediately and certainly while the correct path passes late and uncertainly, the swarm will take the shortcut.
-
-### 7. Choose one change
-
-Pick the smallest change likely to have the largest effect. Prefer, in order:
-
-1. Fix an antecedent: rewrite criteria, add a worked example, add a template, fix an input.
-2. Fix a resource or process: split the task, fix the handoff contract, change the tier.
-3. Fix a consequence: close the eval gap, add a check, change routing.
-4. Only then add knowledge to the brief, as an if/then/because rule.
-
-Never add a bare "don't do X" rule. Pair it with the reinforced alternative ("if X seems necessary, file a blocked report, because..."). Prohibition without an alternative tends to produce a different workaround.
-
-Change one thing at a time, so its effect can be measured. Several simultaneous changes make it impossible to know which one worked.
-
-Weigh what a rule costs as well as what it buys. A rule that adds a review, a fresh agent or an extra check to every task multiplies across the whole run. In one test run, a rule requiring a fresh checker whenever independence was at risk made every review pay a large orientation cost. Prefer rules that apply only where the risk is, and say which tasks a rule covers.
-
-### 8. Write the rule-change record and version the file
-
-Fill in protocol 3.7: trigger, diagnosis, before and after, expected effect, expected cost (tokens or time per task, and which tasks it applies to), the scorecard measure to watch, when to review it, and the condition for reverting. Revert a rule whose cost turns out larger than the problem it fixed. Save the changed file as a new version (`producer.v4.md`); never overwrite.
-
-### 9. Review the effect
-
-At the review cycle, compare the measure with its baseline. Keep changes that worked. Revert changes that did not, and try the next most likely cause.
-
-## Patterns and first fixes
-
-| Pattern | Likely cell | First fix |
-| --- | --- | --- |
-| Stall, no accepted units | 1 or 5 | Split into smaller units; for ambiguous work, redefine the next unit as an uncertainty reducer |
-| Same criterion fails repeatedly | 1 | Rewrite the criterion; add a worked example of it met |
-| Fails only on one tier | 5 | Move the task type to a stronger tier, or split it |
-| Misreport | 3 | Close the gap that let the overclaim look acceptable; check honest blocks are being confirmed |
-| Constraint break | 3 or 5 | Task too hard or reinforcement too lean; resize, add escalation path, confirm the break was quarantined |
-| Tests pass, product wrong | 3 | Add a direct check of the accomplishment beside the proxy |
-| Checkers miss seeded errors | 4 or 6 | Add bad examples to the look-for list; confirm checker context is separate from producer |
-| Overspend | 2 or 3 | Trim context, thin review schedules, move routine work to a faster tier |
-| Drift toward easier output | 3 | Re-anchor criteria to the goal; add a measure for the missing quality |
-| Handoff errors | 2 | Tighten the contract; validate on arrival |
-| Over-control: review over its share, or core work stalled behind supporting work | 3 | Thin review by risk tier; drop checks and work the goal does not need; unblock the core with a minimal version |
-| Honest blocks on solvable tasks, citing a missing capability | 2 | Rewrite the criteria to what the producer and checker can actually verify, or add the capability |
-| A checker passed work after hearing the manager's explanation or expected verdict | 6 | Review packets with facts only; a fresh checker for that re-review |
-| Parallel producers' changes collide, or evidence does not match the submitted version | 2 | Isolated workspaces per task; evidence produced on the exact submitted version |
-| Runs failing on credentials, credit, rate or usage limits, an unavailable model or a context overflow | 2 | Not a performance problem. Fix or park the environment issue, and confirm these failures were kept out of retry caps and review modes. Never write a rule aimed at the agent for them |
-| Cycles that leave no commit, no changed check result and no new record (spinning) | 1 or 3 | Usually the next step is unclear or the done check is unreachable. Restate the next unit as a concrete end state with its check, or split it |
-| "Done" claimed but the done judge returns not met | 3 | Make sure done is judged by a fresh agent running the checks, never by the worker; rewrite any done criterion that lacks a runnable check |
-
-## Rule hygiene
-
-Rules accumulate, and long instruction files reduce how well agents follow them. Keep each brief within a budget (default about 1,500 words, or 15 local rules). Once a brief is at its cap, a new rule must replace or merge with an existing one.
-
-At each milestone, prune briefs: merge overlapping rules, delete rules whose problem no longer occurs, and keep each brief short enough to read cheaply. A brief that grows without limit becomes its own Cell 1 problem.
-
-State each rule's purpose, not only its procedure. Strong models follow a reason better than a rigid procedure, and a narrow rule can make them worse: in one study, telling strong models to record only failures cut most of the benefit of their memory. Fast-tier roles may need more explicit procedures; strong-tier roles need the purpose and the reason.
+**Keep the rules lean.** Each brief has a budget (default about 15 rules). At the cap, a new rule must replace or merge with an old one. Delete rules whose problem no longer occurs. State each rule's purpose, not just its procedure: long rule files are followed poorly.

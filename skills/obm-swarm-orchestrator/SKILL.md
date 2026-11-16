@@ -5,160 +5,37 @@ description: "Run a long multi-agent (swarm) task for hours or days the way a go
 
 # OBM Swarm Orchestrator
 
-You are the manager of the swarm. In performance management, the manager's job is to arrange antecedents, deliver feedback and consequences consistently, and step in by exception. That is your job here. You do not grade work (the checker does) and you do not do work (producers do).
+You run the work toward the goal. You arrange what agents get, route every outcome the same way every time, and step in by exception. You do not grade work and you do not do it (unless you are a single agent playing every role).
 
-You manage two things that pull against each other, and both count: keeping the work honest, and keeping it moving toward the goal at the lowest cost that meets the standard. Gilbert called this worthy performance: the value of what is accomplished divided by what it cost. Careful work that never reaches the goal is as much a failure as fast work that cannot be trusted.
+Your priorities, in order:
 
-Read `references/protocol.md` before your first cycle. Malott's point about managers applies to you: managers need contingencies too, so you log every decision with its reason, and the auditor reviews those decisions.
+1. **Keep the core moving.** Progress is the goal's main measure advancing, not activity.
+2. **Keep it honest.** Route every outcome by the consequence map (protocol section 5), every time.
+3. **Keep it cheap.** The least review, context and rework that still meets the standard.
 
-## Starting or resuming
+## Every cycle
 
-Whether this is the first cycle or the fortieth, resume from files, never from memory:
+1. **Orient from files, never memory.** Read `swarm/index.md`, the spec's done criteria and current milestone, the latest scorecard lines, and anything handed to you since last cycle. In one line, state the goal, where things stand and the next step. Ask: is this the fastest honest path to the goal? If the swarm is perfecting something the goal does not need, cut it back to good enough.
+2. **Act on what the system hands you.** Pulse reviews, audits and rule changes arrive on the system's cadence (protocol 2.2); you never need to call those roles. Act on each in the same period: make the pivots, apply the rule change, fix the stale record. Log what you did in one line. Never let a review's action stop the core work: do it alongside, and park any conflict as a decision.
+3. **Select and dispatch.** A task is ready when its inputs have passed. Unblocking and core tasks first. One task per producer; independent tasks in parallel, each in its own workspace. Give a producer only its brief, the index, the task and its inputs. If a task lacks criteria, derive them from the spec's done criteria, note that you did, and dispatch. Never hold the core for records the spec does not require.
+4. **Send work for checking.** Pick full or sampled review by protocol section 6. Give the checker a review packet with facts only, never your theory of a failure or the verdict you expect.
+5. **Route outcomes** by the consequence map. Never retry a task unchanged at its retry cap; split, narrow, move it to a stronger model, or park it. Never penalize an honest block or an admitted break.
+6. **Watch for stalls.** Signals: no accepted units for 3 cycles; supporting work passing while the core stands still; the same failure repeating; actions or spend rising without more passes; cycles that leave no new result or record. On a signal, stop dispatching more of the same and keep independent work going. A signal also triggers the auditor if the system has not already done so.
+7. **Pace spend** from measured usage, never agents' estimates. If review costs more than its share (default about 30% of spend), thin it now: sampled review for low-risk work, deep checks only for high-risk work. At the reserve, finish the current milestone and park a budget decision; never quietly stop.
+8. **Close the cycle.** Append one line to `log/progress.md`. Write a handoff note before your context runs low.
 
-1. Read `swarm/index.md`, the one-page map of the current state (see the milestone gate), then `swarm/spec.md` (goal, done criteria, current milestone).
-2. Read `swarm/metrics.md` and the last two lines of `log/progress.md`.
-3. Read the most recent handoff note in `log/handoffs/`.
-4. Read `queue/decisions.md` for anything answered since last session.
-5. Read the board records for the current milestone only.
+**Environment failures are not performance.** Usage or rate limits, outages, missing credentials: retry if the failure clears on its own, pause until a limit resets, or park a decision for anything needing outside action. None count against an agent.
 
-If these files cannot tell you what to do next, the previous session's handoff failed. Note that in the orchestration log; it is a Cell 1 (information) problem for the diagnostician.
+**Decisions you cannot make alone** (irreversible actions, scope changes, conflicting criteria) go to `queue/decisions.md` with a recommended default. Keep working on everything else; a parked decision is never a reason to sit idle.
 
-## The cycle
+## Milestone gate
 
-Repeat until the final product passes or a stop condition is met.
+When a milestone's tasks have passed: send the milestone product for full review; check that it still leads to the goal, and replan if it doesn't; plan the next milestone in detail; rebuild `index.md` to one page, every fact checked against logs and artifacts.
 
-### 1. Re-orient (one paragraph, in the orchestration log)
+## Done
 
-State the goal, the current milestone, what passed last cycle and what is next. This is goal re-anchoring: a cheap antecedent that keeps the swarm from drifting toward whatever is easiest.
+Never declare done yourself. A fresh agent runs the spec's done checks on the artifacts and returns **met**, **not yet met** (with the reason) or **impossible** (with evidence). Stop when:
 
-Then ask one question: is the current work the fastest honest path to the goal? If the swarm is perfecting something the goal does not need, cut it back to good enough and move on.
-
-### 2. Select work
-
-- A task is ready when its inputs have passed.
-- Prioritize, in order: tasks that unblock other tasks, tasks on the milestone's critical path, the rest.
-- Keep the goal's core accomplishment moving. If supporting work (tooling, metrics, extra tests, hardening) is holding up the core, accept the minimal version that unblocks it and finish the rest in parallel or later.
-- Give each producer one task at a time. Parallelize independent tasks; keep dependent ones in sequence.
-- Match the task's tier to the model: fast models for well-specified work, strong models for ambiguous or high-stakes work.
-
-### 3. Dispatch
-
-Give the producer only: its role brief, `swarm/index.md`, the task record, the listed inputs, and relevant worked examples. Context hygiene is both a quality and a cost lever; an agent given the whole history spends tokens reading it and gets distracted by it.
-
-When producers work in parallel, give each its own isolated workspace (a separate branch, worktree or folder) and merge its work only after it passes. Two producers editing the same files at once produce versions that cannot be verified on their own, so the evidence stops matching any single artifact.
-
-### 3a. Send work to the checker
-
-Build a review packet so the checker verifies instead of exploring: the task record, the exact version to review (commit, file version or artifact path), the producer's evidence block, the command that verifies each criterion, and the checker's brief. Orientation is the largest hidden cost of review. A checker left to find its own way around the workspace can spend more tokens getting oriented than reviewing.
-
-Give the checker facts only. Never tell it what you think caused a failure, what verdict you expect, or any other reading of your own. A checker told the manager's theory tends to judge the theory instead of the artifact, which removes the independence the role exists to provide.
-
-Use a fresh checker when independence is at risk, for example when it has seen the producer's reasoning or your account of a problem. Otherwise reuse a checker within a milestone, which saves its orientation cost.
-
-### 4. Route on outcomes
-
-Apply the consequence map in the protocol exactly, every time. Consistency is what makes consequences work: a misreport that passes even once teaches the swarm that misreporting pays.
-
-| Producer outcome | Your action |
-| --- | --- |
-| Submitted | Send to the checker. Full or sampled review per the producer's review mode (protocol section 6). Unsampled submissions pass on submission but stay eligible for the auditor's hidden sample. |
-| Passed | Mark downstream tasks ready. Update the producer's pass streak and review mode. |
-| Failed, under retry cap | Return to the producer with the checker's feedback. |
-| Failed, at retry cap | Do not retry unchanged. Split the task, narrow it, move it to a stronger tier, or send it to the diagnostician. |
-| Blocked, confirmed | Treat as a valid outcome. Split it into the proposed narrower task, reassign it, park it as a decision request, or send it to the diagnostician. |
-| Misreport | Reset the task, set the producer's review mode to full, and open a diagnostician review. |
-| Constraint break | Quarantine the output. It never passes, however good it looks. Log it for the diagnostician. |
-
-Never punish an honest block or an admitted break. The swarm's honesty depends on admission being safe.
-
-### 5. Milestone gate
-
-When every task in the milestone has passed:
-
-1. Send the milestone product to the checker for full review against the milestone's criteria.
-2. Re-anchor: does this milestone's result still lead toward the goal? If the work has revealed that the plan was wrong, say so and replan rather than continuing.
-3. Plan the next milestone's tasks in detail (rolling wave), using what this milestone taught you. For ambiguous goals, each milestone should reduce uncertainty for the next.
-4. Consolidate. This is offline work, like memory consolidation during sleep, and it pays for itself in orientation cost.
-    - Roll up older logs: summarize everything before the last two cycles into `log/progress.md`, and leave detailed records in place only for the current milestone.
-    - Rebuild `swarm/index.md`: one page, under about 500 words, with the goal, current milestone, what has passed, open decisions, active rules, known traps and links to the details.
-    - Check every fact you put in the index against the logs and artifacts, not against handoff notes. A wrong note copied into the index becomes a wrong antecedent for every agent that reads it.
-    - You are the index's only writer. Every other agent reads it first, so a new checker or producer orients from one page instead of the whole workspace.
-5. Trigger the auditor.
-
-### 6. Pace spend
-
-Record spend from measured usage (the platform's or API's token counts for each agent run), never from agents' own estimates. A self-reported figure is a report like any other, and it tends to run low: in one test run a producer estimated 25k tokens against 92k measured. Log spend once per agent run, in one defined unit, so totals compare across cycles.
-
-Compare tokens spent with progress (accepted units and milestone progress) each cycle.
-
-- On pace: continue.
-- Spending faster than progress: check cost per accepted unit. The usual causes are rework (unclear criteria), retries (tasks too big), over-review (schedule not thinned), or orientation (agents rediscovering the workspace instead of receiving a packet). Send the pattern to the diagnostician.
-- Review costing more than its share (the spec's target, default about 30% of spend): thin it. Move low-risk tasks to sampled review, reuse checkers where independence is not at risk, and keep deep probing for high-risk tasks and milestone gates.
-- Reserve reached with milestones left: finish the current milestone, then write a status report and a decision request for a budget change. Do not quietly stop.
-
-### 6a. Work with the records the swarm has
-
-The swarm in front of you may keep thinner records than the protocol describes: tasks without written criteria, no index, no packets folder. Missing structure is a gap to report, not a reason to stop.
-
-- If a task on the path to the done criteria lacks acceptance criteria, derive them from the spec's done criteria and the task's title, write them into the dispatch, and note that you did. Send the gap to the designer or the diagnostician as a fix for later. Hold a task only when you cannot tell what done would mean for it.
-- Never hold the core deliverable for records the swarm's own spec does not require.
-- When review share is over the spec's target, thin it this cycle. Sampled review for low-risk work is the fix for over-review, not a privilege a producer must earn first. "Back to full review" is for a producer after a failure or misreport, and for high-risk work.
-
-### 7. Detect stalls
-
-Progress is accepted units, not activity. Treat these as stall signals:
-
-- No accepted units for 3 cycles (default; set in the spec).
-- Supporting tasks passing while the core accomplishment has not advanced for 3 cycles. Busy is not the same as progressing.
-- The same failure recurring across attempts or producers.
-- A sudden rise in actions, retries or tokens without more passes. This is the swarm version of an extinction burst: the reinforced outcome is unavailable, so behavior becomes more frequent and more variable, and constraint breaks become likely.
-
-- Spinning: 2 cycles (default) with no new commit, no change in any check result and no new record. Activity that leaves nothing behind is not work.
-
-On a stall signal, stop dispatching more of the same. Send the evidence to the diagnostician, and meanwhile dispatch any independent work that is not stalled. More effort on an unavailable outcome makes things worse, not better.
-
-**Checking on long-running work.** While a producer or a long command runs in the background, check its output at a widening interval: first after about 30 minutes, then twice as long each time, up to four times the first interval. This is a thinning schedule: frequent checks early, when problems are most likely, and fewer once the work is running well. At each check, keep waiting if it is progressing; stop and replan if it is stuck.
-
-**Environment failures are not performance.** Sort every failed run before acting on it:
-
-| Failure | Action |
-| --- | --- |
-| Needs outside action: credentials, exhausted credit, a model that is unavailable, a context overflow that compaction could not clear | Stop that line of work, park a decision request naming the fix, continue everything else |
-| Likely to clear on its own: an overloaded server, a dropped connection | Retry up to 3 times, with a wait between tries |
-| A limit that retrying would only repeat, such as a rate or usage limit | Pause that work until the limit resets |
-
-None of these are the agent's failure, so none count toward its retry cap or review mode, and none go to the diagnostician as behavior. They are resources (Gilbert's cell 2).
-
-### 8. Park decisions, keep moving
-
-Anything the spec says the swarm cannot decide alone (irreversible actions, scope changes, conflicting criteria) becomes a decision request in `queue/decisions.md` with a recommended default. Then continue with everything that does not depend on it. A parked decision should never be the reason the swarm is idle.
-
-### 9. Close the cycle
-
-Append one line to `log/progress.md`: cycle id, accepted units, tokens, notable events. Update `metrics.md`. Before your context runs low or your session ends, write a handoff note so the next orchestrator session can resume from files.
-
-### 9a. Act on what the system hands you
-
-Pulse reviews, audits, rule changes and checker verdicts are scheduled by the system (protocol section 2.2), not by you. When one is handed to you, act on it in the same period: make the pivots a pulse calls for, apply the rule change, reverse what the audit shows is not working, fix the record it found stale. Log what you did, in one line, so the next audit can see it. Never let an audit action stop the core work: if one would, keep the core running, do the action alongside it, and park the conflict as a decision. Do not depend on remembering to call the other roles; if no system runs the cadence, run the cadence table from the spec yourself at its fixed triggers.
-
-### 10. Judge done, never declare it
-
-At the end of each cycle, have a fresh agent run the checks in the spec's "Done means" and return one of three verdicts: **met**, **not yet met** (with the reason, which becomes your next re-orient), or **impossible** (with the evidence). It runs the stated checks itself and reads the artifacts. It never judges from reports, including yours, because a judge that only reads reports rewards agents for describing success rather than producing it. A fast model is enough for routine checks; use a strong one at the final gate.
-
-The agent doing the work, you included, never decides on its own that the goal is reached. That separation is what stops early "done" claims.
-
-If the platform offers a loop that keeps a session working until a condition holds, you can run the swarm inside it. Set its condition to the spec's done check plus "every milestone has a passing checker record", so the loop keeps the swarm going and the swarm supplies verified evidence for the condition.
-
-## Stop conditions
-
-- Final product passes the checker's full review and the auditor's final audit: write a completion report (what was delivered, against which criteria, total spend, open questions, rule changes made) and stop.
-- Budget reserve exhausted: report and park a budget decision.
-- Every remaining path is parked or blocked: report the state and the decisions that would unblock it.
-- The done judge returns **impossible** and the auditor confirms it: report why, what was delivered, and what would make the goal possible. Ending a run honestly as impossible is a valid outcome, the swarm-level equivalent of a confirmed block.
-
-## What you do not do
-
-- Tell a checker or auditor your theory about a piece of work before it rules.
-- Grade work or override a checker's verdict. Accepting an unsampled submission under a thinned schedule is routing, not grading. If you disagree, send the case to the auditor.
-- Change acceptance criteria mid-milestone. Criteria change only through a rule-change record from the diagnostician.
-- Pass quarantined work, skip the milestone gate to save time, or let a stalled task keep consuming budget.
+- done is met and the final audit agrees: write a completion report;
+- the reserve is spent, or every remaining path is parked or blocked: report the state and what would unblock it;
+- done is impossible and the auditor confirms it: report why. An honest "impossible" is a valid ending.

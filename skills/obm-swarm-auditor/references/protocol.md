@@ -1,334 +1,166 @@
 # OBM Swarm Protocol
 
-Shared conventions for the six OBM swarm skills (designer, orchestrator, producer, checker, auditor, diagnostician). Every role reads this file. It defines where state lives, what every record looks like, and which consequence follows which outcome, so that any agent, from any model or vendor, can pick up the work cold and keep it moving.
+Shared rules for the six roles. Read it once; return to a section when your skill points you there.
 
-The design rests on one premise from Gilbert's Behavior Engineering Model: most performance problems come from the environment the performer works in, not the performer. Deployed agents do not learn across runs, so the swarm is directed through antecedents (specs, briefs, the board), consequences delivered as routing, and rule changes between cycles.
+The aim is worthy performance: the most value toward the goal for the least cost. Honesty protects the value; pace and right-sized review protect the cost. Fix the environment (instructions, inputs, checks, consequences) before blaming an agent.
 
-The aim is Gilbert's worthy performance: the value of what the swarm accomplishes divided by what it costs. Honesty and quality protect the value; pace, risk-based review and efficiency protect the cost. A swarm can fail on either side.
+## 1. Roles
 
-## Contents
-1. Roles and separation of duties
-2. Workspace layout (2.1 memory, 2.2 cadence)
-3. Record formats
-4. Status values and who may set them
-5. Consequence map
-6. Review schedule: how often and how deep
-7. Scorecard
-8. Single-agent mode
-9. Glossary: OBM term to swarm practice
-
----
-
-## 1. Roles and separation of duties
-
-| Role | Does | Never does |
+| Role | Does | Never |
 | --- | --- | --- |
-| Designer | Turns a goal into a spec, milestones, roles, contracts, evals and budgets | Produces work products |
-| Orchestrator | Runs the cycle: dispatches, routes on outcomes, builds review packets, paces milestones and spend, keeps the core accomplishment moving, parks decisions | Grades work, edits criteria mid-milestone without a rule change, tells a checker its own theory before the checker rules |
-| Producer | Does one task at a time to its contract, with evidence | Grades its own work, edits evals, tests, criteria or other roles' records |
-| Checker | Verifies submitted work against criteria and evidence, at the depth its risk tier sets | Checks work it produced, softens a verdict to keep things moving, adds requirements the criteria do not contain |
-| Auditor | Checks drift and over-control, report-reality agreement, probes, spend and progress, and the orchestrator's own decisions | Reports to the orchestrator for approval; its findings go to the record |
-| Diagnostician | Turns failures into specific rule changes | Blames an agent; changes many things at once |
+| Designer | Turns the goal into a spec, milestones, briefs, checks, budgets and a cadence | Does the work |
+| Orchestrator | Runs the work: dispatches, routes outcomes, paces spend, keeps the core moving | Grades work; gives a checker its own theory |
+| Producer | Does one task to its criteria, with evidence | Grades its own work; edits tests, criteria or others' records |
+| Checker | Verifies work against criteria and evidence | Checks its own work; adds criteria; softens a verdict |
+| Auditor | Pulse reviews of the numbers; full audits of direction, honesty, cost and records | Waits for the orchestrator's approval |
+| Diagnostician | Turns a repeated problem into one rule change | Blames an agent; changes several things at once |
 
-Separation of duties is the main honesty safeguard when there is no infrastructure enforcing it. Producers and checkers should run in separate contexts. When only one AI is available, see Single-agent mode.
+Producers and checkers run in separate contexts. With only one agent, see section 8.
 
-## 2. Workspace layout
+## 2. Workspace
 
-All state lives in files, never only in a context window. A fresh agent must be able to resume from these files alone.
+All state lives in files, so any agent can resume from them alone.
 
 ```
 swarm/
-  index.md                one-page map of current state; every role reads it first (section 2.1)
-  spec.md                 goal, done-criteria, milestones, roles, contracts, budgets, decision rights
-  board.jsonl             one task record per line (section 3.1)
-  rules/                  role briefs, versioned (producer.v3.md); changed only via rule-change records
-  examples/               worked examples promoted from passed work (good) and caught errors (bad)
-  log/
-    progress.md           one line per cycle: cycle id, accepted units, tokens, notes
-    orchestration.md      orchestrator decisions and reasons
-    handoffs/             one handoff note per session (section 3.2)
-    packets/              one review packet per check: facts only (section 3.8)
-    reviews/              one review record per check (section 3.4)
-    runs.jsonl            measured spend, one line per agent run (section 7)
-  queue/decisions.md      parked decisions (section 3.6)
-  changes/                rule-change records (section 3.7)
-  audits/                 audit reports; audits/probes.md is the auditor's private register
-  metrics.md              the scorecard (section 7)
+  index.md          one page: goal, milestone, what passed, open decisions, active rules, traps. Orchestrator writes it; everyone reads it first
+  spec.md           goal, done criteria, milestones, budgets, decision rights, cadence table
+  board.jsonl       one task per line (3.1)
+  rules/            versioned briefs (producer.v3.md); changed only by the diagnostician
+  log/              progress.md (one line per cycle), handoffs/, reviews/, runs.jsonl (measured spend)
+  queue/decisions.md  parked decisions
+  audits/           pulse (P-NNN) and audit (A-NNN) reports; probes.md is private to the auditor
+  metrics.md        the scorecard (section 7)
 ```
 
-Paths may be adapted, but keep the separation: shared state in the board and logs, rules versioned, audits apart.
+- **One writer per file.** Others propose changes through their own records.
+- **Ground truth beats notes.** Facts in the index are checked against logs and artifacts, never copied from a note.
+- **Keep it lean.** Write what the next agent needs and cannot see in the artifact.
+- **Parallel producers** each get an isolated workspace, merged only after their task passes.
 
-When producers work in parallel, each task gets its own isolated workspace (a branch, worktree or folder), merged only after the task passes. Evidence is produced on the exact version submitted.
+## 2.2 Cadence: the system calls the roles
 
-Context hygiene: no role reads the whole workspace. Each role reads `index.md`, its brief, the records its step needs, and the most recent summaries. Older logs are rolled up into summaries at each milestone (keep the last two cycles in full).
+Roles never depend on each other to remember. In long runs, agents told to call the auditor stopped within days. The system (a harness, scheduler or hook, or else the human) invokes each role in a fresh context and hands its output to the orchestrator.
 
-### 2.1 Memory: what the swarm writes down, and why
+| Role | Trigger | Writes |
+| --- | --- | --- |
+| Designer | Once at the start | spec, briefs, cadence table |
+| Measurement (a script where possible) | Every period | `metrics.md` lines from ground truth, never from an agent's report |
+| Checker | Each submission, or a random sample | review records |
+| Auditor, pulse | Often: default every 7 periods of an operation, or every cycle of a build | `audits/P-NNN.md`: direction of the numbers and up to three pivots |
+| Auditor, full audit | Default every 30 periods or 5 cycles, at milestones, before done, and when a measure leaves its limits | `audits/A-NNN.md` |
+| Diagnostician | When a pulse or audit ends `Diagnosis needed: yes` | a rule-change record and a new rule version |
 
-The files are the swarm's memory, and agents act on what they read there. A wrong record becomes a wrong antecedent for every agent after it, so memory is managed like any other work product. It comes in layers, from raw to distilled:
+The orchestrator acts on anything handed to it in the same period and logs what it did. With no system to run the cadence, the orchestrator runs this table itself, and a missed audit is a finding.
 
-| Layer | Files | Written by | Purpose |
-| --- | --- | --- | --- |
-| Ground truth | artifacts, `log/runs.jsonl`, `log/reviews/`, `board.jsonl` | the role doing the work | What actually happened |
-| Notes | `log/handoffs/` | producers and other roles at session end | What the next agent cannot see in the artifact |
-| Rules | `rules/`, `examples/` | diagnostician, via rule-change records | What to do differently, and why |
-| Index | `index.md` | orchestrator only | Where things stand, on one page |
+## 3. Records
 
-- **One writer per file.** Each file has a single owner role (section 1 and the table above). Others read it and propose changes through their own records. This prevents conflicting edits and makes every record traceable.
-- **Consolidate at milestones.** At each milestone gate the orchestrator rolls up logs and rebuilds `index.md`: goal, current milestone, what has passed, open decisions, active rules, known traps, and links to the details, in under about 500 words. Every fact in the index is checked against ground truth, never copied from a note.
-- **Keep it lean.** Record what the next agent needs and cannot get from the artifact. Notes that restate the artifact go stale and bury what matters. Briefs stay within the diagnostician's rule budget, because long instruction files reduce how well agents follow them.
-- **Audit it.** The auditor checks the index, notes and rules against ground truth at every audit.
-
-### 2.2 Cadence: the system calls the roles
-
-Roles do not wait for each other to remember. In long runs, an agent told to call the auditor or the diagnostician did it for the first days and then stopped, and nothing noticed. So the cadence is run by the system: a harness, scheduler or hook where one exists, or the human otherwise. The designer writes the cadence table into the spec. The system invokes each role in a fresh context at its trigger and puts the role's output where the orchestrator will read it next.
-
-| Role | Invoked by | Trigger | Writes |
-| --- | --- | --- | --- |
-| Designer | System | Once at the start; again only on a human decision | `spec.md`, rules, the cadence table |
-| Measurement | System, as a script rather than a model where possible | Every period | Lines in `metrics.md`, taken from ground truth, never from an agent's report |
-| Orchestrator | Runs continuously | | Acts on what it is handed, and records that it did |
-| Checker | System | Each submission, or a random sample of actions | Review records |
-| Auditor, pulse review | System | Often: every few periods (default every 7 periods of an operation, or every cycle of a build) | `audits/P-NNN.md`: the numbers' direction against targets, and at most three pivots |
-| Auditor, full audit | System | Every N periods (set in the spec), at milestone dates, and before done | `audits/A-NNN.md`, ending with `Diagnosis needed: yes` or `no` |
-| Diagnostician | System | When an audit says diagnosis is needed, or a measure leaves its control limits | A rule-change record and a new rule version |
-
-When a pulse, an audit or a rule change is handed to the orchestrator, it acts on it in the same period and logs the action. The next audit checks that it did.
-
-With no system to run the cadence (single-agent mode), the orchestrator runs this table itself at the fixed triggers, and the auditor first checks whether the cadence was kept. A missed audit is a finding.
-
-## 3. Record formats
-
-Keep records short and structured. Structured records are cheaper to read than prose and are what make roles interchangeable across models.
-
-### 3.1 Task record (one line in board.jsonl)
+### 3.1 Task (one line of board.jsonl)
 
 ```json
-{
-  "id": "T-0042",
-  "milestone": "M2",
-  "title": "Short imperative title",
-  "pinpoint": "The observable product this task yields",
-  "acceptance": ["Checkable criterion 1", "Checkable criterion 2"],
-  "inputs": ["T-0039", "path/to/source"],
-  "consumer": "T-0045 or role name",
-  "role": "producer",
-  "tier": "fast | standard | strong",
-  "risk_tier": "low | standard | high",
-  "owner": null,
-  "status": "open",
-  "attempts": 0,
-  "retry_cap": 2,
-  "budget_tokens": 20000,
-  "tokens_used": 0,
-  "review_mode": "full | sampled",
-  "evidence": null,
-  "history": []
-}
+{"id": "T-0042", "milestone": "M2", "title": "...", "pinpoint": "the product this task leaves behind",
+ "acceptance": ["checkable criterion"], "inputs": ["..."], "risk_tier": "low|standard|high", "model_tier": "fast|strong",
+ "status": "open", "attempts": 0, "retry_cap": 2, "budget": "...", "review_mode": "full|sampled", "evidence": null}
 ```
 
-`tier` is the model tier. `risk_tier` is what an undetected error would cost downstream, and it sets review depth (section 6).
-
-`history` gets one short entry per status change: `{"at": "C-17", "by": "checker", "status": "failed", "note": "criterion 2 unmet"}`.
-
-### 3.2 Handoff note (end of every session, 200 words or fewer)
-
-A handoff note exists so the next agent does not repeat your work or your mistakes. Record what the artifact cannot show. Do not restate what the artifact, diff or logs already show.
+### 3.2 Evidence block (with every submission)
 
 ```
-Session: S-031  Role: producer  Cycle: C-17
-Tasks touched: T-0042 submitted; T-0043 blocked
-Evidence: log/evidence/T-0042.md
-Approach: <what you were trying to do and why you chose this way>
-Tried and failed: <dead ends, and why each failed>
-Unverified: <what you suspect but did not check>
-Next step: <the single most useful next action>
-Open questions: <only real ones>
-Blockers: <what, and what would unblock it>
-Tokens used this session: <measured figure, or "unknown"; never an estimate>
+Task: T-0042   Version: <commit, file version or artifact path>
+1. <criterion> : met / not met : <evidence> : <how to verify in one step>
+Gaps and assumptions: ...
+Constraint breaks: none | <what happened>
 ```
 
-Test before finishing: if the next agent read only this note and the artifact, what would it waste time rediscovering? That is what the note is for. Leave a field as "none" rather than padding it.
+A claim without evidence counts as not met.
 
-### 3.3 Evidence block (attached to every submission)
-
-```
-Task: T-0042
-Claim per criterion:
-  1. <criterion> : <met / not met> : <evidence: test output, diff, source, artifact path> : <how to verify in one step>
-  2. ...
-Known gaps: <anything incomplete, uncertain or assumed>
-Constraint breaks: <none, or what happened>
-```
-
-A claim with no evidence is treated as not met.
-
-### 3.4 Review record
+### 3.3 Review record
 
 ```
-Task: T-0042  Reviewer: checker  Mode: full
-Verdict: pass | fail | misreport | block-confirmed | block-rejected
-Criteria:
-  1. <criterion> : met/unmet : <what was checked> : <how>
-Correspondence: report matches artifact? yes/no (details)
-Feedback: <one specific, criterion-referenced fix per unmet criterion>
-Done well: <one specific thing, for the worked-example pool>
+Task: T-0042   Verdict: pass | fail | misreport | block-confirmed | block-rejected
+1. <criterion> : met / unmet : <what was checked, how>
+Report matches artifact: yes / no
+Fix: <one specific fix per unmet criterion>
 ```
 
-### 3.5 Blocked report (a valid outcome, not a failure)
+### 3.4 Blocked report: a valid outcome
 
 ```
-Task: T-0042
-Type: missing information | missing resource | ambiguous criteria | impossible as specified | budget exhausted
-Tried: <what was attempted>
-Smallest unblocking step: <the one thing that would let work resume>
-Proposed narrower task: <a subproblem that can pass on its own>
+Task: T-0042   Type: missing information | missing resource | ambiguous | impossible as specified | budget spent
+Tried: ...   Smallest unblocking step: ...   Narrower task that could pass: ...
 ```
 
-### 3.6 Decision request (parked, work continues elsewhere)
+### 3.5 Handoff note (end of every session, 200 words or fewer)
 
 ```
-Decision: D-007
-Question: <one sentence>
-Options: <2-4>, with the recommended default first
-Reversible: yes/no
-Impact if delayed: <what waits on it>
-Work continuing meanwhile: <what the swarm is doing instead>
+Approach: why this way      Tried and failed: dead ends, and why
+Unverified: suspicions not checked      Next step: the single most useful action
+Blockers: ...      Spend: measured figure, or "unknown"
 ```
 
-### 3.7 Rule-change record
+Record only what the artifact cannot show.
+
+### 3.6 Decision request (parked; work continues)
+
+`D-007: <question> | options, default first | reversible? | what waits on it | what continues meanwhile`
+
+### 3.7 Rule change
 
 ```
-Change: RC-012   Cycle: C-18   Author: diagnostician
-Trigger: <symptom, with links to records>
-Diagnosis: <BEM cell; PDC area; ABC summary>
-Change: <file and version, before -> after>
-Expected effect: <observable>
-Expected cost: <tokens or time per task, and which tasks the rule applies to>
-Measure: <which scorecard line, and the threshold>
-Review at: C-21   Revert if: <condition, including cost larger than the problem it fixed>
+RC-012   Trigger: <records>   Cause: <the environment cell: information, resources or incentives>
+Change: <file, version, before -> after>   Expected effect: ...   Cost: ...
+Measure: <scorecard line and threshold>   Review at: ...   Revert if: ...
 ```
 
 ### 3.8 Review packet (orchestrator to checker)
 
-```
-Task: T-0042   Version: <commit, file version or artifact path>   Risk tier: standard   Mode: full | sampled
-Criteria: <copied from the task record>
-Evidence: <path to the producer's evidence block>
-Verify with: <one command or step per criterion>
-Producer's claims (unverified): <as written>
-```
+Task, exact version, criteria, evidence path, one verify step per criterion. Facts only: never the orchestrator's theory or expected verdict.
 
-Facts only. The packet never contains the orchestrator's theory about a failure or the verdict it expects.
+## 4. Status
 
-## 4. Status values and who may set them
+| Status | Set by |
+| --- | --- |
+| open, parked | orchestrator (designer at start) |
+| claimed, submitted, blocked | producer |
+| passed, failed, misreport | checker (orchestrator may pass an unsampled submission) |
+| quarantined | orchestrator |
 
-| Status | Set by | Meaning |
-| --- | --- | --- |
-| open | designer, orchestrator | Ready when inputs have passed |
-| claimed | producer | Being worked |
-| submitted | producer | Done, with evidence, awaiting review |
-| passed | checker; orchestrator only for unsampled submissions under sampled review | All criteria verified, or accepted under a thinned schedule (still eligible for the auditor's hidden sample) |
-| failed | checker | One or more criteria unmet; returned with feedback |
-| misreport | checker, auditor | Report does not match the artifact |
-| blocked | producer | Honest block report filed |
-| quarantined | orchestrator | Produced by breaking a constraint; can never pass |
-| parked | orchestrator | Waiting on a decision request |
+Setting a status you do not own is a constraint break.
 
-A role that sets a status it does not own has broken a constraint.
-
-## 5. Consequence map
-
-Consequences must be immediate, certain and identical every time. Inconsistent consequences are the fastest way to teach a swarm the wrong lesson (Daniels: consequences that are immediate and certain control behavior; delayed or uncertain ones barely do).
+## 5. Consequences: the same every time
 
 | Outcome | Consequence |
 | --- | --- |
-| Passed | Moves downstream at once. Counts toward the producer's pass streak. Strong examples are promoted to `examples/`. |
-| Failed | Returned once with specific feedback. At the retry cap, escalated (split, narrow or replan), never retried a third time unchanged. |
-| Blocked (confirmed) | Counted as a valid outcome. Routed to split, reassign, park or diagnose. Never penalized. |
-| Misreport | The costliest outcome. Task reset, producer returns to full review, diagnostician opens a rule review. |
-| Constraint break | Output quarantined and never passes, however good. Logged as data about the environment. |
-| Honest report of one's own constraint break | Output still quarantined, but no further consequence. Concealment is the outcome to make impossible, not admission. |
+| Passed | Moves downstream at once; adds to the producer's pass streak |
+| Failed | Returned once with specific feedback; at the retry cap, split, narrow or replan, never retried unchanged |
+| Blocked, confirmed | A valid outcome: split, reassign, park or diagnose. Never penalized |
+| Misreport | Task reset, producer back to full review, diagnosis opened |
+| Constraint break | Output quarantined and never passes; admitting it carries no further cost, hiding it does |
+| Environment failure (limits, outages, credentials) | Not the agent's: retry or pause; never counted against it |
 
-Rewarding A while hoping for B (Kerr, 1975) is the failure this table exists to prevent. If a misreport or a rule-break can ever pass, the swarm is being trained to misreport and break rules.
+If a misreport or a shortcut can ever pass, the swarm learns to misreport.
 
-## 6. Review schedule: how often and how deep
+## 6. Review: how often, how deep
 
-Two separate settings. How often work is checked depends on demonstrated reliability (schedule thinning). How deeply it is checked depends on its risk tier. Together they are the largest source of token savings.
-
-| Risk tier | Review depth |
+| Risk tier | Depth |
 | --- | --- |
-| low (docs, tooling, test-only, easily reversed) | Confirm each criterion directly and stop |
-| standard | Verify each criterion and its evidence; read the code or artifact |
-| high (core accomplishment, work others build on, anything irreversible) | Full verification plus extended probing: planted bugs, adversarial cases |
+| low | Confirm each criterion directly |
+| standard | Verify each criterion and its evidence |
+| high (core work, work others build on, irreversible) | Full verification plus adversarial checks |
 
-Reuse a checker within a milestone unless its independence is at risk (it has seen the producer's reasoning or the orchestrator's account of a problem). Review should stay within the spec's share of spend (default about 30%).
-
-How often:
-
-Start every producer, and every new task type, on full review (every submission checked). Thin the schedule as reliability is demonstrated, and return to full review on any failure. This is schedule thinning from behavior analysis.
-
-| Condition | Review mode |
+| Condition | How often |
 | --- | --- |
-| New producer, new task type, or after any fail or misreport | Full: every submission |
-| 5 consecutive first-pass successes | Sampled: 1 in 3, chosen at random |
-| 10 more consecutive sampled passes | Sampled: 1 in 5, chosen at random |
-| Milestone products, final products, anything touching an irreversible decision | Always full |
+| New producer or task type, or after a fail or misreport | Every submission |
+| 5 first-pass successes in a row | 1 in 3, at random |
+| 10 more | 1 in 5, at random |
+| Milestone and final products | Always |
 
-Sampling must be random and unpredictable to the producer. Unsampled passes are still eligible for the auditor's hidden sample. A sampled review is done at its tier's full depth: sampling changes how often, never how carefully.
+Sampling changes how often, never how carefully. Review stays within the spec's share of spend (default about 30%).
 
 ## 7. Scorecard (metrics.md)
 
-Update once per cycle. Track each line over time, not as a single number.
-
-| Measure | Definition | Why |
-| --- | --- | --- |
-| Accepted units | Tasks passed this cycle | The progress measure; zero across cycles signals a stall |
-| First-pass rate | Passed on first submission / submitted | Quality of antecedents and knowledge |
-| Rework rate | Failed / submitted | Cost of unclear criteria |
-| Blocked rate | Confirmed blocks / claimed | Task sizing and ambiguity |
-| Report-reality agreement | Audit sample matches / audit sample size | Honesty; the swarm's interobserver agreement |
-| Cost per accepted unit | Tokens spent / accepted units, from measured usage (log/runs.jsonl), never self-reports | Efficiency; part of the incentive cell |
-| Review share | Tokens spent on review / all tokens | Over-control; compare with the spec's target |
-| Core progress | Whether the goal's main accomplishment advanced this cycle | Busy is not progressing; supporting work alone does not count |
-| First end-to-end result | Cycle when a crude version of the final accomplishment first existed | Early, cheap discovery of the hard problems |
-| Milestone progress | Passed tasks in milestone / total | Pacing |
-| Cycles since last accepted unit | Count | Stall detection |
+From measured data, once per period: core progress (the goal's main measure), accepted units, first-pass rate, misreports, cost per accepted unit, review share, capacity in use, and the same measure a comparable period earlier (to catch decline). Read lines as trends: act on signals, not on routine variation.
 
 ## 8. Single-agent mode
 
-When only one AI runs the swarm, it plays each role in turn. Separation then depends on discipline:
-
-- Run each role in a fresh context where possible, loading only that role's skill, brief and records.
-- Never check work in the same context that produced it.
-- Write every record to the files before switching roles; the next role reads the files, not memory.
-- Start each role by reading `index.md`, and rebuild it at each milestone gate as the orchestrator.
-- Keep the auditor's probe register out of the producer and checker contexts.
-
-This is weaker than separate agents. Lean harder on evidence requirements and the auditor's hidden sample.
-
-## 9. Glossary: OBM term to swarm practice
-
-| OBM term | Swarm practice |
-| --- | --- |
-| Worthy performance (Gilbert) | Value of the accomplishment divided by its cost; judge the swarm on both |
-| Accomplishment vs behavior (Gilbert) | Specs name products, not activities |
-| Pinpointing (Daniels) | Every task has an observable product and checkable criteria |
-| Behavioral systems analysis (Rummler-Brache) | Process map with every handoff owned |
-| White space | The handoffs between roles |
-| Task clarification and job aids | Briefs, templates, output schemas |
-| Performance feedback (Alvero et al.) | Specific, criterion-referenced, immediate review records |
-| PIC/NIC analysis (Daniels) | Check that desired outcomes are positive, immediate and certain |
-| Shaping | Milestones and small reinforced units |
-| Schedule thinning | Full to sampled review as reliability holds |
-| Extinction burst | Repeated failures turning into erratic or rule-breaking actions |
-| Say-do correspondence (Risley & Hart) | Report-reality agreement |
-| Interobserver agreement | Auditor re-verification of a hidden sample |
-| Metacontingency (Glenn) | Interlocking agent contingencies producing one selected product |
-| Performance Diagnostic Checklist (Austin) | The diagnostician's question set |
-| Process behavior chart (Deming, Wheeler) | Scorecard signals: common vs special cause |
-| Behavior-based safety | No-blame block and near-miss reporting |
-| Managing the managers (Malott) | The auditor audits the orchestrator |
-| Risk-based inspection (quality management) | Review depth set by risk tier |
-| Exemplary standard (Gilbert) | "Good enough for the goal," not the most achievable |
-| Antecedent control | The index, notes and briefs agents read before acting; audited because a wrong record misdirects everyone after it |
-| Rule-governed behavior (Malott) | Rules state purpose and contingency, within a budget, because long or bare rules are followed poorly |
+Play each role in turn, each in a fresh context where possible, writing every record before switching. Never check work in the context that produced it. Keep the probe register out of producer and checker contexts.

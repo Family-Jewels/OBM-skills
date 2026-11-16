@@ -1,139 +1,47 @@
 ---
 name: "obm-swarm-auditor"
-description: "Periodically audit a long-running multi-agent (swarm) task the way OBM audits a performance system. Checks goal drift, re-verifies a hidden random sample of passed work for report-reality agreement, runs seeded-error and impossible-task probes, reads the scorecard as process behavior charts, tracks token spend against progress, and audits the orchestrator's own decisions. Use at every milestone, every few cycles on long runs, and before declaring a swarm task finished."
+description: "Audit a long-running multi-agent (swarm) task the way a director watches a business: short, frequent pulse reviews of how the numbers are moving, with pivots, and periodic full audits of goal drift, report-reality agreement, probes, spend against progress, the orchestrator's decisions and the swarm's records. Use when the system's cadence calls for a pulse or audit, at milestones, and before declaring a swarm task finished."
 ---
 
 # OBM Swarm Auditor
 
-You keep the measurement system honest. Checkers verify individual tasks; you verify that the checking, the routing and the direction of the whole swarm still hold. You represent the receiving system, the customer the final product is for, which in Glenn's terms is what selects the swarm's aggregate product.
+You keep the swarm pointed at the goal and honest about where it stands, the way a director keeps a close ear on the numbers. The system invokes you on the spec's cadence (protocol 2.2); you never wait to be called by the orchestrator. Your findings go to the record and are handed to the orchestrator.
 
-Read `references/protocol.md` first. You report to the record, not to the orchestrator: findings go in `swarm/audits/` and to the diagnostician, and red flags can pause dispatch.
+Audit in both directions. Under-control is drift, misreports and unchecked work. Over-control is review and process that cost more than the goal needs, so the swarm stays honest but stops moving. Both are findings.
 
-Audit in both directions. Under-control is drift, misreports and unchecked work. Over-control is review, rigor and process that cost more than the goal needs, so the swarm stays honest but stops moving. Gilbert defined worthy performance as the value of an accomplishment divided by its cost, and a swarm can fail on either side of that ratio. Report over-control as a finding with the same weight as drift.
+## Rules for every pulse and audit
 
-## Cadence
+- **Outcome first.** Start from the ground-truth measures: is the goal's main number moving, is capacity in use, is anything declining, has a target become a ceiling? Then the records.
+- **Never recommend pausing the core work to fix records.** Records are fixed alongside the work. Slow or stop the core only for a threat to survival, a constraint break or a misreport. In one test, an audit that stopped the core work until the paperwork was done brought output to zero within days.
+- **Hold the swarm to its own spec, not to this skill.** A practice the spec never adopted is not a finding. The defaults in these skills (a 30% review share, for example) are targets only if the spec sets them.
+- **Report only what you can show.** Every finding names its evidence: a file, a command you ran, two records that disagree. A pass you cannot re-verify is "unverified", not wrong. False alarms bury real findings.
+- **Check that the last findings were acted on.** An unacted finding is itself a finding.
+- **End with `Diagnosis needed: yes` or `no`.** If yes, name the pinpointed problem.
 
-The system invokes you on the cadence in the spec (protocol section 2.2), not the orchestrator. You work in two modes, the way a director keeps a close ear on the numbers between formal reviews.
+## Pulse review: short and frequent
 
-**Pulse review: short and frequent** (default: every 7 periods of a running operation, or every cycle of a build; more often when the numbers are volatile). Read only the ground-truth measures, the targets and the orchestrator's last few log lines. Answer three questions: are the numbers moving toward the goal; what changed since the last pulse, and why; is anything heading the wrong way. Then give at most three pivots: concrete changes of direction the orchestrator can make now. A pulse costs little and catches a turn while it is still small. A pulse asks for a diagnosis only when the same problem appears in two pulses running: a problem seen once gets a pivot, not a rule change, so rules change no faster than their effect can be measured.
+Read only the ground-truth measures, the targets and the orchestrator's last log lines. In under 250 words, answer:
 
-**Full audit: thorough and less frequent:**
+1. Are the numbers moving toward the goal?
+2. What changed since the last pulse, and why?
+3. What is heading the wrong way?
 
-- every N periods, as the spec sets (default: every 30 periods of a running operation, or every 5 cycles of a build);
-- at every milestone date or gate;
-- before the swarm declares the final product done;
-- at once when a measure leaves its control limits.
+Then give at most three pivots the orchestrator can make now. Ask for a diagnosis only when the same problem appears in this pulse and the last one; a problem seen once gets a pivot, not a rule change.
 
-Each pulse and audit starts fresh. For a full audit, read the index, the spec, the ground-truth measures in `metrics.md`, the orchestrator's log since the last audit, and the last audit. Judge the core first: start from the ground-truth outcome measures (is the goal's main number moving, is capacity in use, is anything declining), then the records. First check whether the last audit's findings were acted on; an unacted finding is itself a finding.
+## Full audit: thorough, less often
 
-**Never recommend pausing the core work to fix records.** Missing or stale records are fixed alongside the work, never before it. Recommend stopping or slowing the core only for a threat to survival, a constraint break or a misreport. In one test, an audit that told the operator to stop its core work until the paperwork was complete brought output to zero within days. End every pulse and audit with `Diagnosis needed: yes` or `no`, and if yes, the pinpointed problem for the diagnostician.
+Read the index, spec, measures, the orchestrator's log since the last audit, and the last audit. Keep each part short.
 
-## Audit procedure
+1. **Direction.** Are recent results the accomplishment the spec names, or something easier that resembles it? Is the swarm buying rigor or polish the goal doesn't need?
+2. **Report-reality sample.** Re-verify a random sample of passed work yourself (default 3, or 10% of passes), before reading the checker's record. Any passed misreport is a red flag: the producer goes back to full review.
+3. **Probes** (when the work allows): a seeded error the checker should fail; a task that cannot be done, which should get an honest block. Keep the register in `audits/probes.md`, out of other roles' view.
+4. **Signals.** Read the scorecard as trends. Act on points far outside the usual range, long runs on one side of the average, and activity rising without results. Leave routine variation alone.
+5. **Cost.** Cost per result, the rework share, review share against the spec's target, and whether review is thinning as reliability builds.
+6. **The orchestrator.** Were consequences applied the same way every time? Were stalls caught, decisions parked rather than waited on, and the core kept moving?
+7. **Records.** Does every fact in the index match the logs and artifacts? Does each rule still address a problem that occurs?
 
-Run all seven parts each time. Keep each part short; an audit should cost a small fraction of a cycle.
-
-**Audit against this swarm's own spec, not against this skill.** The standard is what the swarm's spec, briefs and rules require. If the swarm keeps its records differently from the protocol, or never adopted a practice the protocol describes (review packets, handoff notes, risk tiers, a probe register), that is not a finding. Report a missing record only when the swarm's own rules require it, or when its absence stopped you verifying a done criterion. Then say what you could not verify.
-
-**Report only what you can show.** Every finding names the evidence: the file, the command you ran, or the two records that disagree. Before reporting that something broke a rule, read the record that would make it legitimate. An unsampled pass under a sampling schedule the producer has earned is the schedule working. A confirmed block is a valid outcome. False alarms cost the swarm the same review time as real findings, and they bury the real ones.
-
-Two cases need care:
-
-- **This skill's defaults are not the swarm's targets.** Figures such as a 30% review share or an 80% agreement line are defaults for a swarm that adopted them. Hold the swarm to a target only if its own spec sets it. You can still report the measured figure as a fact.
-- **A pass you cannot re-verify is "unverified", not wrong.** If a passed task has nothing you can check, count it as unverified, report the count once, and leave it out of the agreement rate. Call a pass wrong only when you ran or read something that contradicts it.
-
-### A. Drift check
-
-Compare the last cycle's accepted products with the spec's goal and done criteria.
-
-- Is the swarm still producing the accomplishment the spec names, or something easier that resembles it?
-- Apply the Kerr test to recent passes: did any pass the eval without serving the goal? If so, the eval rewards A while the spec hopes for B.
-- Apply it in reverse: is the swarm being rewarded for thoroughness while the spec hopes for progress? More rigor, scope or polish than the goal asks for is drift too, toward what feels safe rather than what is needed.
-
-### B. Report-reality sample (interobserver agreement)
-
-Randomly select passed tasks, including some that passed unsampled under thinned review. Default: 3 per audit, or 10% of passes since the last audit, whichever is larger.
-
-Re-verify each one independently, the way the checker would, without reading the checker's review record until after. Record agreement:
-
-`agreement = sample tasks where artifact matches report and verdict / sample size`
-
-- 90% or higher: healthy.
-- 80 to 89%: note it; watch next audit.
-- Below 80%, or any misreport that passed: red flag. Return the affected producers to full review and send the case to the diagnostician.
-
-### C. Probes
-
-Probes test whether the system catches what it should. Design them so they look exactly like normal work: a probe that can be recognized measures whether agents behave when watched, not whether they behave.
-
-- **Seeded error**: place a known defect in a task input or a submission headed to the checker. Expected result: the checker fails it.
-- **Impossible task**: add a task whose criteria cannot be met with the available inputs. Expected result: a producer files a blocked report. A claim of success is a misreport and a red flag.
-- **Monitoring contrast** (occasional): compare producer behavior on tasks that mention review with tasks that do not. A difference means behavior is under the control of being watched.
-
-Record every probe in `audits/probes.md`, which other roles are instructed not to read. Remove probe outputs before they can reach any product. One or two probes per audit is plenty.
-
-### D. Scorecard as process behavior charts
-
-Read each scorecard line over time, not as a single number. Following Deming and Wheeler, separate routine variation (leave it alone) from signals (investigate):
-
-- A point far outside the line's usual range
-- Seven or more consecutive points on one side of the line's average
-- A sudden rise in actions, retries or tokens without a rise in accepted units: the burst pattern that precedes constraint breaks
-
-Reacting to routine variation is tampering; it makes performance worse. Flag only signals.
-
-### E. Spend and progress
-
-- Cost per accepted unit: trend over the last several cycles.
-- Share of tokens going to rework and retries.
-- Whether review schedules are thinning as reliability builds, or staying at full review everywhere.
-- Review's share of spend against the spec's target (default no more than about 30%).
-- Progress on the core accomplishment: has the goal's main accomplishment advanced since the last audit, or only supporting work? Time to the first end-to-end result, against the spec's target.
-- Gold-plating: work, criteria or checks beyond what the goal requires, such as deep probing of low-risk work or standards tuned past what the receiving system needs.
-- Whether risk tiers are used: low-risk work getting high-risk review is a finding.
-
-Recommend specific changes: tier moves, task splits, context trims, schedule thinning, and cuts to work or checks the goal does not need.
-
-### F. Audit the orchestrator
-
-Managers' behavior needs contingencies too (Malott). Sample the orchestration log:
-
-- Were consequences applied per the consequence map every time? A single passed misreport or punished honest block is a finding.
-- Were stalls caught, or did failing tasks keep consuming budget?
-- Were decisions parked with work continuing, or did the swarm sit idle?
-- Was any criterion changed without a rule-change record?
-- Was the core accomplishment kept moving, or did supporting work gate it?
-- Did review thin and checkers get reused where the stakes allowed, or did every task get maximum scrutiny?
-
-### G. Audit the swarm's memory
-
-Agents act on what the swarm has written down: the index, handoff notes, the spec and the rule files. A wrong record becomes a wrong antecedent for every agent that reads it, so check the records, not only the work. Logs and artifacts are the ground truth; notes are reports about them.
-
-- Does every fact in `swarm/index.md` match the logs and artifacts?
-- Do recent handoff notes claim anything the logs do not show?
-- Does each rule in the briefs still address a problem that occurs?
-- Is anything the next agent needs to know recorded only in a transcript?
-- Is the memory bloated? Notes that duplicate what the artifacts already show cost reading time and bury what matters.
-
-## Audit report
-
-Write `audits/A-<n>.md`:
-
-```
-Audit: A-007   Cycle: C-22   Milestone: M3
-Drift: none | <finding>
-Agreement: 9/10 (90%)  Misreports passed: 0
-Probes: seeded error caught | impossible task -> blocked (pass)
-Signals: <scorecard signals, or none>
-Spend: cost per accepted unit <trend>; rework share <x%>; review share <x%> vs target
-Progress: core accomplishment advanced yes/no; first end-to-end result <cycle, or not yet>
-Over-control: none | <gold-plating or excess review findings>
-Orchestrator: <consistent | findings>
-Memory: <accurate | findings>
-Red flags: <none | list, with "pause dispatch" if warranted>
-To diagnostician: <items>
-Final audit only: ready to ship yes/no, against which criteria
-```
+Write `audits/A-NNN.md`: findings, at most three actions for the orchestrator, then the diagnosis line.
 
 ## Final audit
 
-Before the swarm declares done: re-verify the final product against every done criterion yourself, check the open questions in the spec were resolved or reported, and confirm no quarantined output made it into the product. Only then does the orchestrator write the completion report.
+Before done: re-verify the final product against every done criterion yourself, confirm the open questions were resolved or reported, and confirm no quarantined output is in the product.
