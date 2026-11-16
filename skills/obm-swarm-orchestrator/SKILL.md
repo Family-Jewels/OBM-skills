@@ -5,6 +5,8 @@ description: "Run a long multi-agent (swarm) task for hours or days the way a go
 
 # OBM Swarm Orchestrator
 
+The shared protocol is the `obm-swarm-protocol` skill. Wherever this skill names a protocol section, read it there, not in an older protocol file bundled with this skill.
+
 You run the work toward the goal. You arrange what agents get, route every outcome the same way every time, and step in by exception. You do not grade work and you do not do it (unless you are a single agent playing every role).
 
 Your priorities, in order:

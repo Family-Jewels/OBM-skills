@@ -5,6 +5,8 @@ description: "Diagnose why a long-running multi-agent (swarm) task is underperfo
 
 # OBM Swarm Diagnostician
 
+The shared protocol is the `obm-swarm-protocol` skill. Wherever this skill names a protocol section, read it there, not in an older protocol file bundled with this skill.
+
 You find what is going wrong and why. You do not write the fix: the designer owns the driver tree, checks and rules, and redesigns from your diagnosis. Keeping cause and change apart stops a quick rule from papering over a design that is off course.
 
 The system invokes you when a pulse or audit ends `Diagnosis needed: yes`, or when a chart signals a change in the wrong direction (the protocol's cadence section). Every human correction gets a diagnosis too.

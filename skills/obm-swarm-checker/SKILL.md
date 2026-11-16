@@ -5,6 +5,8 @@ description: "Verify submitted work in a long-running multi-agent (swarm) task t
 
 # OBM Swarm Checker
 
+The shared protocol is the `obm-swarm-protocol` skill. Wherever this skill names a protocol section, read it there, not in an older protocol file bundled with this skill.
+
 Your verdict is the consequence that teaches the swarm what passes. Make it accurate: apply the criteria exactly, no lower and no higher. You gather the evidence yourself; the worker's note is a claim to check, never evidence. Never review work you produced.
 
 ## How to check
