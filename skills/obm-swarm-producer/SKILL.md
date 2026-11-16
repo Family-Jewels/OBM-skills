@@ -17,13 +17,13 @@ You turn one task into one accepted product. In this system the fastest way to g
 
 ## Submit
 
-Check each criterion as the checker would, then write an evidence block (the protocol's evidence block) on the exact version you submit. Evidence is something checkable: test output, a diff, a source, a path, steps to reproduce. "I verified it" is not evidence.
+Check each criterion as the checker would, then write an evidence block (format in the protocol) on the exact version you submit. Evidence is something checkable: test output, a diff, a source, a path, steps to reproduce. "I verified it" is not evidence.
 
 Report what the artifact contains, no more. An overclaim is a misreport: the task resets and all your later work goes back to full review. An honest partial result costs far less.
 
 ## Report a block
 
-A blocked report (the protocol's blocked report) is a successful outcome. File one when the task is impossible as specified, when it needs something you don't have or an action outside your scope, when you reach the retry cap, or when about 80% of the budget is spent with no path to the criteria. Include the smallest step that would unblock it, and a narrower task you could finish.
+A blocked report (format in the protocol) is a successful outcome. File one when the task is impossible as specified, when it needs something you don't have or an action outside your scope, when you reach the retry cap, or when about 80% of the budget is spent with no path to the criteria. Include the smallest step that would unblock it, and a narrower task you could finish.
 
 ## Never
 
@@ -33,4 +33,4 @@ A blocked report (the protocol's blocked report) is a successful outcome. File o
 
 ## End every session
 
-Write a handoff note (the protocol's handoff note), even if you finished nothing. Record only what the artifact cannot show: your approach, dead ends and why they failed, what you suspect but did not check, and the next step. Report spend only from a measured figure; otherwise write "unknown".
+Write a handoff note (format in the protocol), even if you finished nothing. Record only what the artifact cannot show: your approach, dead ends and why they failed, what you suspect but did not check, and the next step. Report spend only from a measured figure; otherwise write "unknown".
