@@ -8,7 +8,8 @@ Each time the engine runs (once per period of the work), it:
 2. **Runs a pulse review** every `pulse_every` periods: the auditor's short look at the numbers, ending in at most three pivots. This is the director's close ear on how the numbers are moving.
 3. **Runs a full audit** every `audit_every` periods, or at once when a signal fires (a measure outside its limits).
 4. **Runs the diagnostician** when an audit says a diagnosis is needed, or when the same problem shows in two pulses running.
-5. **Hands the results to the orchestrator** as additional context on the hook event that triggered it, so they arrive in the same turn and cannot be skipped.
+5. **Hands the results to the orchestrator** as additional context on the hook event, so they cannot be skipped. Reviews run in the background while the work continues, and their findings arrive at the first period after they finish, like a report that lands the next morning. A run of 365 periods otherwise spent more time waiting on reviews than working.
+6. **Spaces out rule changes.** At least `min_periods_between_diagnoses` (default 21) between changes, so each one's effect can be measured; in between, pulses give pivots.
 
 ## Using it on a task
 
