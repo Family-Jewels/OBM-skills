@@ -42,7 +42,7 @@ def claude(args, cfg, cwd, out_stream, timeout):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--arm', required=True, choices=['base', 'native', 'obm', 'obm_enf', 'obm_cadence']); ap.add_argument('--seed', type=int, default=1)
+    ap.add_argument('--arm', required=True, choices=['base', 'native', 'native_cadence', 'obm', 'obm_enf', 'obm_cadence']); ap.add_argument('--seed', type=int, default=1)
     ap.add_argument('--days', type=int, default=365); ap.add_argument('--budget', type=float, default=40)
     ap.add_argument('--timeout', type=int, default=7000); ap.add_argument('--output', type=Path, required=True)
     ap.add_argument('--model', default='claude-haiku-5-5'); ap.add_argument('--audit-every', type=int, default=50); ap.add_argument('--pulse-every', type=int, default=5)
@@ -75,10 +75,10 @@ def main():
         mcp = json.dumps({'mcpServers': {'vending': {'type': 'http', 'url': f'http://127.0.0.1:{port}/mcp'}}})
         common = ['--model', a.model, '--output-format', 'stream-json', '--verbose', '--tools', TOOLS, '--strict-mcp-config',
                   '--mcp-config', mcp, '--allowedTools', 'mcp__vending', TOOLS, '--system-prompt', prompt]
-        if a.arm in ('obm_enf', 'obm_cadence'):
-            hook = {'hooks': {'Stop': [{'hooks': [{'type': 'command', 'timeout': 30,
+        if a.arm in ('obm_enf', 'obm_cadence', 'native_cadence'):
+            hook = {'hooks': {}} if a.arm == 'native_cadence' else {'hooks': {'Stop': [{'hooks': [{'type': 'command', 'timeout': 30,
                     'command': f'python3 -I {HERE / "vb_stop_gate2.py"} {statedir / "state.json"} {out / "gate.jsonl"} {a.days} 40'}]}]}}
-            if a.arm == 'obm_cadence':
+            if a.arm in ('obm_cadence', 'native_cadence'):
                 ccfg = {'workspace': str(ws), 'log': str(out / 'cadence.jsonl'), 'adapter': 'adapters.vending:VendingState',
                         'adapter_args': {'state_path': str(statedir / 'state.json')}, 'unit': 'day', 'horizon': a.days,
                         'pulse_every': a.pulse_every, 'audit_every': a.audit_every, 'model': a.model, 'hook_event': 'PostToolUse',
@@ -89,6 +89,7 @@ def main():
                             {'name': 'slots_selling', 'better': 'up'}, {'name': 'revenue_per_slot', 'better': 'up'}, {'name': 'units', 'better': 'up'}]},
                         'exemplar': {'measure': 'cash', 'points': {'0': 1500, '30': 3228, '365': 61219}, 'origin': 1500,
                                      'source': "the benchmark's scripted reference operator, which knows the economy's hidden parameters"}}
+                if a.arm == 'native_cadence': ccfg['prompts'] = 'plain'  # same cadence, charts and exemplar; reviews without OBM skills
                 (statedir / 'cadence.json').write_text(json.dumps(ccfg))
                 hook['hooks']['PostToolUse'] = [{'matcher': 'mcp__vending__wait_for_next_day', 'hooks': [{'type': 'command', 'timeout': 1600,
                     'command': f'python3 -I /home/claude/obm-lab/cadence/engine.py {statedir / "cadence.json"}'}]}]
@@ -115,12 +116,23 @@ def main():
                           "you their results in the result of wait_for_next_day. Act on what it hands you, adopt any redesign, and log what you did. Keep operating until the simulation ends.")
             p, r = claude(['-p', run_prompt, '--permission-mode', 'acceptEdits', '--max-budget-usd', f'{left:.2f}', *common], cfg, ws, stream, a.timeout)
             results.append(r)
-        elif a.arm == 'native':
+        elif a.arm in ('native', 'native_cadence'):
             plan_prompt = (TASK + "\n\nBefore operating, plan. You are in plan mode: read the briefing, look around with the read-only "
                            "tools you have, and write a plan for running the whole simulation well. Do not operate yet.")
+            if a.arm == 'native_cadence':
+                plan_prompt += ("\n\nWhile you operate, the system will keep your plan in swarm/plan.md in the current folder, write ground-truth "
+                                "measures to swarm/metrics_system.md and process behavior charts to swarm/charts.md every simulated day, run a short "
+                                f"review every {a.pulse_every} simulated days and a full review every {a.audit_every}, find out what is going wrong "
+                                "when a review asks for it and revise swarm/plan.md from that, and hand you every result in the result of "
+                                "wait_for_next_day. Act on what it hands you and follow the current swarm/plan.md. The best known result on this "
+                                "simulation is about EUR 3,228 at day 30 and EUR 61,219 at day 365 from EUR 1,500, by the benchmark's scripted "
+                                "reference operator, which knows the economy's hidden parameters.")
             p, r = claude(['-p', plan_prompt, '--permission-mode', 'plan', '--max-budget-usd', f'{min(3, left):.2f}', *common], cfg, ws, stream, 1800)
             results.append(r); left -= r.get('total_cost_usd') or 0
             sid = r.get('session_id')
+            if a.arm == 'native_cadence':
+                (ws / 'swarm').mkdir(exist_ok=True); plans = sorted((cfg / 'plans').glob('*.md'), key=lambda f: f.stat().st_mtime) if (cfg / 'plans').exists() else []
+                (ws / 'swarm' / 'plan.md').write_text(plans[-1].read_text() if plans else str(r.get('result') or '(no plan)'))
             p, r = claude(['-p', '/goal ' + GOAL, '--resume', sid, '--permission-mode', 'acceptEdits', '--max-budget-usd', f'{left:.2f}', *common],
                           cfg, ws, stream, a.timeout)
             results.append(r)

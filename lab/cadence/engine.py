@@ -77,6 +77,7 @@ def main():
     jobs = log_p.with_suffix(".jobs"); jobs.mkdir(exist_ok=True)
     gap = cfg.get("min_periods_between_redesigns", cfg.get("min_periods_between_diagnoses", 20))
     mem.setdefault("pending", [])
+    plain = cfg.get("prompts") == "plain"  # no OBM skills: neutral review prompts against swarm/plan.md
     new_jobs = []
 
     def spawn(jid, kind, prompt, budget, turns, extra):
@@ -108,14 +109,24 @@ def main():
             rf = sw / "audits" / f"{j['id']}.md"
             rec = rf.read_text() if rf.exists() else (r.get("result") or "(no record)")
             charts.new_phase(mem, j["id"], period)
-            handoff += (f"\n\nSYSTEM CADENCE: the designer redesigned the work system after diagnosis {j['after']} "
-                        f"(swarm/audits/{j['id']}.md). Adopt it from now on: re-read swarm/spec.md and swarm/rules/.\n\n{rec[-2000:]}")
+            handoff += ((f"\n\nSYSTEM CADENCE: the plan was revised after diagnosis {j['after']} (swarm/audits/{j['id']}.md). "
+                         f"Follow it from now on: re-read swarm/plan.md.\n\n{rec[-2000:]}") if plain else
+                        (f"\n\nSYSTEM CADENCE: the designer redesigned the work system after diagnosis {j['after']} "
+                        f"(swarm/audits/{j['id']}.md). Adopt it from now on: re-read swarm/spec.md and swarm/rules/.\n\n{rec[-2000:]}"))
             continue
         if j["kind"] == "diagnosis":
             df = sw / "audits" / f"{j['id']}.md"
             diag = df.read_text() if df.exists() else (r.get("result") or "(no diagnosis)")
-            handoff += f"\n\nSYSTEM CADENCE: diagnosis {j['id']} (swarm/audits/{j['id']}.md); the designer is now reworking the design from it.\n\n{diag[-1200:]}"
+            handoff += f"\n\nSYSTEM CADENCE: diagnosis {j['id']} (swarm/audits/{j['id']}.md); " + ("the plan is now being revised from it." if plain else "the designer is now reworking the design from it.") + f"\n\n{diag[-1200:]}"
             rid = "R-" + j["id"][2:]
+            if plain:
+                spawn(rid, "redesign",
+                      f"The system has asked you to revise the operating plan, at {unit} {period} of {horizon}. Diagnosis {j['id']} "
+                      f"(swarm/audits/{j['id']}.md) says what is going wrong and why; the system's charts are in swarm/charts.md and the "
+                      f"current plan is swarm/plan.md. Change the plan to address it. Before changing swarm/plan.md, copy the old version to "
+                      f"swarm/history/ with a version number; keep the current plan at swarm/plan.md. Then write a short record of the change "
+                      f"to swarm/audits/{rid}.md. Reply with the change in under 150 words.", budgets.get("redesign", 1.5), 25, {"after": j["id"]})
+                continue
             spawn(rid, "redesign",
                   f"Use the obm-swarm-designer skill in REDESIGN mode, invoked by the system at {unit} {period} of {horizon} of the work the swarm in "
                   f"swarm/ is doing. Diagnosis {j['id']} (swarm/audits/{j['id']}.md) says what is going wrong and why. The system's charts "
@@ -137,12 +148,19 @@ def main():
             if period - mem.get("last_diagnosis", -10**6) >= gap:
                 mem["last_diagnosis"] = period
                 did = f"D-{j['id']}"
-                spawn(did, "diagnosis",
-                      f"Use the obm-swarm-diagnostician skill, invoked by the system because {label} {j['id']} (swarm/audits/{j['id']}.md) says a "
-                      f"diagnosis is needed, at {unit} {period} of {horizon}. Charts (limits computed by the system): swarm/charts.md; the driver "
-                      f"tree: swarm/spec.md. Walk the tree from the top measure down to the driver that moved, then find why. Do not write a fix or change any rule, spec or KPI: the designer will "
-                      f"redesign from your diagnosis. Write swarm/audits/{did}.md and reply with it in under 200 words.",
-                      budgets.get("diagnosis", 1.0), 20, {"after": j["id"]})
+                if plain:
+                    spawn(did, "diagnosis",
+                          f"The system has asked you to find out what is going wrong, because review {j['id']} (swarm/audits/{j['id']}.md) "
+                          f"asked for a closer look, at {unit} {period} of {horizon}. The system's charts are in swarm/charts.md and the plan in "
+                          f"swarm/plan.md. Find what is going wrong and why. Do not change the plan; it will be revised from what you find. "
+                          f"Write swarm/audits/{did}.md and reply with it in under 200 words.", budgets.get("diagnosis", 1.0), 20, {"after": j["id"]})
+                else:
+                    spawn(did, "diagnosis",
+                          f"Use the obm-swarm-diagnostician skill, invoked by the system because {label} {j['id']} (swarm/audits/{j['id']}.md) says a "
+                          f"diagnosis is needed, at {unit} {period} of {horizon}. Charts (limits computed by the system): swarm/charts.md; the driver "
+                          f"tree: swarm/spec.md. Walk the tree from the top measure down to the driver that moved, then find why. Do not write a fix or change any rule, spec or KPI: the designer will "
+                          f"redesign from your diagnosis. Write swarm/audits/{did}.md and reply with it in under 200 words.",
+                          budgets.get("diagnosis", 1.0), 20, {"after": j["id"]})
                 handoff += f"\n\nSYSTEM CADENCE: a diagnosis of this finding has started; it and the designer's redesign will be handed to you when ready."
             else:
                 handoff += (f"\n\nSYSTEM CADENCE: no redesign now: the last one started at {unit} {mem['last_diagnosis']} and needs "
@@ -156,23 +174,40 @@ def main():
         why = f"because a signal fired: {fired}" if fired else "on its schedule"
         common = (f"at {unit} {period} of {horizon} of the work the swarm in swarm/ is doing. You cannot act on the work itself; review the "
                   f"records. The ground-truth measures (swarm/metrics_system.md) and charts (swarm/charts.md) are written by the system every {unit}, never by an agent.")
-        if full_due or fired:
-            mem["n_audit"] += 1; mem["last_audit"] = period; aid = f"A-{mem['n_audit']:03d}"
-            spawn(aid, "audit", f"Use the obm-swarm-auditor skill for a FULL AUDIT, invoked by the system ({why}). This is audit {aid}, {common} Judge "
-                  f"the outcome first: are the goal's main measures moving toward it, is capacity in use, is anything declining, has a target become "
-                  f"a ceiling? Read swarm/charts.md (limits computed by the system from the data, signals, gap to the exemplar) against the driver tree in swarm/spec.md. Is the direction right: does the tree add up to the goal, and are its drivers the ones that move it? Did each redesign's predicted shift appear on the charts by its date? Did any redesign lower the goal or an aim? Then whether earlier findings were acted on, then whether the records are current. Never tell the "
-                  f"orchestrator to pause its core work to fix records. Write swarm/audits/{aid}.md: findings first, then at most three concrete "
-                  f"actions for the orchestrator, then a last line exactly 'Diagnosis needed: yes' or 'Diagnosis needed: no'.",
-                  budgets.get("audit", 1.5), 30, {"trigger": fired or "scheduled"})
+        if plain:
+            common = (f"at {unit} {period} of {horizon} of operating the business. You cannot act on the business; review the records. "
+                      f"The measures (swarm/metrics_system.md) and charts (swarm/charts.md) are written by the system every {unit}. The "
+                      f"operating plan is swarm/plan.md and the operator's notes are in the current folder.")
+            tail = (f"then a last line exactly 'Diagnosis needed: yes' or 'Diagnosis needed: no' (yes when something is going wrong "
+                    f"that needs a closer look).")
+            if full_due or fired:
+                mem["n_audit"] += 1; mem["last_audit"] = period; aid = f"A-{mem['n_audit']:03d}"
+                spawn(aid, "audit", f"The system has asked for a full review of how the business is going ({why}). This is review {aid}, "
+                      f"{common} Write swarm/audits/{aid}.md: findings first, then at most three concrete actions for the operator, {tail}",
+                      budgets.get("audit", 1.5), 30, {"trigger": fired or "scheduled"})
+            else:
+                mem["n_pulse"] += 1; mem["last_pulse"] = period; aid = f"P-{mem['n_pulse']:03d}"
+                spawn(aid, "pulse", f"The system has asked for a short check on how the business is going. This is check {aid}, {common} "
+                      f"Write swarm/audits/{aid}.md in under 250 words: how it is going, then at most three changes the operator can make now, {tail}",
+                      budgets.get("pulse", 0.6), 12, {"trigger": "scheduled"})
         else:
-            mem["n_pulse"] += 1; mem["last_pulse"] = period; aid = f"P-{mem['n_pulse']:03d}"
-            spawn(aid, "pulse", f"Use the obm-swarm-auditor skill for a PULSE REVIEW, invoked by the system on its schedule. This is pulse {aid}, "
-                  f"{common} Read only swarm/charts.md (limits computed by the system), the driver tree in swarm/spec.md and the last lines of the "
-                  f"orchestrator's log. Answer: which measures show a signal and which only routine variation (never react to routine variation); what changed since the last pulse, and why; is anything heading the wrong way. Write "
-                  f"swarm/audits/{aid}.md in under 250 words: the answers, then at most three pivots the orchestrator can make now (never a "
-                  f"pause of its core work), then a last line exactly 'Diagnosis needed: yes' or 'Diagnosis needed: no'. A pulse answers 'yes' "
-                  f"when a chart signals a change in the wrong direction, when a redesign's predicted shift has not appeared by its date, or when "
-                  f"the gap to the exemplar is above 2 and no measure has signalled an improvement in the last 30 {unit}s. Otherwise 'no'.", budgets.get("pulse", 0.6), 12, {"trigger": "scheduled"})
+            if full_due or fired:
+                mem["n_audit"] += 1; mem["last_audit"] = period; aid = f"A-{mem['n_audit']:03d}"
+                spawn(aid, "audit", f"Use the obm-swarm-auditor skill for a FULL AUDIT, invoked by the system ({why}). This is audit {aid}, {common} Judge "
+                      f"the outcome first: are the goal's main measures moving toward it, is capacity in use, is anything declining, has a target become "
+                      f"a ceiling? Read swarm/charts.md (limits computed by the system from the data, signals, gap to the exemplar) against the driver tree in swarm/spec.md. Is the direction right: does the tree add up to the goal, and are its drivers the ones that move it? Did each redesign's predicted shift appear on the charts by its date? Did any redesign lower the goal or an aim? Then whether earlier findings were acted on, then whether the records are current. Never tell the "
+                      f"orchestrator to pause its core work to fix records. Write swarm/audits/{aid}.md: findings first, then at most three concrete "
+                      f"actions for the orchestrator, then a last line exactly 'Diagnosis needed: yes' or 'Diagnosis needed: no'.",
+                      budgets.get("audit", 1.5), 30, {"trigger": fired or "scheduled"})
+            else:
+                mem["n_pulse"] += 1; mem["last_pulse"] = period; aid = f"P-{mem['n_pulse']:03d}"
+                spawn(aid, "pulse", f"Use the obm-swarm-auditor skill for a PULSE REVIEW, invoked by the system on its schedule. This is pulse {aid}, "
+                      f"{common} Read only swarm/charts.md (limits computed by the system), the driver tree in swarm/spec.md and the last lines of the "
+                      f"orchestrator's log. Answer: which measures show a signal and which only routine variation (never react to routine variation); what changed since the last pulse, and why; is anything heading the wrong way. Write "
+                      f"swarm/audits/{aid}.md in under 250 words: the answers, then at most three pivots the orchestrator can make now (never a "
+                      f"pause of its core work), then a last line exactly 'Diagnosis needed: yes' or 'Diagnosis needed: no'. A pulse answers 'yes' "
+                      f"when a chart signals a change in the wrong direction, when a redesign's predicted shift has not appeared by its date, or when "
+                      f"the gap to the exemplar is above 2 and no measure has signalled an improvement in the last 30 {unit}s. Otherwise 'no'.", budgets.get("pulse", 0.6), 12, {"trigger": "scheduled"})
         mem["pending"] += new_jobs
         log.write(json.dumps({"t": time.time(), "period": period, "event": "started", "id": aid}) + "\n")
     handoff = handoff.strip()
