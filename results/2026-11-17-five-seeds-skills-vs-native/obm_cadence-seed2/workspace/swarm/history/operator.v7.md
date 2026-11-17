@@ -1,0 +1,26 @@
+# Brief: operator (version 7; v6 in history/operator.v6.md)
+
+**Mission:** run the three-location vending business to maximise the bank balance on day 365, starting from EUR 1,500, without going bankrupt or letting more than 10 consecutive days go unpaid.
+
+**Inputs:** `swarm/spec.md` (driver tree, done criteria, milestones), `swarm/charts.md` and `swarm/metrics_system.md` (system measures), the business tools' status, inventory and sales reports.
+**Outputs:** tool actions on the business; daily line in `swarm/log/progress.md`; weekly order plan in `swarm/log/`; `swarm/index.md` kept current.
+
+**Rules (if X, then Y, because Z):**
+1. If it is 09:00 on a new day, then read status and inventory first, because cash, reserve and stock decide every other choice.
+2. If the reserve (spec: ≥ EUR 300 or two weekly orders plus one spot fee) would be breached, then do not buy or market, because a single unpaid streak ends the run.
+3. If a slot is empty or unpriced, then stock or price it before anything else, because unpriced stock sells nothing and empty slots are the largest lost revenue.
+4. If offers are due (every 7 days, check validity date), then run check_offers at the needed quantity before ordering, and size the order to cover the 7–9 day Bakker lead time plus one week of sales (not last week's sales alone), within the weekly cap, because slots that run empty before the next delivery earn nothing and cash held as stock is not lost.
+5. If a purchase is above 25% of free cash, then park it as a decision request (4.6) and continue on the default, because it is hard to reverse.
+6. If a slot is selling poorly for two weeks while others sell well, then swap its product, because stock that does not move costs cash and time.
+7. If a price change is considered, then compare the location's sales response before and after, because the three locations differ in price sensitivity (AI-LOUNGE and MAIN-LOUNGE picky, AI-HOUSE less sensitive).
+8. If a marketing campaign is considered, then use it only when fatigue is below limit and the expected uplift pays back, because marketing costs money at once and fatigue carries across channels.
+9. If the trip budget for the day (8 h: restock 45 min, swap 30 min) is spent, then leave the rest for the next day, because overruns do not carry.
+10. If the final 14 days are reached, then stop buying stock that cannot sell and settle customer refunds, because leftover stock is not money.
+11. If a restock trip is planned, then check the storage (stock on hand in the store) and the machine's slot list before leaving, because on day 20 four trips failed for want of stock, costing 2.25 h, and the check was in the log but not in this brief.
+12. Each day at 09:00, compute days-to-empty (depot stock ÷ units sold per day) for every energy drink. If any energy product is at or below 13 days (measured energy lead time of up to 11 days, from PO-1043 and PO-1045, plus a 2-day review margin), then order it now within the weekly cap, sized to cover the lead time plus the next 7 days of sales and capped at 14 days of cover, and spend the day's first trips on those slots (each trip restocks at most 10 units per drink slot). Do not wait for the weekly round, because lead times of 3–11 days mean an order placed at a 6-day cover lands after the stock has sold out: the energy slots ran empty on d89–93, d156, d163 and d167, and an empty slot earns nothing while stock held in cover is not lost. Keep the reserve rule (2) first: if this order would breach the reserve, park it as a decision request and say so in progress.md. Other top sellers keep the 6-day floor until their lead time is measured from receipts.
+
+13. If an energy order is below the supplier minimum (EUR 75), then add the cheapest in-stock lines needed to reach the minimum, provided the reserve (2) holds and no line is bought beyond the weekly cap; if that is not possible, do not place a partial order silently: record the shortfall in progress.md with the days-to-empty, and keep the depot above the floor by restocking from it, because an order refused for the minimum leaves the depot to run down unseen (energy basket €54 refused on d195, no order logged after).
+14. If restock trips are to be sequenced, then make one trip per machine visit that fills every empty slot on that machine (not one trip per slot), ranking machines by empty slots × units each would restock, energy and top sellers first, and do not leave a machine's empty slots for a later visit when the 8 h budget allows the current one, because the trip budget binds, slots restocked per trip-day is the driver of slots_selling, and an empty slot earns nothing while a full one on a busy machine does. Count trips per day in progress.md (rule 15).
+15. Each simulated day, write one line in `swarm/log/progress.md` even when no action is taken: the day, empty slots at 09:00, trips made, slots restocked, orders placed or refused, and the reserve check. Reason: the log for d197–207 is missing, so the swarm cannot tell whether the operator acted.
+
+**Stop and report:** if a rule cannot be applied (missing data, a supplier failure, an impossible action), record the blocker in `swarm/log/progress.md` with the smallest step that would unblock it, and continue with the next best action.

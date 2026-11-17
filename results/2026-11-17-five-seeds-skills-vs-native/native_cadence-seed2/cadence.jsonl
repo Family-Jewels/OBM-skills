@@ -1,0 +1,515 @@
+{"t": 1794864431.7808163, "period": 2, "event": "measure", "chart_signals": []}
+{"t": 1794864433.0821757, "period": 3, "event": "measure", "chart_signals": []}
+{"t": 1794864433.585931, "period": 4, "event": "measure", "chart_signals": []}
+{"t": 1794864434.0905821, "period": 5, "event": "measure", "chart_signals": []}
+{"t": 1794864434.0912454, "period": 5, "event": "started", "id": "P-001"}
+{"t": 1794864436.669052, "period": 6, "event": "measure", "chart_signals": []}
+{"t": 1794864447.9310644, "period": 7, "event": "measure", "chart_signals": []}
+{"t": 1794864450.4039829, "period": 8, "event": "measure", "chart_signals": []}
+{"t": 1794864450.4042232, "period": 5, "delivered": 8, "event": "pulse", "id": "P-001", "trigger": "scheduled", "cost": 0.00409407, "turns": 8}
+{"t": 1794864453.5355606, "period": 9, "event": "measure", "chart_signals": []}
+{"t": 1794864467.3241885, "period": 10, "event": "measure", "chart_signals": []}
+{"t": 1794864467.3248255, "period": 10, "event": "started", "id": "P-002"}
+{"t": 1794864480.0153666, "period": 11, "event": "measure", "chart_signals": []}
+{"t": 1794864480.0155573, "period": 8, "delivered": 11, "event": "diagnosis", "id": "D-P-001", "trigger": null, "cost": 0.00603793, "turns": 7}
+{"t": 1794864490.76513, "period": 12, "event": "measure", "chart_signals": []}
+{"t": 1794864499.035837, "period": 13, "event": "measure", "chart_signals": []}
+{"t": 1794864499.0360003, "period": 10, "delivered": 13, "event": "pulse", "id": "P-002", "trigger": "scheduled", "cost": 0.0061096399999999995, "turns": 9}
+{"t": 1794864499.0360484, "period": 13, "event": "diagnosis_deferred", "after": "P-002"}
+{"t": 1794864513.7656376, "period": 14, "event": "measure", "chart_signals": []}
+{"t": 1794864513.765823, "period": 11, "delivered": 14, "event": "redesign", "id": "R-P-001", "trigger": null, "cost": 0.0056405299999999995, "turns": 8}
+{"t": 1794864525.3809216, "period": 15, "event": "measure", "chart_signals": []}
+{"t": 1794864525.3815947, "period": 15, "event": "started", "id": "P-003"}
+{"t": 1794864538.5987725, "period": 16, "event": "measure", "chart_signals": []}
+{"t": 1794864543.3004804, "period": 17, "event": "measure", "chart_signals": []}
+{"t": 1794864544.941095, "period": 18, "event": "measure", "chart_signals": []}
+{"t": 1794864552.167341, "period": 19, "event": "measure", "chart_signals": []}
+{"t": 1794864552.1676447, "period": 15, "delivered": 19, "event": "pulse", "id": "P-003", "trigger": "scheduled", "cost": 0.00670548, "turns": 11}
+{"t": 1794864552.1677294, "period": 19, "event": "diagnosis_deferred", "after": "P-003"}
+{"t": 1794864566.16236, "period": 20, "event": "measure", "chart_signals": []}
+{"t": 1794864566.162989, "period": 20, "event": "started", "id": "P-004"}
+{"t": 1794864570.9675627, "period": 21, "event": "measure", "chart_signals": []}
+{"t": 1794864571.46591, "period": 22, "event": "measure", "chart_signals": []}
+{"t": 1794864572.1352916, "period": 23, "event": "measure", "chart_signals": []}
+{"t": 1794864575.2201357, "period": 24, "event": "measure", "chart_signals": []}
+{"t": 1794864586.2945406, "period": 25, "event": "measure", "chart_signals": []}
+{"t": 1794864602.9274707, "period": 26, "event": "measure", "chart_signals": []}
+{"t": 1794864602.927643, "period": 20, "delivered": 26, "event": "pulse", "id": "P-004", "trigger": "scheduled", "cost": 0.008749870000000002, "turns": 12}
+{"t": 1794864602.9276989, "period": 26, "event": "diagnosis_deferred", "after": "P-004"}
+{"t": 1794864602.9283552, "period": 26, "event": "started", "id": "P-005"}
+{"t": 1794864617.5173123, "period": 27, "event": "measure", "chart_signals": []}
+{"t": 1794864618.0293636, "period": 28, "event": "measure", "chart_signals": []}
+{"t": 1794864619.9797642, "period": 29, "event": "measure", "chart_signals": []}
+{"t": 1794864636.1601632, "period": 30, "event": "measure", "chart_signals": []}
+{"t": 1794864636.1603508, "period": 26, "delivered": 30, "event": "pulse", "id": "P-005", "trigger": "scheduled", "cost": 0.006548730000000001, "turns": 9}
+{"t": 1794864636.1604357, "period": 30, "event": "diagnosis_deferred", "after": "P-005"}
+{"t": 1794864651.576001, "period": 31, "event": "measure", "chart_signals": []}
+{"t": 1794864651.5766618, "period": 31, "event": "started", "id": "P-006"}
+{"t": 1794864662.3754582, "period": 32, "event": "measure", "chart_signals": []}
+{"t": 1794864663.3668325, "period": 33, "event": "measure", "chart_signals": []}
+{"t": 1794864664.6825726, "period": 34, "event": "measure", "chart_signals": []}
+{"t": 1794864673.2204607, "period": 35, "event": "measure", "chart_signals": []}
+{"t": 1794864673.2206247, "period": 31, "delivered": 35, "event": "pulse", "id": "P-006", "trigger": "scheduled", "cost": 0.00551851, "turns": 10}
+{"t": 1794864677.3500469, "period": 36, "event": "measure", "chart_signals": []}
+{"t": 1794864677.3508027, "period": 36, "event": "started", "id": "P-007"}
+{"t": 1794864688.037809, "period": 38, "event": "measure", "chart_signals": []}
+{"t": 1794864705.0309155, "period": 39, "event": "measure", "chart_signals": []}
+{"t": 1794864705.0310595, "period": 36, "delivered": 39, "event": "pulse", "id": "P-007", "trigger": "scheduled", "cost": 0.00668913, "turns": 9}
+{"t": 1794864705.0310996, "period": 39, "event": "diagnosis_deferred", "after": "P-007"}
+{"t": 1794864720.4288301, "period": 40, "event": "measure", "chart_signals": []}
+{"t": 1794864720.4290657, "period": 35, "delivered": 40, "event": "diagnosis", "id": "D-P-006", "trigger": null, "cost": 0.00966013, "turns": 10}
+{"t": 1794864724.2011883, "period": 41, "event": "measure", "chart_signals": []}
+{"t": 1794864724.2019064, "period": 41, "event": "started", "id": "P-008"}
+{"t": 1794864724.7775888, "period": 42, "event": "measure", "chart_signals": []}
+{"t": 1794864728.867706, "period": 43, "event": "measure", "chart_signals": []}
+{"t": 1794864738.4907577, "period": 44, "event": "measure", "chart_signals": []}
+{"t": 1794864748.262141, "period": 45, "event": "measure", "chart_signals": []}
+{"t": 1794864757.3146284, "period": 46, "event": "measure", "chart_signals": []}
+{"t": 1794864757.3148227, "period": 40, "delivered": 46, "event": "redesign", "id": "R-P-006", "trigger": null, "cost": 0.00750039, "turns": 11}
+{"t": 1794864757.3149853, "period": 41, "delivered": 46, "event": "pulse", "id": "P-008", "trigger": "scheduled", "cost": 0.006725440000000001, "turns": 11}
+{"t": 1794864757.3150349, "period": 46, "event": "diagnosis_deferred", "after": "P-008"}
+{"t": 1794864757.3156698, "period": 46, "event": "started", "id": "P-009"}
+{"t": 1794864764.1082866, "period": 47, "event": "measure", "chart_signals": []}
+{"t": 1794864770.4985168, "period": 48, "event": "measure", "chart_signals": []}
+{"t": 1794864773.4935925, "period": 49, "event": "measure", "chart_signals": []}
+{"t": 1794864777.218589, "period": 50, "event": "measure", "chart_signals": []}
+{"t": 1794864787.8093922, "period": 51, "event": "measure", "chart_signals": []}
+{"t": 1794864787.809578, "period": 46, "delivered": 51, "event": "pulse", "id": "P-009", "trigger": "scheduled", "cost": 0.00614914, "turns": 9}
+{"t": 1794864787.8096373, "period": 51, "event": "diagnosis_deferred", "after": "P-009"}
+{"t": 1794864787.8101897, "period": 51, "event": "started", "id": "A-001"}
+{"t": 1794864790.8444889, "period": 52, "event": "measure", "chart_signals": []}
+{"t": 1794864799.7132125, "period": 53, "event": "measure", "chart_signals": []}
+{"t": 1794864811.5704443, "period": 54, "event": "measure", "chart_signals": []}
+{"t": 1794864823.6269004, "period": 55, "event": "measure", "chart_signals": []}
+{"t": 1794864835.0750926, "period": 56, "event": "measure", "chart_signals": []}
+{"t": 1794864835.6258645, "period": 57, "event": "measure", "chart_signals": []}
+{"t": 1794864846.3245766, "period": 58, "event": "measure", "chart_signals": []}
+{"t": 1794864846.3247535, "period": 51, "delivered": 58, "event": "audit", "id": "A-001", "trigger": "scheduled", "cost": 0.01181594, "turns": 11}
+{"t": 1794864846.3248188, "period": 58, "event": "diagnosis_deferred", "after": "A-001"}
+{"t": 1794864846.3253589, "period": 58, "event": "started", "id": "P-010"}
+{"t": 1794864857.090343, "period": 59, "event": "measure", "chart_signals": []}
+{"t": 1794864862.5787528, "period": 60, "event": "measure", "chart_signals": []}
+{"t": 1794864863.1837687, "period": 61, "event": "measure", "chart_signals": []}
+{"t": 1794864865.0183442, "period": 62, "event": "measure", "chart_signals": []}
+{"t": 1794864874.5925934, "period": 63, "event": "measure", "chart_signals": []}
+{"t": 1794864874.5927577, "period": 58, "delivered": 63, "event": "pulse", "id": "P-010", "trigger": "scheduled", "cost": 0.00633868, "turns": 8}
+{"t": 1794864874.5928066, "period": 63, "event": "diagnosis_deferred", "after": "P-010"}
+{"t": 1794864874.5933125, "period": 63, "event": "started", "id": "P-011"}
+{"t": 1794864884.407166, "period": 64, "event": "measure", "chart_signals": []}
+{"t": 1794864890.7608895, "period": 65, "event": "measure", "chart_signals": []}
+{"t": 1794864901.1008644, "period": 66, "event": "measure", "chart_signals": []}
+{"t": 1794864901.101014, "period": 63, "delivered": 66, "event": "pulse", "id": "P-011", "trigger": "scheduled", "cost": 0.0063808300000000005, "turns": 9}
+{"t": 1794864906.2190862, "period": 67, "event": "measure", "chart_signals": []}
+{"t": 1794864913.4101398, "period": 68, "event": "measure", "chart_signals": []}
+{"t": 1794864913.4109366, "period": 68, "event": "started", "id": "P-012"}
+{"t": 1794864914.05074, "period": 69, "event": "measure", "chart_signals": []}
+{"t": 1794864914.5949748, "period": 70, "event": "measure", "chart_signals": []}
+{"t": 1794864916.3250284, "period": 71, "event": "measure", "chart_signals": []}
+{"t": 1794864928.604475, "period": 72, "event": "measure", "chart_signals": []}
+{"t": 1794864938.2371876, "period": 73, "event": "measure", "chart_signals": []}
+{"t": 1794864949.5045977, "period": 74, "event": "measure", "chart_signals": []}
+{"t": 1794864949.504795, "period": 68, "delivered": 74, "event": "pulse", "id": "P-012", "trigger": "scheduled", "cost": 0.007544090000000001, "turns": 11}
+{"t": 1794864949.5048718, "period": 74, "event": "diagnosis_deferred", "after": "P-012"}
+{"t": 1794864949.505448, "period": 74, "event": "started", "id": "P-013"}
+{"t": 1794864952.6133256, "period": 75, "event": "measure", "chart_signals": []}
+{"t": 1794864953.2424567, "period": 76, "event": "measure", "chart_signals": []}
+{"t": 1794864953.8557944, "period": 77, "event": "measure", "chart_signals": []}
+{"t": 1794864955.6932635, "period": 78, "event": "measure", "chart_signals": []}
+{"t": 1794864964.2315314, "period": 79, "event": "measure", "chart_signals": []}
+{"t": 1794864966.1161284, "period": 80, "event": "measure", "chart_signals": []}
+{"t": 1794864974.6078835, "period": 81, "event": "measure", "chart_signals": []}
+{"t": 1794864974.608075, "period": 66, "delivered": 81, "event": "diagnosis", "id": "D-P-011", "trigger": null, "cost": 0.014750570000000001, "turns": 11}
+{"t": 1794864988.1928015, "period": 82, "event": "measure", "chart_signals": []}
+{"t": 1794864988.1930335, "period": 74, "delivered": 82, "event": "pulse", "id": "P-013", "trigger": "scheduled", "cost": 0.008237600000000001, "turns": 9}
+{"t": 1794864988.193092, "period": 82, "event": "diagnosis_deferred", "after": "P-013"}
+{"t": 1794864988.1936607, "period": 82, "event": "started", "id": "P-014"}
+{"t": 1794864990.843827, "period": 83, "event": "measure", "chart_signals": []}
+{"t": 1794864991.4349701, "period": 84, "event": "measure", "chart_signals": []}
+{"t": 1794864993.6839626, "period": 85, "event": "measure", "chart_signals": []}
+{"t": 1794865002.1031022, "period": 86, "event": "measure", "chart_signals": []}
+{"t": 1794865002.103335, "period": 81, "delivered": 86, "event": "redesign", "id": "R-P-011", "trigger": null, "cost": 0.00620005, "turns": 8}
+{"t": 1794865003.555708, "period": 87, "event": "measure", "chart_signals": []}
+{"t": 1794865012.202925, "period": 88, "event": "measure", "chart_signals": []}
+{"t": 1794865013.8429615, "period": 89, "event": "measure", "chart_signals": []}
+{"t": 1794865014.471328, "period": 90, "event": "measure", "chart_signals": []}
+{"t": 1794865014.4715717, "period": 82, "delivered": 90, "event": "pulse", "id": "P-014", "trigger": "scheduled", "cost": 0.00698731, "turns": 9}
+{"t": 1794865014.4716284, "period": 90, "event": "diagnosis_deferred", "after": "P-014"}
+{"t": 1794865014.4722183, "period": 90, "event": "started", "id": "P-015"}
+{"t": 1794865018.3821657, "period": 91, "event": "measure", "chart_signals": ["slots_selling beyond the lower limit"]}
+{"t": 1794865024.3949137, "period": 92, "event": "measure", "chart_signals": []}
+{"t": 1794865036.9673727, "period": 93, "event": "measure", "chart_signals": []}
+{"t": 1794865038.3945148, "period": 94, "event": "measure", "chart_signals": []}
+{"t": 1794865038.394735, "period": 90, "delivered": 94, "event": "pulse", "id": "P-015", "trigger": "scheduled", "cost": 0.007268190000000001, "turns": 9}
+{"t": 1794865038.3948078, "period": 94, "event": "diagnosis_deferred", "after": "P-015"}
+{"t": 1794865043.7326474, "period": 95, "event": "measure", "chart_signals": []}
+{"t": 1794865043.7342465, "period": 95, "event": "started", "id": "P-016"}
+{"t": 1794865045.0716505, "period": 96, "event": "measure", "chart_signals": []}
+{"t": 1794865054.7828503, "period": 97, "event": "measure", "chart_signals": []}
+{"t": 1794865060.5263298, "period": 98, "event": "measure", "chart_signals": []}
+{"t": 1794865062.8934212, "period": 99, "event": "measure", "chart_signals": []}
+{"t": 1794865073.5975862, "period": 100, "event": "measure", "chart_signals": []}
+{"t": 1794865073.5978248, "period": 95, "delivered": 100, "event": "pulse", "id": "P-016", "trigger": "scheduled", "cost": 0.007930920000000001, "turns": 9}
+{"t": 1794865073.5979152, "period": 100, "event": "diagnosis_deferred", "after": "P-016"}
+{"t": 1794865073.598476, "period": 100, "event": "started", "id": "P-017"}
+{"t": 1794865074.9481423, "period": 101, "event": "measure", "chart_signals": []}
+{"t": 1794865079.0404136, "period": 102, "event": "measure", "chart_signals": []}
+{"t": 1794865092.3950965, "period": 103, "event": "measure", "chart_signals": []}
+{"t": 1794865100.0959346, "period": 104, "event": "measure", "chart_signals": []}
+{"t": 1794865103.0304847, "period": 105, "event": "measure", "chart_signals": []}
+{"t": 1794865103.6390343, "period": 106, "event": "measure", "chart_signals": []}
+{"t": 1794865114.870737, "period": 107, "event": "measure", "chart_signals": []}
+{"t": 1794865114.8709278, "period": 100, "delivered": 107, "event": "pulse", "id": "P-017", "trigger": "scheduled", "cost": 0.00996677, "turns": 10}
+{"t": 1794865114.877668, "period": 107, "event": "started", "id": "A-002"}
+{"t": 1794865118.6588914, "period": 108, "event": "measure", "chart_signals": []}
+{"t": 1794865126.0199153, "period": 109, "event": "measure", "chart_signals": []}
+{"t": 1794865137.3268151, "period": 110, "event": "measure", "chart_signals": []}
+{"t": 1794865139.1114395, "period": 111, "event": "measure", "chart_signals": []}
+{"t": 1794865139.7257125, "period": 112, "event": "measure", "chart_signals": []}
+{"t": 1794865140.430308, "period": 113, "event": "measure", "chart_signals": []}
+{"t": 1794865151.967062, "period": 114, "event": "measure", "chart_signals": []}
+{"t": 1794865160.364648, "period": 115, "event": "measure", "chart_signals": []}
+{"t": 1794865191.2051494, "period": 116, "event": "measure", "chart_signals": []}
+{"t": 1794865191.2053547, "period": 107, "delivered": 116, "event": "diagnosis", "id": "D-P-017", "trigger": null, "cost": 0.01317308, "turns": 11}
+{"t": 1794865213.0941222, "period": 117, "event": "measure", "chart_signals": []}
+{"t": 1794865213.0943618, "period": 107, "delivered": 117, "event": "audit", "id": "A-002", "trigger": "scheduled", "cost": 0.017640640000000003, "turns": 12}
+{"t": 1794865213.094466, "period": 117, "event": "diagnosis_deferred", "after": "A-002"}
+{"t": 1794865213.0950172, "period": 117, "event": "started", "id": "P-018"}
+{"t": 1794865216.2676284, "period": 118, "event": "measure", "chart_signals": []}
+{"t": 1794865219.3305392, "period": 119, "event": "measure", "chart_signals": []}
+{"t": 1794865219.330706, "period": 116, "delivered": 119, "event": "redesign", "id": "R-P-017", "trigger": null, "cost": 0.007225489999999999, "turns": 8}
+{"t": 1794865230.0660105, "period": 120, "event": "measure", "chart_signals": []}
+{"t": 1794865243.3026066, "period": 121, "event": "measure", "chart_signals": []}
+{"t": 1794865243.3027923, "period": 117, "delivered": 121, "event": "pulse", "id": "P-018", "trigger": "scheduled", "cost": 0.00860673, "turns": 11}
+{"t": 1794865243.3028598, "period": 121, "event": "diagnosis_deferred", "after": "P-018"}
+{"t": 1794865256.1799033, "period": 122, "event": "measure", "chart_signals": []}
+{"t": 1794865256.1806078, "period": 122, "event": "started", "id": "P-019"}
+{"t": 1794865265.0273075, "period": 123, "event": "measure", "chart_signals": []}
+{"t": 1794865266.8596249, "period": 124, "event": "measure", "chart_signals": []}
+{"t": 1794865267.3606155, "period": 125, "event": "measure", "chart_signals": []}
+{"t": 1794865267.908724, "period": 126, "event": "measure", "chart_signals": []}
+{"t": 1794865281.1465135, "period": 127, "event": "measure", "chart_signals": []}
+{"t": 1794865281.1466992, "period": 122, "delivered": 127, "event": "pulse", "id": "P-019", "trigger": "scheduled", "cost": 0.00773477, "turns": 11}
+{"t": 1794865281.1467578, "period": 127, "event": "diagnosis_deferred", "after": "P-019"}
+{"t": 1794865281.147232, "period": 127, "event": "started", "id": "P-020"}
+{"t": 1794865292.6380227, "period": 128, "event": "measure", "chart_signals": []}
+{"t": 1794865294.8488994, "period": 129, "event": "measure", "chart_signals": []}
+{"t": 1794865306.1169055, "period": 130, "event": "measure", "chart_signals": []}
+{"t": 1794865316.9383934, "period": 131, "event": "measure", "chart_signals": []}
+{"t": 1794865316.9385703, "period": 127, "delivered": 131, "event": "pulse", "id": "P-020", "trigger": "scheduled", "cost": 0.00766383, "turns": 8}
+{"t": 1794865316.9386485, "period": 131, "event": "diagnosis_deferred", "after": "P-020"}
+{"t": 1794865324.0298202, "period": 132, "event": "measure", "chart_signals": []}
+{"t": 1794865324.0305684, "period": 132, "event": "started", "id": "P-021"}
+{"t": 1794865327.0806034, "period": 133, "event": "measure", "chart_signals": []}
+{"t": 1794865338.0139246, "period": 134, "event": "measure", "chart_signals": []}
+{"t": 1794865350.7012773, "period": 135, "event": "measure", "chart_signals": []}
+{"t": 1794865365.3306084, "period": 136, "event": "measure", "chart_signals": []}
+{"t": 1794865365.3307405, "period": 132, "delivered": 136, "event": "pulse", "id": "P-021", "trigger": "scheduled", "cost": 0.00929385, "turns": 10}
+{"t": 1794865365.3307831, "period": 136, "event": "diagnosis_deferred", "after": "P-021"}
+{"t": 1794865366.478755, "period": 137, "event": "measure", "chart_signals": []}
+{"t": 1794865366.479414, "period": 137, "event": "started", "id": "P-022"}
+{"t": 1794865366.9957488, "period": 138, "event": "measure", "chart_signals": []}
+{"t": 1794865368.331896, "period": 139, "event": "measure", "chart_signals": []}
+{"t": 1794865376.6247761, "period": 140, "event": "measure", "chart_signals": []}
+{"t": 1794865381.574575, "period": 141, "event": "measure", "chart_signals": []}
+{"t": 1794865390.9184031, "period": 142, "event": "measure", "chart_signals": []}
+{"t": 1794865402.7841015, "period": 143, "event": "measure", "chart_signals": []}
+{"t": 1794865402.7843087, "period": 137, "delivered": 143, "event": "pulse", "id": "P-022", "trigger": "scheduled", "cost": 0.00855927, "turns": 10}
+{"t": 1794865402.7896507, "period": 143, "event": "started", "id": "P-023"}
+{"t": 1794865403.7694008, "period": 144, "event": "measure", "chart_signals": []}
+{"t": 1794865404.3362057, "period": 145, "event": "measure", "chart_signals": []}
+{"t": 1794865406.4977157, "period": 146, "event": "measure", "chart_signals": []}
+{"t": 1794865418.9960577, "period": 148, "event": "measure", "chart_signals": []}
+{"t": 1794865428.5814312, "period": 149, "event": "measure", "chart_signals": []}
+{"t": 1794865436.1605809, "period": 150, "event": "measure", "chart_signals": []}
+{"t": 1794865436.1608148, "period": 143, "delivered": 150, "event": "pulse", "id": "P-023", "trigger": "scheduled", "cost": 0.009362509999999998, "turns": 10}
+{"t": 1794865436.1608996, "period": 150, "event": "diagnosis_deferred", "after": "P-023"}
+{"t": 1794865436.1616511, "period": 150, "event": "started", "id": "P-024"}
+{"t": 1794865437.1449666, "period": 151, "event": "measure", "chart_signals": []}
+{"t": 1794865442.1426919, "period": 152, "event": "measure", "chart_signals": []}
+{"t": 1794865452.3713114, "period": 153, "event": "measure", "chart_signals": []}
+{"t": 1794865468.0784435, "period": 154, "event": "measure", "chart_signals": []}
+{"t": 1794865468.0786304, "period": 143, "delivered": 154, "event": "diagnosis", "id": "D-P-022", "trigger": null, "cost": 0.014244080000000001, "turns": 11}
+{"t": 1794865468.0793018, "period": 150, "delivered": 154, "event": "pulse", "id": "P-024", "trigger": "scheduled", "cost": 0.00880114, "turns": 10}
+{"t": 1794865468.0793967, "period": 154, "event": "diagnosis_deferred", "after": "P-024"}
+{"t": 1794865475.7611134, "period": 155, "event": "measure", "chart_signals": []}
+{"t": 1794865475.7618234, "period": 155, "event": "started", "id": "P-025"}
+{"t": 1794865482.4802613, "period": 156, "event": "measure", "chart_signals": []}
+{"t": 1794865494.1716776, "period": 157, "event": "measure", "chart_signals": []}
+{"t": 1794865501.577625, "period": 158, "event": "measure", "chart_signals": []}
+{"t": 1794865501.5778399, "period": 155, "delivered": 158, "event": "pulse", "id": "P-025", "trigger": "scheduled", "cost": 0.0076977799999999996, "turns": 10}
+{"t": 1794865501.5778992, "period": 158, "event": "diagnosis_deferred", "after": "P-025"}
+{"t": 1794865501.5785284, "period": 158, "event": "started", "id": "A-003"}
+{"t": 1794865507.67735, "period": 159, "event": "measure", "chart_signals": []}
+{"t": 1794865511.8666933, "period": 160, "event": "measure", "chart_signals": []}
+{"t": 1794865511.8669357, "period": 154, "delivered": 160, "event": "redesign", "id": "R-P-022", "trigger": null, "cost": 0.01092512, "turns": 10}
+{"t": 1794865518.5088875, "period": 161, "event": "measure", "chart_signals": []}
+{"t": 1794865531.125052, "period": 163, "event": "measure", "chart_signals": []}
+{"t": 1794865541.3291402, "period": 165, "event": "measure", "chart_signals": []}
+{"t": 1794865557.7727048, "period": 166, "event": "measure", "chart_signals": []}
+{"t": 1794865558.2842734, "period": 167, "event": "measure", "chart_signals": []}
+{"t": 1794865563.3789732, "period": 168, "event": "measure", "chart_signals": []}
+{"t": 1794865572.3242586, "period": 169, "event": "measure", "chart_signals": []}
+{"t": 1794865576.275414, "period": 170, "event": "measure", "chart_signals": []}
+{"t": 1794865576.2755792, "period": 158, "delivered": 170, "event": "audit", "id": "A-003", "trigger": "scheduled", "cost": 0.01835036, "turns": 11}
+{"t": 1794865576.2756765, "period": 170, "event": "diagnosis_deferred", "after": "A-003"}
+{"t": 1794865576.276278, "period": 170, "event": "started", "id": "P-026"}
+{"t": 1794865577.3543582, "period": 171, "event": "measure", "chart_signals": []}
+{"t": 1794865577.964571, "period": 172, "event": "measure", "chart_signals": ["cash_gain_7 beyond the lower limit"]}
+{"t": 1794865578.636529, "period": 173, "event": "measure", "chart_signals": []}
+{"t": 1794865580.2165494, "period": 174, "event": "measure", "chart_signals": []}
+{"t": 1794865589.1496592, "period": 175, "event": "measure", "chart_signals": []}
+{"t": 1794865598.396758, "period": 176, "event": "measure", "chart_signals": []}
+{"t": 1794865601.9198356, "period": 177, "event": "measure", "chart_signals": []}
+{"t": 1794865601.92006, "period": 170, "delivered": 177, "event": "pulse", "id": "P-026", "trigger": "scheduled", "cost": 0.00799203, "turns": 9}
+{"t": 1794865601.9201202, "period": 177, "event": "diagnosis_deferred", "after": "P-026"}
+{"t": 1794865601.9209166, "period": 177, "event": "started", "id": "P-027"}
+{"t": 1794865609.0730278, "period": 178, "event": "measure", "chart_signals": []}
+{"t": 1794865613.3602772, "period": 179, "event": "measure", "chart_signals": ["cash_gain_7 8 in a row below the centre"]}
+{"t": 1794865622.843996, "period": 180, "event": "measure", "chart_signals": []}
+{"t": 1794865623.429373, "period": 181, "event": "measure", "chart_signals": []}
+{"t": 1794865624.0989509, "period": 182, "event": "measure", "chart_signals": []}
+{"t": 1794865632.711632, "period": 183, "event": "measure", "chart_signals": []}
+{"t": 1794865633.3048267, "period": 184, "event": "measure", "chart_signals": []}
+{"t": 1794865633.9078152, "period": 185, "event": "measure", "chart_signals": []}
+{"t": 1794865634.4781783, "period": 186, "event": "measure", "chart_signals": ["revenue 8 in a row below the centre", "revenue_per_slot 8 in a row below the centre", "units 8 in a row below the centre"]}
+{"t": 1794865635.0700123, "period": 187, "event": "measure", "chart_signals": []}
+{"t": 1794865636.2738764, "period": 188, "event": "measure", "chart_signals": ["slots_selling 8 in a row below the centre"]}
+{"t": 1794865645.8942964, "period": 189, "event": "measure", "chart_signals": []}
+{"t": 1794865645.8945165, "period": 177, "delivered": 189, "event": "pulse", "id": "P-027", "trigger": "scheduled", "cost": 0.01090065, "turns": 8}
+{"t": 1794865645.8976789, "period": 189, "event": "started", "id": "P-028"}
+{"t": 1794865650.9908104, "period": 190, "event": "measure", "chart_signals": []}
+{"t": 1794865651.5201592, "period": 191, "event": "measure", "chart_signals": []}
+{"t": 1794865652.9290903, "period": 192, "event": "measure", "chart_signals": []}
+{"t": 1794865662.1984518, "period": 193, "event": "measure", "chart_signals": []}
+{"t": 1794865672.4097567, "period": 194, "event": "measure", "chart_signals": []}
+{"t": 1794865680.5326283, "period": 195, "event": "measure", "chart_signals": []}
+{"t": 1794865680.5329325, "period": 189, "delivered": 195, "event": "pulse", "id": "P-028", "trigger": "scheduled", "cost": 0.00995035, "turns": 10}
+{"t": 1794865680.533023, "period": 195, "event": "diagnosis_deferred", "after": "P-028"}
+{"t": 1794865680.5341458, "period": 195, "event": "started", "id": "P-029"}
+{"t": 1794865681.9937994, "period": 196, "event": "measure", "chart_signals": []}
+{"t": 1794865688.3911538, "period": 197, "event": "measure", "chart_signals": []}
+{"t": 1794865696.6708505, "period": 198, "event": "measure", "chart_signals": []}
+{"t": 1794865708.069743, "period": 199, "event": "measure", "chart_signals": []}
+{"t": 1794865708.0699346, "period": 195, "delivered": 199, "event": "pulse", "id": "P-029", "trigger": "scheduled", "cost": 0.00864192, "turns": 9}
+{"t": 1794865708.0699842, "period": 199, "event": "diagnosis_deferred", "after": "P-029"}
+{"t": 1794865709.4646113, "period": 200, "event": "measure", "chart_signals": []}
+{"t": 1794865709.465368, "period": 200, "event": "started", "id": "P-030"}
+{"t": 1794865717.8212347, "period": 201, "event": "measure", "chart_signals": []}
+{"t": 1794865717.8214562, "period": 189, "delivered": 201, "event": "diagnosis", "id": "D-P-027", "trigger": null, "cost": 0.01723839, "turns": 14}
+{"t": 1794865718.6675174, "period": 202, "event": "measure", "chart_signals": []}
+{"t": 1794865719.7328515, "period": 203, "event": "measure", "chart_signals": []}
+{"t": 1794865728.130016, "period": 204, "event": "measure", "chart_signals": []}
+{"t": 1794865730.5463336, "period": 205, "event": "measure", "chart_signals": []}
+{"t": 1794865743.7807796, "period": 206, "event": "measure", "chart_signals": []}
+{"t": 1794865743.780987, "period": 200, "delivered": 206, "event": "pulse", "id": "P-030", "trigger": "scheduled", "cost": 0.0087452, "turns": 10}
+{"t": 1794865743.781044, "period": 206, "event": "diagnosis_deferred", "after": "P-030"}
+{"t": 1794865743.7816966, "period": 206, "event": "started", "id": "P-031"}
+{"t": 1794865744.69421, "period": 207, "event": "measure", "chart_signals": []}
+{"t": 1794865745.8507676, "period": 208, "event": "measure", "chart_signals": []}
+{"t": 1794865751.5684536, "period": 209, "event": "measure", "chart_signals": []}
+{"t": 1794865752.813191, "period": 210, "event": "measure", "chart_signals": []}
+{"t": 1794865760.9162087, "period": 211, "event": "measure", "chart_signals": []}
+{"t": 1794865770.7333524, "period": 212, "event": "measure", "chart_signals": []}
+{"t": 1794865770.7335901, "period": 201, "delivered": 212, "event": "redesign", "id": "R-P-027", "trigger": null, "cost": 0.011461760000000001, "turns": 9}
+{"t": 1794865770.7337246, "period": 206, "delivered": 212, "event": "pulse", "id": "P-031", "trigger": "scheduled", "cost": 0.008107399999999999, "turns": 8}
+{"t": 1794865770.733761, "period": 212, "event": "diagnosis_deferred", "after": "P-031"}
+{"t": 1794865770.7343547, "period": 212, "event": "started", "id": "A-004"}
+{"t": 1794865776.70077, "period": 213, "event": "measure", "chart_signals": []}
+{"t": 1794865777.2446132, "period": 214, "event": "measure", "chart_signals": []}
+{"t": 1794865778.4329937, "period": 215, "event": "measure", "chart_signals": []}
+{"t": 1794865788.7574472, "period": 217, "event": "measure", "chart_signals": []}
+{"t": 1794865798.895634, "period": 218, "event": "measure", "chart_signals": ["cash_gain_7 beyond the lower limit"]}
+{"t": 1794865799.480173, "period": 219, "event": "measure", "chart_signals": []}
+{"t": 1794865802.5577433, "period": 220, "event": "measure", "chart_signals": []}
+{"t": 1794865803.9387345, "period": 221, "event": "measure", "chart_signals": []}
+{"t": 1794865810.2112298, "period": 222, "event": "measure", "chart_signals": []}
+{"t": 1794865811.2994835, "period": 223, "event": "measure", "chart_signals": []}
+{"t": 1794865824.027769, "period": 225, "event": "measure", "chart_signals": []}
+{"t": 1794865828.446542, "period": 226, "event": "measure", "chart_signals": []}
+{"t": 1794865829.0091276, "period": 227, "event": "measure", "chart_signals": []}
+{"t": 1794865829.574845, "period": 228, "event": "measure", "chart_signals": []}
+{"t": 1794865830.1222415, "period": 229, "event": "measure", "chart_signals": []}
+{"t": 1794865830.7002373, "period": 230, "event": "measure", "chart_signals": []}
+{"t": 1794865832.8879323, "period": 231, "event": "measure", "chart_signals": []}
+{"t": 1794865842.28163, "period": 232, "event": "measure", "chart_signals": []}
+{"t": 1794865854.0370705, "period": 233, "event": "measure", "chart_signals": []}
+{"t": 1794865854.6229584, "period": 234, "event": "measure", "chart_signals": []}
+{"t": 1794865855.300998, "period": 235, "event": "measure", "chart_signals": []}
+{"t": 1794865859.8904834, "period": 236, "event": "measure", "chart_signals": []}
+{"t": 1794865866.7561543, "period": 237, "event": "measure", "chart_signals": []}
+{"t": 1794865874.260245, "period": 238, "event": "measure", "chart_signals": []}
+{"t": 1794865876.3897283, "period": 239, "event": "measure", "chart_signals": []}
+{"t": 1794865878.1052606, "period": 240, "event": "measure", "chart_signals": []}
+{"t": 1794865878.6704354, "period": 241, "event": "measure", "chart_signals": []}
+{"t": 1794865878.6705785, "period": 212, "delivered": 241, "event": "audit", "id": "A-004", "trigger": "scheduled", "cost": 0.02281073, "turns": 10}
+{"t": 1794865878.677651, "period": 241, "event": "started", "id": "P-032"}
+{"t": 1794865879.780093, "period": 242, "event": "measure", "chart_signals": []}
+{"t": 1794865884.2998304, "period": 243, "event": "measure", "chart_signals": []}
+{"t": 1794865893.3947296, "period": 244, "event": "measure", "chart_signals": []}
+{"t": 1794865894.4915073, "period": 245, "event": "measure", "chart_signals": []}
+{"t": 1794865895.153734, "period": 246, "event": "measure", "chart_signals": []}
+{"t": 1794865901.9347193, "period": 247, "event": "measure", "chart_signals": []}
+{"t": 1794865903.9468641, "period": 248, "event": "measure", "chart_signals": []}
+{"t": 1794865935.6787474, "period": 249, "event": "measure", "chart_signals": ["cash_gain_7 beyond the lower limit"]}
+{"t": 1794865935.678934, "period": 241, "delivered": 249, "event": "pulse", "id": "P-032", "trigger": "scheduled", "cost": 0.010210460000000001, "turns": 10}
+{"t": 1794865935.6789885, "period": 249, "event": "diagnosis_deferred", "after": "P-032"}
+{"t": 1794865935.6797526, "period": 249, "event": "started", "id": "A-005"}
+{"t": 1794865949.3830729, "period": 250, "event": "measure", "chart_signals": []}
+{"t": 1794865964.494268, "period": 251, "event": "measure", "chart_signals": []}
+{"t": 1794865964.4944625, "period": 241, "delivered": 251, "event": "diagnosis", "id": "D-A-004", "trigger": null, "cost": 0.0163992, "turns": 8}
+{"t": 1794865977.6938233, "period": 252, "event": "measure", "chart_signals": []}
+{"t": 1794865989.1726224, "period": 253, "event": "measure", "chart_signals": []}
+{"t": 1794866002.7868598, "period": 254, "event": "measure", "chart_signals": []}
+{"t": 1794866002.787064, "period": 249, "delivered": 254, "event": "audit", "id": "A-005", "trigger": "chart signal, wrong direction: cash_gain_7 beyond the lower limit", "cost": 0.014780970000000001, "turns": 10}
+{"t": 1794866002.7871256, "period": 254, "event": "diagnosis_deferred", "after": "A-005"}
+{"t": 1794866002.7873166, "period": 251, "delivered": 254, "event": "redesign", "id": "R-A-004", "trigger": null, "cost": 0.00867534, "turns": 8}
+{"t": 1794866002.788084, "period": 254, "event": "started", "id": "P-033"}
+{"t": 1794866011.2790139, "period": 255, "event": "measure", "chart_signals": []}
+{"t": 1794866021.67084, "period": 256, "event": "measure", "chart_signals": []}
+{"t": 1794866033.5709128, "period": 257, "event": "measure", "chart_signals": []}
+{"t": 1794866051.2621646, "period": 258, "event": "measure", "chart_signals": []}
+{"t": 1794866051.262417, "period": 254, "delivered": 258, "event": "pulse", "id": "P-033", "trigger": "scheduled", "cost": 0.01065054, "turns": 9}
+{"t": 1794866051.2625, "period": 258, "event": "diagnosis_deferred", "after": "P-033"}
+{"t": 1794866061.7309823, "period": 259, "event": "measure", "chart_signals": []}
+{"t": 1794866061.7317479, "period": 259, "event": "started", "id": "P-034"}
+{"t": 1794866069.3719478, "period": 260, "event": "measure", "chart_signals": []}
+{"t": 1794866079.310387, "period": 261, "event": "measure", "chart_signals": []}
+{"t": 1794866087.9354146, "period": 262, "event": "measure", "chart_signals": []}
+{"t": 1794866090.233978, "period": 263, "event": "measure", "chart_signals": []}
+{"t": 1794866102.1266623, "period": 264, "event": "measure", "chart_signals": []}
+{"t": 1794866102.1268263, "period": 259, "delivered": 264, "event": "pulse", "id": "P-034", "trigger": "scheduled", "cost": 0.01023028, "turns": 9}
+{"t": 1794866102.1268756, "period": 264, "event": "diagnosis_deferred", "after": "P-034"}
+{"t": 1794866102.1275816, "period": 264, "event": "started", "id": "P-035"}
+{"t": 1794866113.324952, "period": 265, "event": "measure", "chart_signals": []}
+{"t": 1794866118.9650915, "period": 266, "event": "measure", "chart_signals": []}
+{"t": 1794866123.4383256, "period": 267, "event": "measure", "chart_signals": []}
+{"t": 1794866124.0345857, "period": 268, "event": "measure", "chart_signals": []}
+{"t": 1794866126.4515462, "period": 269, "event": "measure", "chart_signals": []}
+{"t": 1794866136.9698575, "period": 270, "event": "measure", "chart_signals": []}
+{"t": 1794866136.9700515, "period": 264, "delivered": 270, "event": "pulse", "id": "P-035", "trigger": "scheduled", "cost": 0.010283859999999999, "turns": 12}
+{"t": 1794866136.9701085, "period": 270, "event": "diagnosis_deferred", "after": "P-035"}
+{"t": 1794866136.9709346, "period": 270, "event": "started", "id": "P-036"}
+{"t": 1794866145.6398602, "period": 271, "event": "measure", "chart_signals": []}
+{"t": 1794866153.5757763, "period": 272, "event": "measure", "chart_signals": []}
+{"t": 1794866154.2102497, "period": 273, "event": "measure", "chart_signals": []}
+{"t": 1794866154.8590853, "period": 274, "event": "measure", "chart_signals": []}
+{"t": 1794866157.6081345, "period": 275, "event": "measure", "chart_signals": ["cash_gain_7 8 in a row below the centre"]}
+{"t": 1794866169.436851, "period": 276, "event": "measure", "chart_signals": []}
+{"t": 1794866169.437024, "period": 270, "delivered": 276, "event": "pulse", "id": "P-036", "trigger": "scheduled", "cost": 0.008767609999999999, "turns": 9}
+{"t": 1794866169.4380283, "period": 276, "event": "started", "id": "P-037"}
+{"t": 1794866177.7657235, "period": 277, "event": "measure", "chart_signals": []}
+{"t": 1794866185.5201778, "period": 278, "event": "measure", "chart_signals": []}
+{"t": 1794866186.130778, "period": 279, "event": "measure", "chart_signals": []}
+{"t": 1794866188.0608954, "period": 280, "event": "measure", "chart_signals": []}
+{"t": 1794866199.2505858, "period": 281, "event": "measure", "chart_signals": []}
+{"t": 1794866199.250744, "period": 276, "delivered": 281, "event": "pulse", "id": "P-037", "trigger": "scheduled", "cost": 0.01035667, "turns": 11}
+{"t": 1794866199.2507913, "period": 281, "event": "diagnosis_deferred", "after": "P-037"}
+{"t": 1794866199.2514362, "period": 281, "event": "started", "id": "P-038"}
+{"t": 1794866202.5368972, "period": 282, "event": "measure", "chart_signals": []}
+{"t": 1794866211.3835585, "period": 283, "event": "measure", "chart_signals": []}
+{"t": 1794866219.2817316, "period": 284, "event": "measure", "chart_signals": []}
+{"t": 1794866219.8284273, "period": 285, "event": "measure", "chart_signals": []}
+{"t": 1794866221.0388672, "period": 286, "event": "measure", "chart_signals": ["slots_selling 8 in a row below the centre", "units 8 in a row below the centre"]}
+{"t": 1794866230.253461, "period": 287, "event": "measure", "chart_signals": []}
+{"t": 1794866230.2537096, "period": 281, "delivered": 287, "event": "pulse", "id": "P-038", "trigger": "scheduled", "cost": 0.00994143, "turns": 10}
+{"t": 1794866230.2537649, "period": 287, "event": "diagnosis_deferred", "after": "P-038"}
+{"t": 1794866230.2543128, "period": 287, "event": "started", "id": "P-039"}
+{"t": 1794866237.4474788, "period": 288, "event": "measure", "chart_signals": []}
+{"t": 1794866237.4477315, "period": 276, "delivered": 288, "event": "diagnosis", "id": "D-P-036", "trigger": null, "cost": 0.015210689999999999, "turns": 10}
+{"t": 1794866239.5188355, "period": 289, "event": "measure", "chart_signals": []}
+{"t": 1794866240.7108412, "period": 290, "event": "measure", "chart_signals": []}
+{"t": 1794866249.4115055, "period": 291, "event": "measure", "chart_signals": []}
+{"t": 1794866253.3876352, "period": 292, "event": "measure", "chart_signals": []}
+{"t": 1794866253.8975108, "period": 293, "event": "measure", "chart_signals": []}
+{"t": 1794866254.3938997, "period": 294, "event": "measure", "chart_signals": []}
+{"t": 1794866256.4533255, "period": 295, "event": "measure", "chart_signals": []}
+{"t": 1794866266.2505453, "period": 296, "event": "measure", "chart_signals": []}
+{"t": 1794866266.250793, "period": 287, "delivered": 296, "event": "pulse", "id": "P-039", "trigger": "scheduled", "cost": 0.011702539999999999, "turns": 11}
+{"t": 1794866266.2508776, "period": 296, "event": "diagnosis_deferred", "after": "P-039"}
+{"t": 1794866266.2509944, "period": 288, "delivered": 296, "event": "redesign", "id": "R-P-036", "trigger": null, "cost": 0.007930139999999999, "turns": 8}
+{"t": 1794866266.25191, "period": 296, "event": "started", "id": "P-040"}
+{"t": 1794866274.2715964, "period": 297, "event": "measure", "chart_signals": []}
+{"t": 1794866289.0698678, "period": 298, "event": "measure", "chart_signals": []}
+{"t": 1794866290.5165188, "period": 299, "event": "measure", "chart_signals": []}
+{"t": 1794866291.7771425, "period": 300, "event": "measure", "chart_signals": []}
+{"t": 1794866301.0440986, "period": 301, "event": "measure", "chart_signals": []}
+{"t": 1794866301.0443635, "period": 296, "delivered": 301, "event": "pulse", "id": "P-040", "trigger": "scheduled", "cost": 0.01073775, "turns": 10}
+{"t": 1794866301.0444376, "period": 301, "event": "diagnosis_deferred", "after": "P-040"}
+{"t": 1794866301.0449195, "period": 301, "event": "started", "id": "A-006"}
+{"t": 1794866309.853076, "period": 302, "event": "measure", "chart_signals": []}
+{"t": 1794866318.6307702, "period": 303, "event": "measure", "chart_signals": []}
+{"t": 1794866319.2000608, "period": 304, "event": "measure", "chart_signals": []}
+{"t": 1794866326.6589808, "period": 305, "event": "measure", "chart_signals": []}
+{"t": 1794866327.7337904, "period": 306, "event": "measure", "chart_signals": []}
+{"t": 1794866336.0179167, "period": 307, "event": "measure", "chart_signals": []}
+{"t": 1794866342.4564147, "period": 308, "event": "measure", "chart_signals": []}
+{"t": 1794866343.0740914, "period": 309, "event": "measure", "chart_signals": []}
+{"t": 1794866350.6261384, "period": 310, "event": "measure", "chart_signals": []}
+{"t": 1794866359.4781237, "period": 311, "event": "measure", "chart_signals": []}
+{"t": 1794866363.0088742, "period": 312, "event": "measure", "chart_signals": []}
+{"t": 1794866368.2008734, "period": 313, "event": "measure", "chart_signals": []}
+{"t": 1794866371.9057596, "period": 314, "event": "measure", "chart_signals": []}
+{"t": 1794866375.4217122, "period": 315, "event": "measure", "chart_signals": []}
+{"t": 1794866375.421932, "period": 301, "delivered": 315, "event": "audit", "id": "A-006", "trigger": "scheduled", "cost": 0.01824439, "turns": 12}
+{"t": 1794866375.4220002, "period": 315, "event": "diagnosis_deferred", "after": "A-006"}
+{"t": 1794866375.422588, "period": 315, "event": "started", "id": "P-041"}
+{"t": 1794866376.383854, "period": 316, "event": "measure", "chart_signals": []}
+{"t": 1794866377.0237064, "period": 317, "event": "measure", "chart_signals": []}
+{"t": 1794866385.392936, "period": 318, "event": "measure", "chart_signals": []}
+{"t": 1794866389.3079112, "period": 319, "event": "measure", "chart_signals": ["cash_gain_7 beyond the lower limit"]}
+{"t": 1794866389.8759563, "period": 320, "event": "measure", "chart_signals": []}
+{"t": 1794866390.4289079, "period": 321, "event": "measure", "chart_signals": ["revenue 8 in a row below the centre", "slots_selling 8 in a row below the centre", "units 8 in a row below the centre"]}
+{"t": 1794866391.1359804, "period": 322, "event": "measure", "chart_signals": []}
+{"t": 1794866392.250991, "period": 323, "event": "measure", "chart_signals": []}
+{"t": 1794866399.2796779, "period": 324, "event": "measure", "chart_signals": []}
+{"t": 1794866399.2799127, "period": 315, "delivered": 324, "event": "pulse", "id": "P-041", "trigger": "scheduled", "cost": 0.00971121, "turns": 9}
+{"t": 1794866399.2856817, "period": 324, "event": "started", "id": "P-042"}
+{"t": 1794866408.0698802, "period": 325, "event": "measure", "chart_signals": ["cash_gain_7 8 in a row below the centre"]}
+{"t": 1794866415.0288138, "period": 326, "event": "measure", "chart_signals": []}
+{"t": 1794866419.1047022, "period": 327, "event": "measure", "chart_signals": []}
+{"t": 1794866419.712419, "period": 328, "event": "measure", "chart_signals": []}
+{"t": 1794866420.3456552, "period": 329, "event": "measure", "chart_signals": []}
+{"t": 1794866427.1785553, "period": 330, "event": "measure", "chart_signals": ["slots_selling beyond the lower limit"]}
+{"t": 1794866427.1787639, "period": 324, "delivered": 330, "event": "pulse", "id": "P-042", "trigger": "scheduled", "cost": 0.00983459, "turns": 8}
+{"t": 1794866427.1788163, "period": 330, "event": "diagnosis_deferred", "after": "P-042"}
+{"t": 1794866427.1795058, "period": 330, "event": "started", "id": "A-007"}
+{"t": 1794866436.809029, "period": 331, "event": "measure", "chart_signals": []}
+{"t": 1794866442.5114238, "period": 332, "event": "measure", "chart_signals": []}
+{"t": 1794866443.2002761, "period": 333, "event": "measure", "chart_signals": ["cash_gain_7 beyond the lower limit"]}
+{"t": 1794866444.5960777, "period": 334, "event": "measure", "chart_signals": ["revenue 8 in a row below the centre", "slots_selling 8 in a row below the centre", "units 8 in a row below the centre"]}
+{"t": 1794866451.835638, "period": 335, "event": "measure", "chart_signals": []}
+{"t": 1794866452.989325, "period": 336, "event": "measure", "chart_signals": []}
+{"t": 1794866452.9895241, "period": 324, "delivered": 336, "event": "diagnosis", "id": "D-P-041", "trigger": null, "cost": 0.01582306, "turns": 11}
+{"t": 1794866461.073348, "period": 337, "event": "measure", "chart_signals": []}
+{"t": 1794866463.142363, "period": 338, "event": "measure", "chart_signals": []}
+{"t": 1794866469.5201921, "period": 339, "event": "measure", "chart_signals": []}
+{"t": 1794866470.1099927, "period": 340, "event": "measure", "chart_signals": []}
+{"t": 1794866471.268805, "period": 341, "event": "measure", "chart_signals": []}
+{"t": 1794866479.277088, "period": 342, "event": "measure", "chart_signals": []}
+{"t": 1794866486.45921, "period": 343, "event": "measure", "chart_signals": []}
+{"t": 1794866493.5897694, "period": 344, "event": "measure", "chart_signals": []}
+{"t": 1794866493.5900502, "period": 336, "delivered": 344, "event": "redesign", "id": "R-P-041", "trigger": null, "cost": 0.00929458, "turns": 9}
+{"t": 1794866494.9105573, "period": 345, "event": "measure", "chart_signals": []}
+{"t": 1794866497.8952897, "period": 346, "event": "measure", "chart_signals": []}
+{"t": 1794866498.4983802, "period": 347, "event": "measure", "chart_signals": []}
+{"t": 1794866499.076941, "period": 348, "event": "measure", "chart_signals": []}
+{"t": 1794866500.3520298, "period": 349, "event": "measure", "chart_signals": []}
+{"t": 1794866506.0107598, "period": 350, "event": "measure", "chart_signals": []}
+{"t": 1794866506.010948, "period": 330, "delivered": 350, "event": "audit", "id": "A-007", "trigger": "chart signal, wrong direction: slots_selling beyond the lower limit", "cost": 0.01991327, "turns": 14}
+{"t": 1794866506.011016, "period": 350, "event": "diagnosis_deferred", "after": "A-007"}
+{"t": 1794866506.0115626, "period": 350, "event": "started", "id": "P-043"}
+{"t": 1794866506.9725268, "period": 351, "event": "measure", "chart_signals": []}
+{"t": 1794866507.56544, "period": 352, "event": "measure", "chart_signals": []}
+{"t": 1794866508.233489, "period": 353, "event": "measure", "chart_signals": []}
+{"t": 1794866508.8204503, "period": 354, "event": "measure", "chart_signals": []}
+{"t": 1794866509.9320242, "period": 355, "event": "measure", "chart_signals": ["slots_selling beyond the lower limit"]}
+{"t": 1794866517.07913, "period": 356, "event": "measure", "chart_signals": ["cash_gain_7 beyond the lower limit"]}
+{"t": 1794866517.7357953, "period": 357, "event": "measure", "chart_signals": []}
+{"t": 1794866519.031687, "period": 358, "event": "measure", "chart_signals": []}
+{"t": 1794866528.2811863, "period": 359, "event": "measure", "chart_signals": []}
+{"t": 1794866531.437797, "period": 360, "event": "measure", "chart_signals": []}
+{"t": 1794866532.0912633, "period": 361, "event": "measure", "chart_signals": []}
+{"t": 1794866532.8166046, "period": 362, "event": "measure", "chart_signals": []}
+{"t": 1794866533.512568, "period": 363, "event": "measure", "chart_signals": ["slots_selling beyond the lower limit"]}
+{"t": 1794866534.2935307, "period": 364, "event": "measure", "chart_signals": []}
+{"t": 1794866534.890997, "period": 365, "event": "measure", "chart_signals": []}

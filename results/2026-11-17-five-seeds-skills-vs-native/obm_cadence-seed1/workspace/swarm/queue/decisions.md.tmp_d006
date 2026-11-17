@@ -1,0 +1,5 @@
+D-006 (day 69): complaint refund rule. Parked for the designer.
+- Current operator rule: refund the full claimed amount (matched to CMP- reference). Applied to CMP-001 to CMP-011.
+- Audit A-001 asks for the verified price paid. We cannot verify sales per transaction; claims run 3-10x the item price.
+- Cost so far: about €161 paid on eleven complaints. Reputation returned to 1.00 after each withdrawal.
+- Default taken now: keep the claimed-amount rule until the designer decides. Recommended: keep paying up to the claim while reputation is below 1.00; designer to decide the verified-price rule.
