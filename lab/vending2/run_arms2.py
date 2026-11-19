@@ -144,7 +144,8 @@ def main():
                               "not need to call the other roles: the system writes ground-truth measures and charts every day, runs pulse reviews, full "
                               "audits, opportunity reviews, diagnoses and redesigns on its own schedule, and hands you their results in the result of "
                               "wait_for_next_day. Act on what it hands you: do the fixes, keep doing what it says works, adopt any redesign, and carry out "
-                              "the experiments in swarm/experiments/: make each change on its slice only, write 'Applied: <day>' in its file, and "
+                              "the experiments in swarm/experiments/: make a change only when the system hands it to you with 'starts now', on its slice only, "
+                              "write 'Applied: <day>' in its file, and "
                               "apply the auditor's verdict. Never judge an experiment yourself. Log events only, not a line every day. Keep operating until the simulation ends.")
             p, r = claude(['-p', run_prompt, '--permission-mode', 'acceptEdits', '--max-budget-usd', f'{left:.2f}', *common], cfg, ws, stream, a.timeout)
             results.append(r)
