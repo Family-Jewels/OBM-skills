@@ -131,6 +131,11 @@ def step(mem, spec, sw, t, newest, new_point, W):
             s["state"] = "void"; s["why"] = "its driver is not a measure the system records"
             acts.append(("note", f"experiment {e['id']} cannot run: its driver ('{e['driver_text'][:60]}') is not a measure the system records. "
                          f"The designer must name one of: {', '.join(list(spec.get('unit_measures', {})) + list(spec.get('measures', {})))}."))
+        if (drv and drv in spec.get("measures", {}) and e["slice"] != "all" and spec.get("unit_measures") and not s.get("noted_network")):
+            s["noted_network"] = True
+            acts.append(("note", f"experiment {e['id']} names a slice ({', '.join(e['slice'])}) but a whole-system driver ({drv}), so it "
+                         f"can only be judged on the whole system, not slice against control. A per-unit driver "
+                         f"({', '.join(spec['unit_measures'])}) would let the system compare the slice with the rest."))
         if s["state"] in ("planned", "queued") and e["start"] is not None and t >= e["start"]:
             busy = [o for o in exps if o["id"] != e["id"] and S.get(o["id"], {}).get("state") in ACTIVE and _overlap(o["slice"], e["slice"])]
             if busy:

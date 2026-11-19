@@ -196,7 +196,7 @@ def main(cfg, cfg_path=None):
               f"with lines 'Driver:' (exactly one of the measures the system records: {measure_names}), 'Slice:' (the units it touches, "
               f"from the Units table in swarm/charts.md, or 'all'), 'Control: rest', 'Change:', 'Prediction:', 'Guardrail:', "
               f"'Start: <{unit} number>' and 'End: <{unit} number>', lasting at least {GAP_POINTS} points ({GAP_POINTS * W} {unit}s). "
-              f"Prefer a slice with the rest as control; experiments whose slices overlap run one after another. Change exactly one lever on the slice and leave the core work going on as usual on slice and control alike: never freeze restocking or other core work on a slice. You do not decide "
+              f"Prefer a slice with the rest as control, judged on a per-unit driver ({", ".join(spec.get("unit_measures", {})) or "none in this task"}); a whole-system driver can only be judged on the whole system; experiments whose slices overlap run one after another. Change exactly one lever on the slice and leave the core work going on as usual on slice and control alike: never freeze restocking or other core work on a slice. You do not decide "
               f"keep or revert: the system measures, and the auditor rules. The goal and the aim are the human's: never lower them. State a prediction "
               f"in the record: which measure should shift, which way, by which {unit}. Never change anything in a way that stops the core "
               f"work. Before changing swarm/spec.md or a rule file, copy the old version to swarm/history/ with its version number; keep the "
