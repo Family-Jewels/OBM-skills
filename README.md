@@ -61,15 +61,15 @@ The skills stay complete without enforcement: on a platform with no hooks, every
 
 | Skill | Role |
 | --- | --- |
-| `obm-swarm-designer` | Owns the design: a driver tree from the goal's main measure down to the drivers the swarm controls, the exemplar, checks, budgets, cadence. Called again to redesign when a diagnosis or audit shows the swarm is off course; the only role that changes the tree, checks or rules; the goal itself is the human's |
-| `obm-swarm-orchestrator` | The manager: dispatches, routes on outcomes, paces spend, keeps the core goal moving, adopts redesigns |
+| `obm-swarm-designer` | Owns the design: a driver tree from the goal's main measure down to the drivers the swarm controls, each with a ceiling and guardrail; resources; checks, budgets, experiments, cadence. Called again to redesign after a diagnosis or an opportunity review; the only role that changes the tree, checks, rules or experiments; the goal itself is the human's |
+| `obm-swarm-orchestrator` | The manager: dispatches, routes on outcomes, paces spend, keeps the core goal moving, adopts redesigns, scales what works, runs experiments inside guardrails |
 | `obm-swarm-checker` | Quality: gathers its own evidence for each criterion. Where nothing can be run, checks provenance: who published a source, when it was really published (not the date the text claims), whether it is cited elsewhere, independent corroboration, and whether judgments rest on verifiable facts |
-| `obm-swarm-auditor` | The director: a pulse review of the system's charts every 5 periods, a full audit every 50 (direction, report-reality samples, probes, cost, the manager's decisions) |
-| `obm-swarm-diagnostician` | Finds what is going wrong and why (pinpoint, what maintains it, cause in the environment). Writes no fix: the designer does |
+| `obm-swarm-auditor` | The director: a pulse review of the system's charts every point, full audits at each quarter of the horizon (progress, experiments, direction, report-reality samples, probes, cost, the manager's decisions); about one keep-doing item to four fixes |
+| `obm-swarm-diagnostician` | Fault mode: what is going wrong and why (pinpoint, what maintains it, cause in the environment). Opportunity mode: where the most room is when nothing is broken (gap × leverage, the constraint, idle resources, the own-best stretch, candidate experiments). Writes no fix: the designer does |
 
 There is no producer skill. Workers follow the short rules for whoever does the work in the protocol, and the evidence about their work comes from the system's record and the checker's own checks, never from the worker's report about itself.
 
-The loop: **designer builds the driver tree → system charts every measure with limits computed from the data → auditor separates signals from routine variation → diagnostician walks the tree to what moved and why → designer reworks the design, with a prediction → the charts show whether it worked.**
+The loop has two halves. **Safety:** designer builds the driver tree → system charts every measure with limits computed from the data → auditor separates signals from routine variation → diagnostician walks the tree to what moved and why → designer reworks the design, with a prediction → the charts show whether it worked. **Improvement:** the system measures celeration against a floor line and a deliberate overshoot aim, and resources in use → an opportunity review finds the constraint, idle resources and what worked best → the designer sets up experiments inside guardrails → the charts judge them.
 
 All state lives in files, and every record has a fixed format ([`skills/protocol.md`](skills/protocol.md)), so any session, model or vendor can resume the work.
 
@@ -110,6 +110,15 @@ python analyze.py logs/tiny --out tiny
 ```
 
 ## Changelog: what the field tests changed
+
+**The improvement half, 2026-11-18** (after five seeds showed a safe floor but a low ceiling; [results](results/2026-11-17-five-seeds-skills-vs-native)). v1 is tagged `skills-v1`.
+
+- Progress is measured as Precision Teaching's celeration: the multiplier per point from a median-based log-scale fit, with bounce, phases and own best, computed by the system.
+- Timing comes from the task. The adapter states the horizon, natural cycle and clock ([`lab/cadence/ADAPTER_SPEC.md`](lab/cadence/ADAPTER_SPEC.md)); the system derives the point window and counts every interval in points. Vending's 7-day point falls out of the rules.
+- The top measure has a floor line (the goal at the horizon) that triggers reviews, and an aim that deliberately overshoots (the goal by half the remaining horizon) and triggers nothing.
+- The diagnostician gains an opportunity mode, run on a schedule even when every chart is stable. The designer redesigns from it, often by setting up experiments inside guardrails.
+- Reviews give about one keep-doing item to four fixes. A misreport now cannot advance the task, classified by evidence not intent, instead of resetting it.
+- Cost cuts: the worker logs events instead of a line every period, and re-reads the spec only when it changes.
 
 **Design review, 2026-11-15** (Jules's feedback after the cadence runs):
 

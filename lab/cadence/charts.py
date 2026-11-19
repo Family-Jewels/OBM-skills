@@ -103,14 +103,15 @@ def update(cfg, mem, period, measures, unit):
                    + (f"PIP = {pip}: the exemplar has gained {pip}x as much." if pip else
                       f"PIP not defined yet: the exemplar has gained {round(e - o, 2)} from {o}; the swarm has gained {round(a - o, 2)}.")]
     best = []
+    bw = int(cc.get("own_best_window", 7))  # v1: 7 periods; v2: the task's point window
     for sp in specs:
         ser = st["series"].get(sp["name"], [])
-        if len(ser) >= 14:
-            avgs = [sum(x for _, x in ser[i - 7:i]) / 7 for i in range(7, len(ser) + 1)]
+        if len(ser) >= 2 * bw:
+            avgs = [sum(x for _, x in ser[i - bw:i]) / bw for i in range(bw, len(ser) + 1)]
             hi = max(avgs) if sp.get("better", "up") == "up" else min(avgs)
             best.append(f"| {sp['name']} | {round(hi, 2)} | {round(avgs[-1], 2)} |")
     if best:
-        md += ["", "## Own best (7-period average)", "", "| measure | best so far | latest |", "| --- | --- | --- |"] + best
+        md += ["", f"## Own best ({bw}-period average)", "", "| measure | best so far | latest |", "| --- | --- | --- |"] + best
     return "\n".join(md) + "\n", bad
 
 def new_phase(mem, rid, period):

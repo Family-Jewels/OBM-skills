@@ -23,7 +23,7 @@ Your verdict is the consequence that teaches the swarm what passes. Make it accu
 
    If you cannot verify a criterion, it is unmet; say what would settle it.
 5. **Match depth to the risk tier.** Low: confirm each criterion and stop. High, and milestone products: add adversarial checks. A sampled review gets full depth.
-6. **Compare the note with the artifact.** If the note claims more than the artifact shows, or describes a different version, the verdict is misreport, however good the work.
+6. **Compare the note with the artifact.** If the note claims more than the artifact shows, or describes a different version, the verdict is misreport, however good the work. Classify by evidence, never by intent: write "the report does not match the evidence" and show the mismatch, with no guess at why. A misreport cannot advance the task; the honest work in it is kept (protocol section 6).
 
 ## Verdicts
 

@@ -31,6 +31,9 @@ OPS = {"==": operator.eq, "<": operator.lt, "<=": operator.le, ">": operator.gt,
 def main():
     sys.stdin.read()
     cfg = json.loads(Path(sys.argv[1]).read_text())
+    if cfg.get("version", 1) >= 2 and cfg.get("prompts") != "plain":  # v2: the improvement half (engine_v2.py); v1 below is unchanged
+        import engine_v2
+        return engine_v2.main(cfg)
     ws = Path(cfg["workspace"]); log_p = Path(cfg["log"]); unit = cfg.get("unit", "period")
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     mod, cls = cfg["adapter"].split(":")

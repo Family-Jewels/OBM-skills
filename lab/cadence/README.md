@@ -32,3 +32,12 @@ Write an adapter: a class whose `read()` returns `{"period": int, "over": bool, 
 | Vending Bench (`adapters/vending.py`) | A simulated day | Cash, revenue, units, slots selling, revenue over 7 days | PostToolUse on the day-advance tool |
 | A software build (example) | A cycle, or a merged task | Tests passing, criteria met, spend, review share | PostToolUse on the board's status change, or a timer |
 | Research or writing (example) | A section or a work session | Claims sourced, sections done, open questions | A timer |
+
+## Version 2: the improvement half
+
+Set `"version": 2` in the config to use `engine_v2.py` (the plain, no-skills arm stays on v1). v1 is unchanged and tagged `skills-v1`.
+
+- **The adapter states the task's facts** in a `spec()` method: horizon, natural cycle, clock, goal (a target, or maximize with a ceiling), each measure's kind (flow or level) and better direction, resources and guardrails. Each reading adds resources in use. See [`ADAPTER_SPEC.md`](ADAPTER_SPEC.md). A preflight checks the adapter on the first reading.
+- **Progress (`progress.py`):** a point window derived from the adapter (the shortest span of whole cycles holding at least 3 observations that leaves at least 12 points); celeration per measure from a median-based log-scale fit (quarter-intersect up to 7 points, then Theil-Sen), with its range, bounce, own best, phases, jump and turn; the top measure's floor line and stretch aim; resources in use and idle; guardrails; experiments judged on the system's data. All of it is appended to `swarm/charts.md`.
+- **Intervals in points:** a pulse every point (every second point after three quiet pulses); full audits at each quarter of the horizon; an opportunity review every 3 points without one, or when the top measure has 3 points in a row below its floor line or a flat or wrong-way celeration, never while an experiment runs; redesigns at least 3 points after the last design change. Setting up an experiment does not start a new phase.
+- **Tests and replay:** `python3 -I test_progress.py` checks the celeration math. `python3 -I replay.py <run folder> <scratch folder>` replays a recorded run through v2 with no model calls and prints what it would have triggered and when.
