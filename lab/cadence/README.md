@@ -35,7 +35,7 @@ Write an adapter: a class whose `read()` returns `{"period": int, "over": bool, 
 
 ## Version 2: the improvement half
 
-Set `"version": 2` in the config to use `engine_v2.py` (the plain, no-skills arm stays on v1). v1 is unchanged and tagged `skills-v1`.
+Set `"version": 2` in the config to use `engine_v2.py` (the plain, no-skills arm stays on v1). v1 is unchanged and kept on the branch `skills-v1`.
 
 - **The adapter states the task's facts** in a `spec()` method: horizon, natural cycle, clock, goal (a target, or maximize with a ceiling), each measure's kind (flow or level) and better direction, resources and guardrails. Each reading adds resources in use. See [`ADAPTER_SPEC.md`](ADAPTER_SPEC.md). A preflight checks the adapter on the first reading.
 - **Progress (`progress.py`):** a point window derived from the adapter (the shortest span of whole cycles holding at least 3 observations that leaves at least 12 points); celeration per measure from a median-based log-scale fit (quarter-intersect up to 7 points, then Theil-Sen), with its range, bounce, own best, phases, jump and turn; the top measure's floor line and stretch aim; resources in use and idle; guardrails; experiments judged on the system's data. All of it is appended to `swarm/charts.md`.

@@ -111,7 +111,7 @@ python analyze.py logs/tiny --out tiny
 
 ## Changelog: what the field tests changed
 
-**The improvement half, 2026-11-18** (after five seeds showed a safe floor but a low ceiling; [results](results/2026-11-17-five-seeds-skills-vs-native)). v1 is tagged `skills-v1`.
+**The improvement half, 2026-11-18** (after five seeds showed a safe floor but a low ceiling; [results](results/2026-11-17-five-seeds-skills-vs-native)). v1 is kept on the branch `skills-v1`.
 
 - Progress is measured as Precision Teaching's celeration: the multiplier per point from a median-based log-scale fit, with bounce, phases and own best, computed by the system.
 - Timing comes from the task. The adapter states the horizon, natural cycle and clock ([`lab/cadence/ADAPTER_SPEC.md`](lab/cadence/ADAPTER_SPEC.md)); the system derives the point window and counts every interval in points. Vending's 7-day point falls out of the rules.
