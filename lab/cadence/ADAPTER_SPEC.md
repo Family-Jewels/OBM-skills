@@ -31,7 +31,7 @@ An adapter is a class with two methods.
 
 ## `snapshot()`: optional, for experiment fidelity
 
-Returns text (markdown) of the ground truth the swarm controls, such as every slot's product, price and stock. The system saves one each period in `swarm/snapshots/`, and the checker compares them to confirm an experiment's change was made as written, on its slice only.
+Returns text (markdown) of the ground truth the swarm controls: every lever an experiment could pull, such as each slot's product, price and stock, and each marketing campaign. A lever missing from the snapshot cannot be checked, so an experiment using it cannot start. The system saves one each period in `swarm/snapshots/`, and the checker compares them to confirm an experiment's change was made as written, on its slice only.
 
 ## What the system derives from it
 

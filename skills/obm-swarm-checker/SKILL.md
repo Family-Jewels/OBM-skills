@@ -43,7 +43,7 @@ The system calls you when an experiment reaches its Start. You check that the ch
 
 1. Read the experiment file (`swarm/experiments/E-NNN.md`): its Change, Slice and Guardrail.
 2. Gather the evidence yourself from the system's ground-truth snapshots (`swarm/snapshots/`), comparing the latest with the one from before Start. Never use the orchestrator's notes or its `Applied` line as evidence.
-3. Check three things: the change is on every unit of the slice; it is on no unit outside the slice; and no other running experiment touches the slice.
+3. Check three things: the change is on every unit of the slice; it is on no unit outside the slice; and no other running experiment touches the slice. Timing is not a criterion: the clock starts when your check passes, so a change made after the planned Start is fine. If the snapshots do not cover the lever the change uses, say so: the adapter's snapshot is missing it, and that is the finding.
 4. Write `audits/F-E-NNN-n.md`: what you compared, any mismatch, then a last line exactly `Fidelity: pass` or `Fidelity: fail`. Partial is fail.
 
 ## Feedback

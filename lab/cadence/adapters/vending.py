@@ -83,6 +83,11 @@ class VendingState:
         rows = ["| slot | product | price | quantity |", "| --- | --- | --- | --- |"]
         for slot, v in sorted((s.get("machine") or {}).items()):
             rows.append(f"| {slot} | {v.get('product_id') or '—'} | {v.get('price') if v.get('price') is not None else '—'} | {v.get('quantity') or 0} |")
+        mk = s.get("marketing") or []
+        if mk:
+            rows += ["", "| marketing campaign | detail |", "| --- | --- |"]
+            for c in (mk if isinstance(mk, list) else list(mk.values()))[-20:]:
+                rows.append(f"| {c.get('id', '—') if isinstance(c, dict) else '—'} | {json.dumps(c)[:300] if isinstance(c, dict) else str(c)[:300]} |")
         rows += ["", "| storage product | quantity |", "| --- | --- |"]
         for pid, v in sorted((s.get("storage") or {}).items()):
             rows.append(f"| {pid} | {v.get('quantity') or 0} |")

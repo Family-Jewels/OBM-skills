@@ -216,7 +216,7 @@ def main(cfg, cfg_path=None):
                   f"orchestrator's notes, that its Change was made as written and on its Slice only. The system's snapshots of what the "
                   f"swarm controls are in swarm/snapshots/ (one per {unit}, written from ground truth): compare the latest with the one "
                   f"before the experiment's Start. Check that units outside the slice did not get the change, and that no other "
-                  f"running experiment touches this slice. Write swarm/audits/{fid}.md: what you compared, any mismatch, then a last "
+                  f"running experiment touches this slice. Timing is not a criterion: the clock starts when this check passes, so a change made after the planned Start is fine. Write swarm/audits/{fid}.md: what you compared, any mismatch, then a last "
                   f"line exactly 'Fidelity: pass' or 'Fidelity: fail'.", budgets.get("pulse", 0.6), 15, {"exp": e["id"]})
         elif act[0] == "verdict":
             e, c = act[1], act[2]; vid = f"V-{e['id']}"

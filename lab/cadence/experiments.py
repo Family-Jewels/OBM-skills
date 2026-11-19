@@ -116,7 +116,14 @@ def step(mem, spec, sw, t, newest, new_point, W):
     ('note', text)."""
     exps = parse(sw); S = mem.setdefault("exp", {}); acts = []
     rows = []
+    known = sorted({u for m in mem.get("units", {}).values() for u in m}, key=len, reverse=True)
     for e in exps:
+        if e["slice"] != "all" and known:  # pick the known unit ids out of whatever the designer wrote around them
+            found = [u for u in known if re.search(rf"(?<![\w:-]){re.escape(u)}(?![\w:-])", e["slice_text"])]
+            if not found:  # a group named instead, e.g. a location: every unit whose id starts with it
+                found = [u for u in known if any(re.search(rf"(?<![\w:-]){re.escape(g)}(?![\w-])", e["slice_text"])
+                                                 for g in [u.rsplit(":", k)[0] for k in range(1, u.count(":") + 1)])]
+            e["slice"] = found or "all"
         s = S.setdefault(e["id"], {"state": "planned", "fails": 0})
         drv = driver_of(e["driver_text"], spec); s["driver"] = drv
         s["len"] = max(3 * W, (e["end"] or 0) - (e["start"] or 0))
@@ -141,7 +148,7 @@ def step(mem, spec, sw, t, newest, new_point, W):
         if s["state"] == "running" and t >= s["end_t"]:
             cmp = compare(mem, spec, e, s, W); s["cmp"] = cmp; s["state"] = "verdict"; acts.append(("verdict", e, cmp))
         c = s.get("cmp")
-        rows.append(f"| {e['id']} | {drv or 'not measured'} | {e['slice_text'][:40]} | {e['start'] or '?'} | {e['end'] or '?'} | "
+        rows.append(f"| {e['id']} | {drv or 'not measured'} | {', '.join(e['slice']) if e['slice'] != 'all' else 'all'} | {e['start'] or '?'} | {e['end'] or '?'} | "
                     f"{s.get('start_t', '—')} | {s['state']}{(': ' + s['verdict']) if s.get('verdict') else ''} | "
                     + (f"{P.fmt_cel(c['effect']) if c['effect'] else '—'} | {('within x' + format(c['envelope'], '.2f')) if c['envelope'] else '—'} | {c['reading']} |" if c else " | | |"))
     md = []
