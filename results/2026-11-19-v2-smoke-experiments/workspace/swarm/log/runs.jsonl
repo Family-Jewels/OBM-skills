@@ -1,0 +1,8 @@
+{"day": 1, "spend_usd_note": "orchestrator tokens not metered in-game; game spend: orders 167.40 (PO-1001 85.80, PO-1002 81.60)", "game_cash": 1332.60}
+{"day": 10, "game_spend": "PO-1003 88.80", "game_cash": 1216.00}
+{"day": 11, "game_spend": "0 (E-001 price change only)", "game_cash": 1245.70}
+{"day": 14, "event": "E-002 run_marketing prints MAIN-LOUNGE, cost 8.00, copy 'Fresh snacks and drinks on every floor. Find your favourite at the MAIN-LOUNGE machines, stocked for the working week.', prints limit 8 / weekly 2, traffic multiplier 1.10 after print", "game_cash_after": 1249.20}
+{"day": 17, "game_spend": "PO-1004 283.00", "game_cash": 1055.60}
+{"day": 20, "game_spend": "PO-1005 78.80", "game_cash": 1195.60}
+{"day": 24, "game_spend": "PO-1006 248.90", "game_cash": 1164.85}
+{"day": 26, "event": "E-001 void per checker (3 fails); AI-HOUSE:SNACK:A1 price reverted to 1.50", "game_cash": 1401.75}
