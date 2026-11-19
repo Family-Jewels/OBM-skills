@@ -57,8 +57,9 @@ def experiments(sw, t):
     out = []
     for f in sorted((sw / "experiments").glob("E-*.md")) if (sw / "experiments").exists() else []:
         txt = f.read_text(errors="ignore")
-        g = lambda k: (re.search(rf"^\W*{k}\W*:\W*(\d+)", txt, re.I | re.M) or [None, None])[1]
-        drv = re.search(r"^\W*Driver\W*:\s*(.+)$", txt, re.I | re.M)
+        # "Start: 12", "Start: day 12" or "**Start:** session 12", anywhere on a line
+        g = lambda k: (re.search(rf"\b{k}\b\W*:\W*[^\d\n]{{0,15}}?(\d+)", txt, re.I) or [None, None])[1]
+        drv = re.search(r"\bDriver\b\W*:\W*(.+?)(?:\s{2,}|\s+Change\b|$)", txt, re.I | re.M)
         s, e = g("Start"), g("End")
         out.append({"id": f.stem, "start": int(s) if s else None, "end": int(e) if e else None,
                     "driver": drv.group(1).strip()[:60] if drv else "?"})
@@ -271,9 +272,11 @@ def main(cfg, cfg_path=None):
     if "design_hash" not in mem:
         mem["design_hash"] = design_hash(sw)
     running = [e["id"] for e in exps if e["start"] is not None and e["start"] <= t and (e["end"] is None or t < e["end"])]
-    if new_point and win["ok"] and running:
+    lo0 = mem.get("last_opp_point", mem.get("first_point"))
+    overdue = lo0 is not None and newest - lo0 >= 2 * GAP_POINTS  # experiments may not hold off the review for ever
+    if new_point and win["ok"] and running and not overdue:
         log.write(json.dumps({"t": time.time(), "period": period, "event": "opportunity_waits", "running": running}) + "\n")
-    if new_point and win["ok"] and not running:  # while an experiment runs, its end is the next decision point
+    if new_point and win["ok"] and (not running or overdue):  # while an experiment runs, its end is usually the next decision point
         reasons = [e["label"] for e in events if e["kind"] in ("below_floor", "flat_or_wrong")]
         lo = mem.get("last_opp_point")
         if lo is None:
@@ -307,14 +310,19 @@ def main(cfg, cfg_path=None):
     early = bool(chart_bad) and step == 2 and period - lr >= max(1, W // 2)  # with weekly pulses, a signal waits for the next one
     if not win["ok"]:
         pulse_due = period - lr >= cfg.get("pulse_every", 5)
-    if (full_due or pulse_due or early) and not any(j["kind"] in ("pulse", "audit") for j in mem["pending"]):
+    busy_kinds = {j["kind"] for j in mem["pending"]}
+    if full_due and "audit" in busy_kinds:
+        full_due = False
+    if not full_due and "pulse" in busy_kinds:
+        pulse_due = early = False
+    if full_due or pulse_due or early:
         (sw / "audits").mkdir(exist_ok=True)
         common = (f"at {where} of the work the swarm in swarm/ is doing. You cannot act on the work itself; review the records. The "
                   f"ground-truth measures (swarm/metrics_system.md) and {charts_note} are written by the system, never by an agent.")
         items = ("then at most five items for the orchestrator, about one keep-doing (what works and should be done more) to four fixes, "
                  "with at least one keep-doing; never a pause of its core work")
         mem["last_review_period"] = period
-        if full_due:
+        if full_due:  # a due pulse is not lost: it runs at the next period, beside the audit
             mem["quarters_done"] = q; mem["n_audit"] += 1; aid = f"A-{mem['n_audit']:03d}"
             spawn(aid, "audit", f"Use the obm-swarm-auditor skill for a FULL AUDIT, invoked by the system at quarter {q} of the horizon. This is "
                   f"audit {aid}, {common} Judge the outcome first: is the top measure above its floor line, how far from its aim, and is its "

@@ -26,7 +26,7 @@ class VendingState:
                 "slots_selling": {"kind": "level", "better": "up"},
                 "revenue_per_slot": {"kind": "flow", "better": "up"},
             },
-            "resources": ["selling slots", "capital"],
+            "resources": ["slots stocked at day end", "capital"],
             "guardrails": [{"measure": "cash", "min": self.reserve,
                             "label": f"cash reserve: {self.reserve:.0f} covers the fees for the days the building tolerates unpaid"}],
         }
@@ -49,6 +49,6 @@ class VendingState:
                              "revenue_per_slot": round(last.get("revenue", 0) / len(last["per_slot"]), 2) if last.get("per_slot") else 0, "revenue_last_7": rev(d - 6, d),
                              "revenue_same_7_a_month_earlier": rev(d - 36, d - 30) if d > 36 else None},
                 "resources": {
-                    "selling slots": {"used": sum(1 for v in mach.values() if (v.get("quantity") or 0) > 0), "available": len(mach) or None},
+                    "slots stocked at day end": {"used": sum(1 for v in mach.values() if (v.get("quantity") or 0) > 0), "available": len(mach) or None},
                     "capital": {"used": round(stock_value, 2), "available": round(stock_value + max(0.0, bal - self.reserve), 2)},
                 }}

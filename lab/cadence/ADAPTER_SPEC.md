@@ -15,7 +15,7 @@ An adapter is a class with two methods.
 | `top` | The measure the goal is judged on | `"cash"` | `"tests_passing"` |
 | `goal` | `{"type": "target" or "maximize", "value": number, "source": text}`; for maximize, `value` is the best known ceiling | maximize; ceiling 61,219 (the reference operator) | target: every hidden test |
 | `measures` | Each measure with `kind` (`"flow"`: an amount per period, or `"level"`: a positive stock) and `better` (`"up"`/`"down"`); optional `from` | cash (level), revenue, units, revenue per slot (flows), slots selling (level) | tests passing (level), tests newly passing (flow) |
-| `resources` | The names of the resources each reading reports | selling slots, capital | agent hours, budget |
+| `resources` | The names of the resources each reading reports | slots stocked at day end, capital | agent hours, budget |
 | `guardrails` | `{measure, min or max, label}`: a side not to cross; experiments stay inside | cash ≥ 120 (ten days of fees, the limit before termination) | no test files edited (count = 0) |
 
 ## `read()`: one reading per period, from ground truth

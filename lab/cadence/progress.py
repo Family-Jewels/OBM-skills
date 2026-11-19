@@ -144,7 +144,7 @@ def update(mem, spec, t, measures, resources):
                        f"x{f['bounce']:.1f} | {fmt_cel(st['best_cel'].get(name))} | {verdict(f, better)} |" if f else
                        f"collecting | | | {fmt_cel(st['best_cel'].get(name))} | collecting |"))
     md += ["", f"Celeration is the multiplier per point ({w} {spec.get('unit', 'period')}s), fitted on the log scale in the current phase "
-           f"(since point {phase_start}). Range: the middle half of the pairwise slopes. Bounce: the envelope at +/- 2 SD, top / bottom. "
+           f"(since point {phase_start + 1}). Range: the middle half of the pairwise slopes. Bounce: the envelope at +/- 2 SD, top / bottom. "
            f"Provisional below {FIRM} points.", "",
            "| measure | kind | better | points | celeration | range | bounce | own best | status |",
            "| --- | --- | --- | --- | --- | --- | --- | --- | --- |"] + rows
@@ -166,9 +166,9 @@ def update(mem, spec, t, measures, resources):
         f = fits.get(top)
         md += ["", f"## Top measure: {top}", "",
                f"Floor line (minimum celeration to reach {L['target']:,.0f} by the horizon): {fmt_cel(L['floor'])} per point from point "
-               f"{L['k0']}. Aim line (a deliberate overshoot: {L['aim_target']:,.0f} by half the remaining horizon): {fmt_cel(L['aim'])} per "
-               f"point from point {L['aim_k0']}. Falling short of the aim is expected and triggers nothing.", "",
-               f"Latest point {k}: {v:,.2f}; floor line {floor_v:,.2f}; aim line {aim_v:,.2f}. Required celeration from here to the target: "
+               f"{L['k0'] + 1}. Aim line (a deliberate overshoot: {L['aim_target']:,.0f} by half the remaining horizon): {fmt_cel(L['aim'])} per "
+               f"point from point {L['aim_k0'] + 1}. Falling short of the aim is expected and triggers nothing.", "",
+               f"Latest point {k + 1} ({spec.get('unit', 'period')}s {k * w + 1}-{(k + 1) * w}): {v:,.2f}; floor line {floor_v:,.2f}; aim line {aim_v:,.2f}. Required celeration from here to the target: "
                f"{fmt_cel((L['target'] / v) ** (1 / max(1, total - 1 - k)) if v > 0 else None)}; actual (this phase): {fmt_cel(f['cel']) if f else 'collecting'}."]
         last3 = [p for p in usable if p[0] > L["k0"]][-3:]
         below = [p for p in last3 if p[1] < L["v0"] * L["floor"] ** (p[0] - L["k0"])]
@@ -196,7 +196,7 @@ def update(mem, spec, t, measures, resources):
         first = [p for p in tp if p[0] >= ps and p[1] and p[1] > 0][:1]
         jump = (first[0][1] / line_at(old, first[0][0])) if (old and first) else None
         turn = (new["cel"] / old["cel"]) if (old and new) else None
-        md += ["", f"## Since the phase change at point {ps}", "",
+        md += ["", f"## Since the phase change at point {ps + 1}", "",
                f"Jump (first point / old line projected): {fmt_cel(jump) if jump else 'needs a point and an old line'}. "
                f"Turn (new celeration / old): {fmt_cel(turn) if turn else 'needs 3 points in the new phase'}."]
     # Resources.
