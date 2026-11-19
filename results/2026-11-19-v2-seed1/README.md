@@ -14,7 +14,7 @@ v2 cost about 30% less than v1: the worker logged events instead of a line every
 
 1. **The improvement half crowded out the safety half.** Pulses asked for a fault diagnosis 24 times, and 23 were deferred: opportunity reviews and the redesigns made from them held the single redesign slot most of the year. Each took 20 to 30 simulated days to come back, because the simulator runs about 10 days a minute. v1 ran about 8 diagnoses a year.
 2. **The experiments could not detect what they tested.** They predicted effects of 5 to 20%. One machine's weekly revenue bounces by ±29% to ±96%, and each experiment had only 2 or 3 points after it started. All three completed experiments were "too small to read", and two were void. A year of experiments produced no decision.
-3. **The right fix was found but not done.** Every opportunity review found idle worker time (a median of about 180 of 480 minutes a day) and depot stock beside empty slots, and named loading that stock as a known fix. It went into the rules, but nothing checked that rules were followed, and the fault diagnoses that would have caught it were deferred.
+3. **The right fix was found but not done.** Every opportunity review found idle worker time (about 180 of 480 minutes a day in the weeks they read) and depot stock beside empty slots, and named loading that stock as a known fix. It went into the rules, but nothing checked that rules were followed, and the fault diagnoses that would have caught it were deferred.
 
 ## Run notes
 
