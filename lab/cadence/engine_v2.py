@@ -196,7 +196,7 @@ def main(cfg, cfg_path=None):
               f"with lines 'Driver:' (exactly one of the measures the system records: {measure_names}), 'Slice:' (the units it touches, "
               f"from the Units table in swarm/charts.md, or 'all'), 'Control: rest', 'Change:', 'Prediction:', 'Guardrail:', "
               f"'Start: <{unit} number>' and 'End: <{unit} number>', lasting at least {GAP_POINTS} points ({GAP_POINTS * W} {unit}s). "
-              f"Prefer a slice with the rest as control; experiments whose slices overlap run one after another. You do not decide "
+              f"Prefer a slice with the rest as control; experiments whose slices overlap run one after another. Change exactly one lever on the slice and leave the core work going on as usual on slice and control alike: never freeze restocking or other core work on a slice. You do not decide "
               f"keep or revert: the system measures, and the auditor rules. The goal and the aim are the human's: never lower them. State a prediction "
               f"in the record: which measure should shift, which way, by which {unit}. Never change anything in a way that stops the core "
               f"work. Before changing swarm/spec.md or a rule file, copy the old version to swarm/history/ with its version number; keep the "
@@ -216,7 +216,10 @@ def main(cfg, cfg_path=None):
                   f"orchestrator's notes, that its Change was made as written and on its Slice only. The system's snapshots of what the "
                   f"swarm controls are in swarm/snapshots/ (one per {unit}, written from ground truth): compare the latest with the one "
                   f"before the experiment's Start. Check that units outside the slice did not get the change, and that no other "
-                  f"running experiment touches this slice. Timing is not a criterion: the clock starts when this check passes, so a change made after the planned Start is fine. Write swarm/audits/{fid}.md: what you compared, any mismatch, then a last "
+                  f"running experiment touches this slice. Those three are the only pass criteria. Timing is not one: the clock starts "
+                  f"when this check passes, so a change made after the planned Start is fine. Ordinary core work going on alike on slice "
+                  f"and control (restocking, new products, orders) is not a violation, and record-keeping, cost claims and other "
+                  f"pre-conditions in the file are notes, not criteria: the system measures cost and enforces guardrails itself. Write swarm/audits/{fid}.md: what you compared, any mismatch, then a last "
                   f"line exactly 'Fidelity: pass' or 'Fidelity: fail'.", budgets.get("pulse", 0.6), 15, {"exp": e["id"]})
         elif act[0] == "verdict":
             e, c = act[1], act[2]; vid = f"V-{e['id']}"
