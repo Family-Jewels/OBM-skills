@@ -174,7 +174,7 @@ def main(cfg, cfg_path=None):
                     ids = sorted({u for m in mem.get("units", {}).values() for u in m})
                     (sw / "experiments" / f"E-{mem['dry_n']:03d}.md").write_text(
                         f"Driver: {next(iter(spec.get('unit_measures', {})), spec['top'])}\nSlice: {ids[0] if ids else 'all'}\nControl: rest\n"
-                        f"Start: {period + 1}\nEnd: {period + GAP_POINTS * W}\nApplied: {period + 1}\n")
+                        f"Capacity: 10\nStart: {period + 1}\nEnd: {period + GAP_POINTS * W}\nApplied: {period + 1}\n")
         else:
             subprocess.Popen(["sh", "-c", shell], cwd=ws, start_new_session=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         new_jobs.append({"id": jid, "kind": kind, "period": period, "started": time.time(), "out": str(out), **extra})
@@ -332,9 +332,12 @@ def main(cfg, cfg_path=None):
     # 2. Opportunity review: on the progress rules, or every 3 points without one.
     if "design_hash" not in mem:
         mem["design_hash"] = design_hash(sw)
-    running = [k for k, v in mem.get("exp", {}).items() if v.get("state") in ("queued", "fidelity", "running", "verdict")]
-    lo0 = mem.get("last_opp_point", mem.get("first_point"))
-    overdue = lo0 is not None and newest - lo0 >= 2 * GAP_POINTS  # experiments may not hold off the review for ever
+    # Only experiments that have actually started hold off a review; one that is queued or cannot start does not.
+    running = [k for k, v in mem.get("exp", {}).items() if v.get("state") in ("fidelity", "running", "verdict")]
+    lo0 = mem.get("last_opp_point")
+    if lo0 is None:
+        lo0 = mem.get("first_point", 0)
+    overdue = newest - lo0 >= 2 * GAP_POINTS  # experiments may not hold off the review for ever
     if new_point and win["ok"] and running and not overdue:
         log.write(json.dumps({"t": time.time(), "period": period, "event": "opportunity_waits", "running": running}) + "\n")
     if new_point and win["ok"] and (not running or overdue):  # while an experiment runs, its end is usually the next decision point

@@ -155,8 +155,9 @@ def step(mem, spec, sw, t, newest, new_point, W, capacity_available=None):
                       f"({P.START * W} periods) are in, so it does not compete with getting the core work going. Do not make its change yet.")
                 continue_row = True
             elif cap_name and e["capacity"] is None:
-                _once(s, "noted_capacity", acts, f"experiment {e['id']} cannot start: it has no 'Capacity:' line. Every experiment draws on "
-                      f"the worker's {cap_name}; the designer must state how much it uses per period.")
+                s["state"] = "void"; s["why"] = "no Capacity line"
+                acts.append(("note", f"experiment {e['id']} is void: it has no 'Capacity:' line. Every experiment draws on the worker's "
+                             f"{cap_name}, so the designer must state how much it uses per period; the next redesign can set it up again."))
                 continue_row = True
             elif budget is not None and in_use + e["capacity"] > budget:
                 s["state"] = "queued"

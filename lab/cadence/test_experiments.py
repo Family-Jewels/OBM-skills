@@ -95,7 +95,7 @@ mem = {}
 for t in range(1, 26): P.update(mem, cspec, t, {"cash": 1500}, {})
 md, acts = X.step(mem, cspec, sw, 25, mem["progress"]["last_point"], True, W, 480)
 st = {k: v["state"] for k, v in mem["exp"].items()}
-assert st == {"E-007": "planned", "E-008": "fidelity", "E-009": "queued"}, st   # 30 + 30 > 48 (10% of 480)
+assert st == {"E-007": "void", "E-008": "fidelity", "E-009": "queued"}, st   # no Capacity: void; 30 + 30 > 48 (10% of 480)
 notes = " ".join(a[1] for a in acts if a[0] == "note")
 assert "no 'Capacity:' line" in notes and "above the experiment budget of 48" in notes, notes
 print("all experiment tests passed")
