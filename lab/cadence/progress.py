@@ -199,14 +199,22 @@ def update(mem, spec, t, measures, resources):
         md += ["", f"## Since the phase change at point {ps + 1}", "",
                f"Jump (first point / old line projected): {fmt_cel(jump) if jump else 'needs a point and an old line'}. "
                f"Turn (new celeration / old): {fmt_cel(turn) if turn else 'needs 3 points in the new phase'}."]
-    # Resources.
+    # Resources: latest, and the median over the last point window, with periods left unused.
     if resources:
-        md += ["", "## Resources (used / available, written by the system)", "", "| resource | used | available | in use | idle |",
-               "| --- | --- | --- | --- | --- |"]
+        rs = st.setdefault("resources", {})
         for rname, r in resources.items():
-            u, a = r.get("used"), r.get("available")
+            rs.setdefault(rname, []).append([t, r.get("used"), r.get("available")])
+            rs[rname] = rs[rname][-(3 * w):]
+        md += ["", f"## Resources (used / available, written by the system; median over the last {w} {spec.get('unit', 'period')}s)", "",
+               f"| resource | latest | median used | available | in use | idle | {spec.get('unit', 'period')}s unused (of last {w}) |",
+               "| --- | --- | --- | --- | --- | --- | --- |"]
+        for rname, r in resources.items():
+            last = [x for x in rs[rname][-w:] if x[1] is not None]
+            u, a = (_median([x[1] for x in last]) if last else None), r.get("available")
             pct = f"{100 * u / a:.0f}%" if (u is not None and a) else "—"
-            md.append(f"| {rname}{' (the capacity of the work)' if rname == spec.get('capacity') else ''} | {u} | {a} | {pct} | {round(a - u, 2) if (u is not None and a is not None) else '—'} |")
+            zero = sum(1 for x in last if x[1] == 0)
+            md.append(f"| {rname}{' (the capacity of the work)' if rname == spec.get('capacity') else ''} | {r.get('used')} | "
+                      f"{round(u, 2) if u is not None else '—'} | {a} | {pct} | {round(a - u, 2) if (u is not None and a is not None) else '—'} | {zero} |")
     # Guardrails.
     gr = []
     for g in spec.get("guardrails", []):
