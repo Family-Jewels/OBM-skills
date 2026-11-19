@@ -78,6 +78,7 @@ def main(cfg, cfg_path=None):
     if reading is None:
         return
     spec = load_spec(cfg, adapter); unit = spec["unit"]; horizon = spec["horizon"]
+    v3 = cfg.get("version", 2) >= 3  # v3: the Strategist sets aims through the designer; no experiments or opportunity reviews
     period, over, measures = reading["period"], reading["over"], reading["measures"]
     t = reading.get("clock", period)
     resources = reading.get("resources") or {}
@@ -114,15 +115,15 @@ def main(cfg, cfg_path=None):
     cmd_md, chart_bad = charts.update(cfg, mem, period, measures, unit)
     prog_md, events = progress.update(mem, spec, t, measures, resources)
     X.record_units(mem, t, reading.get("units"))
-    if hasattr(adapter, "snapshot"):  # ground truth of what the swarm controls, for the checker's fidelity checks
+    if hasattr(adapter, "snapshot") and not v3:  # ground truth of what the swarm controls, for the checker's fidelity checks
         snap = sw / "snapshots"; snap.mkdir(exist_ok=True)
         (snap / f"{period:05d}.md").write_text(f"# Snapshot at {unit} {period} (written by the system from ground truth; do not edit)\n\n" + adapter.snapshot())
         for old in sorted(snap.glob("*.md"))[:-(3 * W + 2)]:
             old.unlink()
     cap_av = (resources.get(spec.get("capacity")) or {}).get("available") if spec.get("capacity") else None
-    exp_md, exp_acts = X.step(mem, spec, sw, t, mem["progress"]["last_point"], True, W, cap_av)
+    exp_md, exp_acts = ("", []) if v3 else X.step(mem, spec, sw, t, mem["progress"]["last_point"], True, W, cap_av)
     unit_md = ""
-    if mem.get("units"):
+    if mem.get("units") and not v3:  # the per-unit table serves experiment slices (v2 only)
         ums = list(mem["units"]); ids = sorted({u for m in ums for u in mem["units"][m]})
         unit_md = ("\n## Units (for experiment slices; latest point, median per " + unit + ")\n\n| unit | " + " | ".join(ums) + " |\n| --- |"
                    + " --- |" * len(ums) + "\n")
@@ -165,7 +166,11 @@ def main(cfg, cfg_path=None):
         if cfg.get("dry_run"):  # replay and tests: no model call; the job "finishes" at once with a neutral report
             out.write_text(json.dumps({"result": f"dry run {jid}. Diagnosis needed: {cfg.get('dry_run_diagnosis', 'no')}\nFidelity: pass\n"
                                                  f"Verdict: {cfg.get('dry_run_verdict', 'keep')}", "total_cost_usd": 0}))
-            if kind == "redesign":  # alternate between changing the design and setting up an experiment
+            if kind == "aims":
+                (sw / "aims.md").write_text(f"# Aims (dry run {jid})\n")
+            if kind == "redesign" and v3:
+                with (sw / "spec.md").open("a") as fh: fh.write(f"\nchange {jid}\n")
+            elif kind == "redesign":  # alternate between changing the design and setting up an experiment
                 mem["dry_n"] = mem.get("dry_n", 0) + 1
                 if mem["dry_n"] % 2:
                     with (sw / "spec.md").open("a") as fh: fh.write(f"\nchange {jid}\n")
@@ -188,13 +193,27 @@ def main(cfg, cfg_path=None):
     where = f"{unit} {period} of {horizon}"
     measure_names = ", ".join(list(spec.get("unit_measures", {})) + list(spec.get("measures", {})))
     charts_note = ("swarm/charts.md (written by the system: level charts with limits from the data; Progress: celeration per measure, the "
-                   "top measure's floor and aim lines, own best; Resources in use and idle; Guardrails; Experiments)")
+                   "top measure's floor and aim lines, own best; Resources in use and idle; Guardrails" + (")" if v3 else "; Experiments)"))
+    aims_note = "swarm/aims.md (the current aims and capacity plan, set by the designer from the Strategist's redirects)"
 
     def spawn_redesign(src_id, src_kind):
         rid = "R-" + src_id[2:] if src_kind == "diagnosis" else "R-" + src_id
         what = (f"Diagnosis {src_id} (swarm/audits/{src_id}.md) says what is going wrong and why." if src_kind == "diagnosis" else
+                f"The Strategist's redirect {src_id} (swarm/audits/{src_id}.md) needs a change to how the work is done, not only to the aims "
+                f"(see the aim update A{src_id})." if src_kind == "strategist" else
                 f"Opportunity review {src_id} (swarm/audits/{src_id}.md) names where the most room is: the constraint, idle resources, "
                 f"what worked best, and candidate experiments.")
+        if v3:
+            spawn(rid, "redesign",
+                  f"Use the obm-swarm-designer skill in REDESIGN mode, invoked by the system at {where} of the work the swarm in swarm/ is doing. "
+                  f"{what} Read {charts_note}, {aims_note} and the driver tree in swarm/spec.md. First ask whether the direction is right, then "
+                  f"make the smallest design change that addresses it: fix the cause in the environment (information, resources, incentives), "
+                  f"or change how the work is done so the current aims can be reached with the capacity there is. The goal and the aims are not "
+                  f"yours to lower. State a prediction in the record: which measure should shift, which way, by which {unit}. Never change "
+                  f"anything in a way that stops the core work. Before changing swarm/spec.md or a rule file, copy the old version to "
+                  f"swarm/history/ with its version number; keep the current version at its usual path. Then write the redesign record to "
+                  f"swarm/audits/{rid}.md. Reply with the change in under 150 words.", budgets.get("redesign", 1.5), 25, {"after": src_id})
+            return
         spawn(rid, "redesign",
               f"Use the obm-swarm-designer skill in REDESIGN mode, invoked by the system at {where} of the work the swarm in swarm/ is doing. "
               f"{what} Read {charts_note} and the driver tree in swarm/spec.md. First ask whether the direction is right, then make the "
@@ -214,6 +233,16 @@ def main(cfg, cfg_path=None):
               f"work. Before changing swarm/spec.md or a rule file, copy the old version to swarm/history/ with its version number; keep the "
               f"current version at its usual path. Then write the redesign record to swarm/audits/{rid}.md. Reply with the change in under 150 words.",
               budgets.get("redesign", 1.5), 25, {"after": src_id})
+
+    def spawn_diagnosis(review_id, label):
+        did = f"D-{review_id}"
+        spawn(did, "diagnosis",
+              f"Use the obm-swarm-diagnostician skill, invoked by the system because {label} {review_id} (swarm/audits/{review_id}.md) says a "
+              f"diagnosis is needed, at {where}. Read {charts_note}{', ' + aims_note if v3 else ''} and the driver tree in swarm/spec.md. Walk "
+              f"the tree from the top measure down to the driver that moved, then find why; ask too whether any resource sits idle while a "
+              f"driver is short{', and whether the work is following the current aims' if v3 else ''}. Do not write a fix or change anything: "
+              f"the designer will redesign from your diagnosis. Write swarm/audits/{did}.md and reply with it in under 200 words.",
+              budgets.get("diagnosis", 1.0), 20, {"after": review_id, "trigger": label})
 
     # 0. Experiments: notes, fidelity checks (checker) and verdicts (auditor), all called by the system.
     for act in exp_acts:
@@ -271,7 +300,7 @@ def main(cfg, cfg_path=None):
                 mem["last_adopted_point"] = newest
             mem["design_hash"] = h; mem["flag_since_pulse"] = True
             handoff += (f"\n\nSYSTEM CADENCE: the designer redesigned the work system after {j['after']} (swarm/audits/{j['id']}.md). "
-                        f"Adopt it from now on: re-read swarm/spec.md, swarm/rules/ and swarm/experiments/.\n\n{rec[-2000:]}")
+                        f"Adopt it from now on: re-read swarm/spec.md, swarm/rules/ and {'swarm/aims.md' if v3 else 'swarm/experiments/'}.\n\n{rec[-2000:]}")
             continue
         if j["kind"] == "fidelity":
             ok, state = X.fidelity_result(mem, j["exp"], rec, period, W)
@@ -295,6 +324,28 @@ def main(cfg, cfg_path=None):
             log.write(json.dumps({"t": time.time(), "period": period, "event": "experiment_verdict", "exp": j["exp"], "verdict": v}) + "\n")
             mem["flag_since_pulse"] = True
             continue
+        if j["kind"] == "strategist":
+            handoff += (f"\n\nSYSTEM CADENCE: the Strategist set new aims ({j['id']}, swarm/audits/{j['id']}.md); the designer is "
+                        f"incorporating them now and will hand you the updated swarm/aims.md.")
+            aid = "A" + j["id"]
+            spawn(aid, "aims", f"Use the obm-swarm-designer skill in AIM UPDATE mode, invoked by the system at {where} right after the "
+                  f"Strategist's redirect {j['id']} (swarm/audits/{j['id']}.md). Incorporate it into swarm/aims.md now: the constraint, the "
+                  f"stretch aim for each priority driver for the next point, and how the worker's {spec.get('capacity') or 'capacity'} is split "
+                  f"across the drivers, in the spec's terms, with any guardrails. Keep it short enough for the orchestrator to read every "
+                  f"{unit}. Copy the old aims.md to swarm/history/ first. Do not change swarm/spec.md or the rules: if the redirect cannot be "
+                  f"met without changing how the work is done, say so. Write the record to swarm/audits/{aid}.md, ending with a line exactly "
+                  f"'Design change needed: yes' or 'Design change needed: no'.", budgets.get("aims", 0.8), 15, {"after": j["id"]})
+            continue
+        if j["kind"] == "aims":
+            am = sw / "aims.md"
+            handoff += (f"\n\nSYSTEM CADENCE: new aims from the designer (swarm/aims.md, after {j['after']}). Work to them from now: put "
+                        f"the capacity where they say, and push the priority drivers toward their aims.\n\n"
+                        + (am.read_text()[-2500:] if am.exists() else rec[-1500:]))
+            mem["flag_since_pulse"] = True; mem["aims_period"] = period
+            if "design change needed: yes" in rec.lower():
+                mem.setdefault("redesign_queue", []).append(j["after"])
+                log.write(json.dumps({"t": time.time(), "period": period, "event": "design_change_queued", "after": j["after"]}) + "\n")
+            continue
         if j["kind"] in ("diagnosis", "opportunity"):
             label = "diagnosis" if j["kind"] == "diagnosis" else "opportunity review"
             handoff += f"\n\nSYSTEM CADENCE: {label} {j['id']} (swarm/audits/{j['id']}.md); the designer is now redesigning from it.\n\n{rec[-1200:]}"
@@ -308,14 +359,13 @@ def main(cfg, cfg_path=None):
             mem["quiet_pulses"] = 0 if (wants or j.get("flagged")) else mem.get("quiet_pulses", 0) + 1
         if wants:
             if redesign_ok():
-                did = f"D-{j['id']}"
-                spawn(did, "diagnosis",
-                      f"Use the obm-swarm-diagnostician skill, invoked by the system because {label} {j['id']} (swarm/audits/{j['id']}.md) says a "
-                      f"diagnosis is needed, at {where}. Read {charts_note} and the driver tree in swarm/spec.md. Walk the tree from the top measure "
-                      f"down to the driver that moved, then find why; ask too whether any resource sits idle while a driver is short. Do not write a "
-                      f"fix or change anything: the designer will redesign from your diagnosis. Write swarm/audits/{did}.md and reply with it in under 200 words.",
-                      budgets.get("diagnosis", 1.0), 20, {"after": j["id"], "trigger": label})
+                spawn_diagnosis(j["id"], label)
                 handoff += "\n\nSYSTEM CADENCE: a diagnosis of this finding has started; it and the redesign will be handed to you when ready."
+            elif v3:  # faults first: a deferred diagnosis waits in a queue and runs as soon as the redesign slot frees
+                mem.setdefault("diag_queue", []).append([j["id"], label])
+                handoff += (f"\n\nSYSTEM CADENCE: a diagnosis of this finding is queued: a redesign is in progress or was adopted less than "
+                            f"{GAP_POINTS} points ago. It runs as soon as the slot frees. Meanwhile use the review's items.")
+                log.write(json.dumps({"t": time.time(), "period": period, "event": "diagnosis_queued", "after": j["id"]}) + "\n")
             else:
                 handoff += (f"\n\nSYSTEM CADENCE: no redesign now: one is in progress or was adopted less than {GAP_POINTS} points "
                             f"({GAP_POINTS * W} {unit}s) ago, so its effect cannot be judged yet. Use the review's items instead.")
@@ -329,18 +379,45 @@ def main(cfg, cfg_path=None):
             print(json.dumps({"hookSpecificOutput": {"hookEventName": cfg.get("hook_event", "PostToolUse"), "additionalContext": handoff}}))
         return
 
-    # 2. Opportunity review: on the progress rules, or every 3 points without one.
+    # 2. v3: the redesign slot serves queued diagnoses first, then design changes the Strategist needs; the Strategist has its own lane.
     if "design_hash" not in mem:
         mem["design_hash"] = design_hash(sw)
+    if v3:
+        if mem.get("diag_queue") and redesign_ok():
+            rid_, lab_ = mem["diag_queue"].pop(0); spawn_diagnosis(rid_, lab_)
+            handoff += f"\n\nSYSTEM CADENCE: the queued diagnosis after {rid_} has started."
+        elif mem.get("redesign_queue") and not mem.get("diag_queue") and redesign_ok():
+            spawn_redesign(mem["redesign_queue"].pop(0), "strategist")
+        if new_point and win["ok"] and newest + 1 >= progress.START:
+            reasons = [e["label"] for e in events if e["kind"] in ("below_floor", "flat_or_wrong")]
+            ls = mem.get("last_strat_point")
+            if ls is None or newest - ls >= GAP_POINTS:
+                reasons.append(f"scheduled: {GAP_POINTS} points since the last strategy" if ls is not None else "first strategy, after the baseline")
+            busy = any(p.get("kind") in ("strategist", "aims") for p in mem["pending"] + new_jobs)
+            early_ok = ls is None or newest - ls >= GAP_POINTS - 1  # a progress rule brings it forward once the aims have had 2 points
+            scheduled = ls is None or newest - ls >= GAP_POINTS
+            if reasons and not busy and (scheduled or early_ok):
+                mem["n_strat"] = mem.get("n_strat", 0) + 1; sid = f"S-{mem['n_strat']:03d}"; mem["last_strat_point"] = newest
+                (sw / "audits").mkdir(exist_ok=True)
+                spawn(sid, "strategist",
+                      f"Use the obm-swarm-strategist skill, invoked by the system ({'; '.join(reasons)}) at {where} of the work the swarm in "
+                      f"swarm/ is doing. Read {charts_note}, {aims_note}, the driver tree in swarm/spec.md and your earlier records in "
+                      f"swarm/audits/S-*.md. Say whether the last aims were met and what that shows. Find the constraint now, starting with the "
+                      f"worker's own {spec.get('capacity') or 'capacity'}. Set a stretch aim for each priority driver for the next point, and how "
+                      f"the capacity should be split across the drivers to reach them. The human's goal is fixed: never lower it. Do not design "
+                      f"the work system, diagnose faults or touch the work: the designer turns your redirect into aims. Write swarm/audits/{sid}.md "
+                      f"in under 250 words and reply with it.", budgets.get("strategist", 0.8), 15, {"trigger": "; ".join(reasons)})
+        mem["pending"] += new_jobs; new_jobs = []
+    # 2. (v2) Opportunity review: on the progress rules, or every 3 points without one.
     # Only experiments that have actually started hold off a review; one that is queued or cannot start does not.
     running = [k for k, v in mem.get("exp", {}).items() if v.get("state") in ("fidelity", "running", "verdict")]
     lo0 = mem.get("last_opp_point")
     if lo0 is None:
         lo0 = mem.get("first_point", 0)
     overdue = newest - lo0 >= 2 * GAP_POINTS  # experiments may not hold off the review for ever
-    if new_point and win["ok"] and running and not overdue:
+    if not v3 and new_point and win["ok"] and running and not overdue:
         log.write(json.dumps({"t": time.time(), "period": period, "event": "opportunity_waits", "running": running}) + "\n")
-    if new_point and win["ok"] and (not running or overdue):  # while an experiment runs, its end is usually the next decision point
+    if not v3 and new_point and win["ok"] and (not running or overdue):  # while an experiment runs, its end is usually the next decision point
         reasons = [e["label"] for e in events if e["kind"] in ("below_floor", "flat_or_wrong")]
         lo = mem.get("last_opp_point")
         if lo is None:
@@ -396,8 +473,10 @@ def main(cfg, cfg_path=None):
                   f"audit {aid}, {common} Judge the outcome first: is the top measure above its floor line, how far from its aim, and is its "
                   f"celeration near its own best? Is capacity in use, or are resources idle? Is anything declining? Is the direction right: does "
                   f"the driver tree in swarm/spec.md add up to the goal, and are its drivers the ones that move it? Do the system's measures still "
-                  f"track the goal, or has the work started serving the measures? Did each redesign's predicted shift appear by its date? Judge "
-                  f"each experiment in swarm/experiments/ against its prediction: a missed prediction is information, an unrun one is a finding. "
+                  f"track the goal, or has the work started serving the measures? Did each redesign's predicted shift appear by its date? "
+                  + (f"Is the work following the current aims in swarm/aims.md, with the capacity going where they say? Were the Strategist's "
+                     f"last aims met? " if v3 else f"Judge each experiment in swarm/experiments/ against its prediction: a missed prediction is "
+                     f"information, an unrun one is a finding. ") + f""
                   f"Did anything lower the goal or an aim? Then whether earlier findings were acted on, then whether the records are current. "
                   f"Write swarm/audits/{aid}.md: findings first, {items}, then a last line exactly 'Diagnosis needed: yes' or 'Diagnosis needed: no'.",
                   budgets.get("audit", 1.5), 30, {"trigger": f"quarter {q}"})
@@ -408,13 +487,16 @@ def main(cfg, cfg_path=None):
             flagged = bool(mem.get("flag_since_pulse")); mem["flag_since_pulse"] = False
             spawn(aid, "pulse", f"Use the obm-swarm-auditor skill for a PULSE REVIEW, invoked by the system "
                   f"{'because a level chart signalled a change in the wrong direction' if early and not pulse_due else 'on its schedule'}. "
-                  f"This is pulse {aid}, {common} Read only swarm/charts.md, the driver tree in swarm/spec.md, swarm/experiments/ and the last "
+                  f"This is pulse {aid}, {common} Read only swarm/charts.md, the driver tree in swarm/spec.md, "
+                  f"{'swarm/aims.md' if v3 else 'swarm/experiments/'} and the last "
                   f"lines of the orchestrator's log. Answer: which measures show a signal and which only routine variation (never react to routine "
                   f"variation); is the top measure above its floor line and how far from its aim; which driver's celeration is flattest for its "
-                  f"leverage; is any resource idle; what is working best, and is the swarm doing more of it. Write swarm/audits/{aid}.md in under "
+                  f"leverage; is any resource idle; {'is the work following the current aims, with the capacity where they say; ' if v3 else ''}"
+                  f"what is working best, and is the swarm doing more of it. Write swarm/audits/{aid}.md in under "
                   f"250 words: the answers, {items}, then a last line exactly 'Diagnosis needed: yes' or 'Diagnosis needed: no'. Answer 'yes' only "
-                  f"when a level chart signals a change in the wrong direction or a redesign's predicted shift has not appeared by its date. A flat "
-                  f"celeration or a point below the floor line goes to the system's opportunity review, not to a diagnosis.",
+                  f"when a level chart signals a change in the wrong direction, a redesign's predicted shift has not appeared by its date"
+                  f"{', or the work has not followed the current aims for a whole point' if v3 else ''}. A flat celeration or a point below the "
+                  f"floor line goes to the system's {'Strategist' if v3 else 'opportunity review'}, not to a diagnosis.",
                   budgets.get("pulse", 0.6), 12, {"trigger": "chart signal" if early and not pulse_due else "scheduled", "flagged": flagged})
         mem["pending"] += new_jobs
     handoff = handoff.strip()

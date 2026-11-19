@@ -42,7 +42,7 @@ def claude(args, cfg, cwd, out_stream, timeout):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--arm', required=True, choices=['base', 'native', 'native_cadence', 'obm', 'obm_enf', 'obm_cadence', 'obm_v2']); ap.add_argument('--seed', type=int, default=1)
+    ap.add_argument('--arm', required=True, choices=['base', 'native', 'native_cadence', 'obm', 'obm_enf', 'obm_cadence', 'obm_v2', 'obm_v3']); ap.add_argument('--seed', type=int, default=1)
     ap.add_argument('--days', type=int, default=365); ap.add_argument('--budget', type=float, default=40)
     ap.add_argument('--timeout', type=int, default=7000); ap.add_argument('--output', type=Path, required=True)
     ap.add_argument('--model', default='claude-haiku-5-5'); ap.add_argument('--audit-every', type=int, default=50); ap.add_argument('--pulse-every', type=int, default=5)
@@ -75,10 +75,10 @@ def main():
         mcp = json.dumps({'mcpServers': {'vending': {'type': 'http', 'url': f'http://127.0.0.1:{port}/mcp'}}})
         common = ['--model', a.model, '--output-format', 'stream-json', '--verbose', '--tools', TOOLS, '--strict-mcp-config',
                   '--mcp-config', mcp, '--allowedTools', 'mcp__vending', TOOLS, '--system-prompt', prompt]
-        if a.arm in ('obm_enf', 'obm_cadence', 'native_cadence', 'obm_v2'):
+        if a.arm in ('obm_enf', 'obm_cadence', 'native_cadence', 'obm_v2', 'obm_v3'):
             hook = {'hooks': {}} if a.arm == 'native_cadence' else {'hooks': {'Stop': [{'hooks': [{'type': 'command', 'timeout': 30,
                     'command': f'python3 -I {HERE / "vb_stop_gate2.py"} {statedir / "state.json"} {out / "gate.jsonl"} {a.days} 40'}]}]}}
-            if a.arm in ('obm_cadence', 'native_cadence', 'obm_v2'):
+            if a.arm in ('obm_cadence', 'native_cadence', 'obm_v2', 'obm_v3'):
                 ccfg = {'workspace': str(ws), 'log': str(out / 'cadence.jsonl'), 'adapter': 'adapters.vending:VendingState',
                         'adapter_args': {'state_path': str(statedir / 'state.json')}, 'unit': 'day', 'horizon': a.days,
                         'pulse_every': a.pulse_every, 'audit_every': a.audit_every, 'model': a.model, 'hook_event': 'PostToolUse',
@@ -90,19 +90,19 @@ def main():
                         'exemplar': {'measure': 'cash', 'points': {'0': 1500, '30': 3228, '365': 61219}, 'origin': 1500,
                                      'source': "the benchmark's scripted reference operator, which knows the economy's hidden parameters"}}
                 if a.arm == 'native_cadence': ccfg['prompts'] = 'plain'  # same cadence, charts and exemplar; reviews without OBM skills
-                if a.arm == 'obm_v2':  # engine v2: timing from the adapter's spec, celeration, floor and aim, resources, opportunity reviews
-                    ccfg['version'] = 2
+                if a.arm in ('obm_v2', 'obm_v3'):  # engine v2 (v3 adds the Strategist): timing from the adapter's spec, celeration, floor and aim, resources, opportunity reviews
+                    ccfg['version'] = 3 if a.arm == 'obm_v3' else 2
                     ccfg['adapter_args'].update({'horizon': a.days, 'ceiling': 61219, 'ceiling_source': "the benchmark's scripted reference operator",
                                                  'clock_log': str(statedir / 'clock.jsonl')})
                 (statedir / 'cadence.json').write_text(json.dumps(ccfg))
                 hook['hooks']['PostToolUse'] = [{'matcher': 'mcp__vending__wait_for_next_day', 'hooks': [{'type': 'command', 'timeout': 1600,
                     'command': f'python3 -I /home/claude/obm-lab/cadence/engine.py {statedir / "cadence.json"}'}]}]
-                if a.arm == 'obm_v2':  # the worker's capacity, read from the simulator's clock just before each day ends
+                if a.arm in ('obm_v2', 'obm_v3'):  # the worker's capacity, read from the simulator's clock just before each day ends
                     hook['hooks']['PreToolUse'] = [{'matcher': 'mcp__vending__wait_for_next_day', 'hooks': [{'type': 'command', 'timeout': 20,
                         'command': f'python3 -I /home/claude/obm-lab/cadence/adapters/vending_clock_hook.py {statedir / "state.json"} {statedir / "clock.jsonl"}'}]}]
             common += ['--settings', json.dumps(hook)]
         left = a.budget
-        if a.arm in ('obm_cadence', 'obm_v2'):
+        if a.arm in ('obm_cadence', 'obm_v2', 'obm_v3'):
             design = ("Use the obm-swarm-designer skill to design the work system for operating this business for the whole simulation. "
                       "The system prompt is the business briefing. Write it into swarm/ in the current directory: a driver tree from the final balance "
                       "down to the drivers the operator controls, the exemplar, and the cadence table. The system will write ground-truth measures to "
@@ -112,7 +112,7 @@ def main():
                       "revenue_last_7 and revenue_same_7_a_month_earlier; it charts cash_gain_7 (cash gained over 7 days), revenue, slots_selling, "
                       "revenue_per_slot and units. Build the tree on these. Exemplar: the benchmark's scripted reference operator, which knows the "
                       "economy's hidden parameters, reaches about EUR 3,228 at day 30 and EUR 61,219 at day 365 from EUR 1,500. You cannot use the business tools; design only.")
-            if a.arm == 'obm_v2':
+            if a.arm in ('obm_v2', 'obm_v3'):
                 design = ("Use the obm-swarm-designer skill to design the work system for operating this business for the whole simulation. "
                           "The system prompt is the business briefing. Write it into swarm/ in the current directory: a driver tree from the final balance "
                           "down to the drivers the operator controls, with a ceiling, its source, a confidence and any guardrail for each driver; the "
@@ -129,6 +129,22 @@ def main():
                           "every result to the operator. The system's daily measures are: cash, revenue, units, slots_selling, revenue_per_slot, "
                           "revenue_last_7, revenue_same_7_a_month_earlier and unit_cost_paid_30d. Exemplar and ceiling: the benchmark's scripted reference operator, which "
                           "knows the economy's hidden parameters, reaches about EUR 3,228 at day 30 and EUR 61,219 at day 365 from EUR 1,500. You cannot use the business tools; design only.")
+            if a.arm == 'obm_v3':
+                design = ("Use the obm-swarm-designer skill to design the work system for operating this business for the whole simulation. "
+                          "The system prompt is the business briefing. Write it into swarm/ in the current directory: a driver tree from the final balance "
+                          "down to the drivers the operator controls, with a ceiling, its source and any guardrail for each driver; the resources the "
+                          "work uses, starting with the worker's time; a first swarm/aims.md (the constraint, an aim for each priority driver, how the "
+                          "worker's time is split); and the cadence table. The system writes ground-truth measures to swarm/metrics_system.md and "
+                          "swarm/charts.md every simulated day: level charts with limits computed from the data, celeration per measure over 7-day "
+                          "points, the top measure's floor line and a deliberate overshoot aim, the worker's time (480 minutes a working day, read from "
+                          "the simulator's clock; each tool call costs simulated minutes, a slot refill 45), slots and capital in use and idle, and a "
+                          "cash-reserve guardrail of EUR 120. It runs a pulse review every point, full audits at each quarter of the year, diagnoses when "
+                          "a review asks and redesigns from them, and a Strategist (the obm-swarm-strategist skill) after the first three points and "
+                          "every three points after; it calls you right after each strategy to update swarm/aims.md, and hands every result to the "
+                          "operator. There are no experiments. The system's daily measures are: cash, revenue, units, slots_selling, revenue_per_slot, "
+                          "revenue_last_7, revenue_same_7_a_month_earlier and unit_cost_paid_30d. Exemplar and ceiling: the benchmark's scripted reference "
+                          "operator, which knows the economy's hidden parameters, reaches about EUR 3,228 at day 30 and EUR 61,219 at day 365 from "
+                          "EUR 1,500. You cannot use the business tools; design only.")
             p, r = claude(['-p', design, '--permission-mode', 'acceptEdits', '--max-budget-usd', '2', '--model', a.model, '--output-format',
                            'stream-json', '--verbose', '--tools', TOOLS, '--allowedTools', TOOLS, '--strict-mcp-config', '--system-prompt', prompt],
                           cfg, ws, stream, 1200)
@@ -138,7 +154,7 @@ def main():
                           "not need to call the other roles: the system writes ground-truth measures and charts to swarm/metrics_system.md and swarm/charts.md every day, runs "
                           f"a pulse review every {a.pulse_every} simulated days, a full audit every {a.audit_every}, and a diagnosis and redesign by the designer when needed, and hands "
                           "you their results in the result of wait_for_next_day. Act on what it hands you, adopt any redesign, and log what you did. Keep operating until the simulation ends.")
-            if a.arm == 'obm_v2':
+            if a.arm in ('obm_v2', 'obm_v3'):
                 run_prompt = (TASK + "\n\nYou are the orchestrator of a one-agent OBM swarm: use the obm-swarm-orchestrator skill, with the work "
                               "system the designer left in swarm/ (read swarm/index.md and swarm/spec.md first). You do the operating yourself. You do "
                               "not need to call the other roles: the system writes ground-truth measures and charts every day, runs pulse reviews, full "
@@ -147,6 +163,14 @@ def main():
                               "the experiments in swarm/experiments/: make a change only when the system hands it to you with 'starts now', on its slice only, "
                               "write 'Applied: <day>' in its file, and "
                               "apply the auditor's verdict. Never judge an experiment yourself. Log events only, not a line every day. Keep operating until the simulation ends.")
+            if a.arm == 'obm_v3':
+                run_prompt = (TASK + "\n\nYou are the orchestrator of a one-agent OBM swarm: use the obm-swarm-orchestrator skill, with the work "
+                              "system the designer left in swarm/ (read swarm/index.md, swarm/spec.md and swarm/aims.md first). You do the operating "
+                              "yourself. You do not need to call the other roles: the system writes ground-truth measures and charts every day, runs "
+                              "pulse reviews, full audits, diagnoses, redesigns and the Strategist on its own schedule, and hands you their results, "
+                              "including new aims, in the result of wait_for_next_day. Work to the current aims in swarm/aims.md: put your time where "
+                              "they say. Act on what the system hands you: do the fixes, keep doing what it says works, adopt any redesign or new aims. "
+                              "Log events only, not a line every day. Keep operating until the simulation ends.")
             p, r = claude(['-p', run_prompt, '--permission-mode', 'acceptEdits', '--max-budget-usd', f'{left:.2f}', *common], cfg, ws, stream, a.timeout)
             results.append(r)
         elif a.arm in ('native', 'native_cadence'):

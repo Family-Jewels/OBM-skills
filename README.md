@@ -61,15 +61,16 @@ The skills stay complete without enforcement: on a platform with no hooks, every
 
 | Skill | Role |
 | --- | --- |
-| `obm-swarm-designer` | Owns the design: a driver tree from the goal's main measure down to the drivers the swarm controls, each with a ceiling and guardrail; resources; checks, budgets, experiments, cadence. Called again to redesign after a diagnosis or an opportunity review; the only role that changes the tree, checks, rules or experiments; the goal itself is the human's |
-| `obm-swarm-orchestrator` | The manager: dispatches, routes on outcomes, paces spend, keeps the core goal moving, adopts redesigns, scales what works, runs experiments inside guardrails |
+| `obm-swarm-designer` | Owns the design: a driver tree from the goal's main measure down to the drivers the swarm controls, each with a ceiling and guardrail; resources; checks, budgets, cadence. Turns each Strategist redirect into the current aims at once; redesigns after a diagnosis; the only role that changes the tree, checks or rules; the goal itself is the human's |
+| `obm-swarm-orchestrator` | The manager: dispatches, routes on outcomes, paces spend, keeps the core goal moving, adopts redesigns, works to the current aims |
 | `obm-swarm-checker` | Quality: gathers its own evidence for each criterion. Where nothing can be run, checks provenance: who published a source, when it was really published (not the date the text claims), whether it is cited elsewhere, independent corroboration, and whether judgments rest on verifiable facts |
 | `obm-swarm-auditor` | The director: a pulse review of the system's charts every point, full audits at each quarter of the horizon (progress, experiments, direction, report-reality samples, probes, cost, the manager's decisions); about one keep-doing item to four fixes |
-| `obm-swarm-diagnostician` | Fault mode: what is going wrong and why (pinpoint, what maintains it, cause in the environment). Opportunity mode: where the most room is when nothing is broken (gap × leverage, the constraint, idle resources, the own-best stretch, candidate experiments). Writes no fix: the designer does |
+| `obm-swarm-diagnostician` | Finds what is going wrong and why (pinpoint, what maintains it, cause in the environment). Writes no fix: the designer does |
+| `obm-swarm-strategist` | Decides what the system drives toward: the constraint now (the worker's capacity first), a stretch aim for each priority driver, how the capacity is split, and whether the last aims were met. The designer turns each redirect into `swarm/aims.md` at once |
 
 There is no producer skill. Workers follow the short rules for whoever does the work in the protocol, and the evidence about their work comes from the system's record and the checker's own checks, never from the worker's report about itself.
 
-The loop has two halves. **Safety:** designer builds the driver tree → system charts every measure with limits computed from the data → auditor separates signals from routine variation → diagnostician walks the tree to what moved and why → designer reworks the design, with a prediction → the charts show whether it worked. **Improvement:** the system measures celeration against a floor line and a deliberate overshoot aim, and resources in use → an opportunity review finds the constraint, idle resources and what worked best → the designer sets up experiments inside guardrails → the charts judge them.
+The loop has two halves. **Safety:** designer builds the driver tree → system charts every measure with limits computed from the data → auditor separates signals from routine variation → diagnostician walks the tree to what moved and why → designer reworks the design, with a prediction → the charts show whether it worked. **Improvement:** the system measures celeration against a floor line and a deliberate overshoot aim, and resources in use, the worker's capacity first → the Strategist judges its last aims, finds the constraint, and sets stretch aims and a capacity split → the designer turns them into `swarm/aims.md` at once → the orchestrator works to them, and the auditor checks it does.
 
 All state lives in files, and every record has a fixed format ([`skills/protocol.md`](skills/protocol.md)), so any session, model or vendor can resume the work.
 
@@ -110,6 +111,13 @@ python analyze.py logs/tiny --out tiny
 ```
 
 ## Changelog: what the field tests changed
+
+**v3: the Strategist, 2026-11-19** (after v2 seed 1: €11,852 against v1's €15,006 on the same seed). v2 is kept on the branch `skills-v2`.
+
+- Experiments and opportunity reviews are removed. In v2 seed 1, no experiment reached a decision in a whole year, and the opportunity reviews and their redesigns held the redesign slot so that 23 of 24 requested fault diagnoses were deferred.
+- One new role, the Strategist, owns direction: the constraint, stretch aims and the split of the worker's capacity, with feedback on whether its last aims were met. The designer incorporates each redirect into `swarm/aims.md` straight away, in its own lane; a redirect that needs a design change queues behind fault diagnoses.
+- Faults first: deferred diagnoses wait in a queue instead of being dropped.
+- The other roles go back to their own jobs; the auditor also checks the work follows the current aims.
 
 **The improvement half, 2026-11-18** (after five seeds showed a safe floor but a low ceiling; [results](results/2026-11-17-five-seeds-skills-vs-native)). v1 is kept on the branch `skills-v1`.
 

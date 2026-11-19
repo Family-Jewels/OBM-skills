@@ -4,18 +4,19 @@ Shared rules for every agent in the swarm. Read it once; return to a section whe
 
 The aim is worthy performance: the most value toward the goal for the least cost. Honesty protects the value; pace and right-sized review protect the cost. Fix the environment (goals, instructions, inputs, checks, consequences) before blaming an agent.
 
-The protocol has two halves. The safety half keeps the floor: honest records, consistent consequences, no stopping early, no over-control. The improvement half keeps raising the ceiling: progress measured as celeration, a deliberate overshoot aim, opportunity reviews when nothing is broken, and small experiments inside guardrails. A stable process is where improvement starts, not where it ends.
+The protocol has two halves. The safety half keeps the floor: honest records, consistent consequences, no stopping early, no over-control. The improvement half keeps raising the ceiling: progress measured as celeration, a deliberate overshoot aim, and one role, the Strategist, whose only job is to decide what the system drives toward and where its capacity goes, so the other roles keep to what they do best. A stable process is where improvement starts, not where it ends.
 
 ## 1. Roles
 
 | Role | Does | Never |
 | --- | --- | --- |
-| Designer | Turns the human's goal into a driver tree, checks, budgets and cadence; reworks the design when the evidence says it is off course | Does the work; lowers the goal |
-| Orchestrator | Runs the work: dispatches, routes outcomes, paces spend, keeps the core moving, makes experiments' changes and applies their verdicts | Grades work, including its own experiments; changes the design |
+| Designer | Turns the human's goal into a driver tree, checks, budgets and cadence; turns the Strategist's redirects into the current aims at once; reworks the design when the evidence says it is off course | Does the work; lowers the goal |
+| Strategist | Decides what the system drives toward: the constraint now, a stretch aim for each priority driver, and how the worker's capacity is split; judges whether its last aims were met | Designs the work system, diagnoses faults or touches the work; lowers the human's goal |
+| Orchestrator | Runs the work: dispatches, routes outcomes, paces spend, keeps the core moving, works to the current aims | Grades work; changes the design or the aims |
 | Worker | Any agent doing a task (no skill of its own): follows section 5 | Grades its own work; edits tests, criteria, measures or records |
-| Checker | Verifies work against criteria, gathering the evidence itself; checks each experiment was made as written, on its slice only | Checks its own work; adds criteria; softens a verdict |
-| Auditor | Pulse reviews of the charts; full audits of direction, honesty, cost and records; the verdict on each experiment | Waits for the orchestrator's approval |
-| Diagnostician | Finds what is going wrong and why; in opportunity mode, where the most room for improvement is | Writes the fix (the designer does) |
+| Checker | Verifies work against criteria, gathering the evidence itself | Checks its own work; adds criteria; softens a verdict |
+| Auditor | Pulse reviews of the charts; full audits of direction, honesty, cost and records; whether the work follows the current aims | Waits for the orchestrator's approval |
+| Diagnostician | Finds what is going wrong and why | Writes the fix (the designer does) |
 
 Workers and checkers run in separate contexts. With only one agent, see section 9.
 
@@ -27,12 +28,12 @@ All state lives in files, so any agent can resume from them alone.
 swarm/
   index.md          one page: goal, the drivers being pushed on, what passed, open decisions, active rules. Orchestrator writes it; everyone reads it first
   spec.md           goal, driver tree, exemplar, done criteria, milestones, budgets, decision rights, cadence. Versioned; only the designer changes it
+  aims.md           the current aims and capacity plan (4.7). Versioned; the designer writes it from the Strategist's redirects
   board.jsonl       one task per line (4.1)
   rules/            versioned briefs; only the designer changes them
   log/              progress.md (events only), reviews/, runs.jsonl (measured spend), work.jsonl (what the system recorded of each worker's actions)
   queue/decisions.md  parked decisions
-  audits/           pulses (P-NNN), audits (A-NNN), diagnoses (D-NNN), opportunity reviews (O-NNN), redesigns (R-NNN)
-  experiments/      one file per experiment (E-NNN, 4.8); the designer sets them up, the orchestrator runs them
+  audits/           pulses (P-NNN), audits (A-NNN), diagnoses (D-NNN), strategies (S-NNN), aim updates (AS-NNN), redesigns (R-NNN)
   metrics_system.md, charts.md   measures, charts, celeration, resources and guardrails, written by the system only (section 8)
   history/          earlier versions of the spec and rules; the current version always stays at its usual path
 ```
@@ -50,20 +51,20 @@ Intervals are counted in **points**, not fixed periods. The task's adapter state
 
 | Role | Trigger | Writes |
 | --- | --- | --- |
-| Designer | At the start; after a diagnosis or opportunity review | spec with driver tree, briefs, experiments, cadence; later a redesign record and new versions |
-| Measurement (the system) | Every period | `metrics_system.md` and `charts.md`: measures, limits, signals, celeration, floor and aim, resources, guardrails, experiments, gap to the exemplar |
+| Designer | At the start; after a diagnosis | spec with driver tree, briefs, cadence; later a redesign record and new versions |
+| Measurement (the system) | Every period | `metrics_system.md` and `charts.md`: measures, limits, signals, celeration, floor and aim, resources, guardrails, gap to the exemplar |
 | Checker | Each submission, or a random sample | review records, with the evidence it gathered |
-| Checker, experiment fidelity | When an experiment reaches its Start (after the orchestrator writes Applied), and again after a failed check | `audits/F-E-NNN-n.md`: `Fidelity: pass` or `fail` |
-| Auditor, experiment verdict | When an experiment's clock ends, with the system's comparison | `audits/V-E-NNN.md`: `Verdict: keep`, `revert` or `too small to read` |
-| Auditor, pulse | Every point; every second point after three quiet pulses, back to every point on any signal, redesign or experiment end | `audits/P-NNN.md` |
+| Auditor, pulse | Every point; every second point after three quiet pulses, back to every point on any signal, redesign or new aims | `audits/P-NNN.md` |
 | Auditor, full audit | At each quarter of the horizon, at milestones and before done | `audits/A-NNN.md` |
-| Diagnostician, fault | When a pulse or audit ends `Diagnosis needed: yes` | `audits/D-NNN.md`: what is wrong and why |
-| Diagnostician, opportunity | Every 3 points without one, or when the top measure has 3 points in a row below its floor line or a flat or wrong-way celeration; never while an experiment runs | `audits/O-NNN.md`: where the most room is |
-| Designer, redesign | After a diagnosis or an opportunity review | `audits/R-NNN.md`, new spec or rule versions, experiments |
+| Diagnostician | When a pulse or audit ends `Diagnosis needed: yes` | `audits/D-NNN.md`: what is wrong and why |
+| Strategist | After the first 3 points, then every 3 points; brought forward (after at least 2) when the top measure has 3 points in a row below its floor line or a flat or wrong-way celeration | `audits/S-NNN.md`: the redirect |
+| Designer, aim update | Right after each Strategist redirect | `aims.md` and `audits/AS-NNN.md`, ending `Design change needed: yes/no` |
+| Designer, redesign | After a diagnosis; or after an aim update that needs a design change | `audits/R-NNN.md`, new spec or rule versions |
 
 - **Reviews give both kinds of item:** about one keep-doing (what works and should be done more) to four fixes, with at least one keep-doing. Agents need information more than encouragement; the keep-doing item says what to scale.
 - The orchestrator acts on anything handed to it in the same period and logs what it did.
-- **Redesigns are spaced** at least 3 points after the last adopted design change, so each change can be judged. Setting up an experiment is not a design change.
+- **Faults first.** The redesign slot serves diagnoses first. A diagnosis that cannot run yet waits in a queue and runs as soon as the slot frees; a design change the Strategist needs waits behind it.
+- **Redesigns are spaced** at least 3 points after the last adopted design change, so each change can be judged. An aim update is not a design change and is never held back by this spacing.
 - With no system to run the cadence, the orchestrator runs this table itself, and a missed review is a finding.
 
 ## 4. Records
@@ -98,7 +99,7 @@ Fix: <one specific fix per unmet criterion>
 ### 4.5 Redesign (R-NNN)
 
 ```
-Trigger: <diagnosis, opportunity review or audit>   Change: <spec, driver, tree, rule or experiment, version before -> after>
+Trigger: <diagnosis, or an aim update that needs a design change>   Change: <spec, driver, tree or rule, version before -> after>
 Why: ...   Prediction: <measure> shifts <up/down> by <period>   Cost: ...   Revert if: ...
 ```
 
@@ -106,30 +107,17 @@ Why: ...   Prediction: <measure> shifts <up/down> by <period>   Cost: ...   Reve
 
 `D-007: <question> | options, default first | reversible? | what waits on it | what continues meanwhile`
 
-### 4.7 Opportunity review (O-NNN)
+### 4.7 Strategy (S-NNN) and aims (aims.md)
 
-`Drivers ranked by gap x leverage | the constraint | idle resources and what one more unit would return | what differed in the own-best stretch | up to two candidate experiments (driver, change, predicted shift, guardrail)`
+Strategy: `Last aims: met or missed, and what that shows | the constraint now (the worker's capacity first) | for each priority driver: its stretch aim for the next point, and why | how the capacity is split across the drivers | anything the aims cannot reach without a design change`
 
-### 4.8 Experiment (experiments/E-NNN.md)
+aims.md, written by the designer from the strategy:
 
 ```
-Driver: <exactly one measure the system records>   Slice: <the units it touches, or all>   Control: rest
-Change: <what is done differently>   Prediction: <the driver> shifts <up/down> by <amount>
-Guardrail: <measure and side it must not cross>   Capacity: <how much of the worker's capacity it uses per period>
-Start: <period number, after the first 3 points>   End: <period number, at least 3 points later>
-Applied: <period number>, written by the orchestrator once it has made the change on the slice
-Verdict: written by the system from the auditor's ruling
+As of <period> (after S-NNN)   Constraint: <driver or resource>
+| Driver | Now | Aim for the next point | Share of capacity | Guardrail |
+Notes: <what to do first each period, in the spec's terms>
 ```
-
-**The lifecycle, run by the system.** No role judges its own work.
-
-1. The designer writes the experiment, only for a lever whose effect is uncertain: a known fix goes into the design for the whole system instead. It is a one-time setting, not a habit. Its driver must be a measure the system records; one that is not is void. It states its capacity cost; running experiments together stay within the experiment budget (default 10% of the worker's capacity), and none starts before the first 3 points.
-2. Experiments whose slices overlap run one after another: a later one is queued until the earlier one ends. A slice with the rest as control is best; a whole-system experiment is judged against its own earlier line and runs alone.
-3. At the start, the system hands the orchestrator the exact change. The orchestrator makes it on the slice only and writes `Applied`.
-4. The system calls the checker for a fidelity check against its ground-truth snapshots. The clock starts only when it passes; after three failed checks the experiment is void.
-5. While it runs, the system enforces the guardrails; a breach means revert at once.
-6. At the end, the system compares the driver on the slice against the control (or against its own earlier line), and reads the effect against the envelope of the earlier bounce. The auditor rules: keep, revert, or too small to read.
-7. The orchestrator applies the ruling. A keep is folded into the design at the next redesign.
 
 ## 5. Rules for whoever does the work
 
@@ -174,9 +162,9 @@ Every measure here is computed by the system from ground truth, never reported b
 - **Ceiling sources, best first:** an external exemplar (someone has done this work); the swarm's own best stretch; a resource ceiling (output if no resource sat idle); a reference class (comparable cases found by research). With none, the driver is an uncertainty to test, not a gap: test the high-stakes, low-confidence links first.
 - **Process behavior charts** answer "is it stable?". Limits come from the measure's own data (centre ± 2.66 × average moving range). A signal is a point beyond a limit or 8 in a row on one side of the centre. Everything else is routine variation: do not react to it.
 - **Celeration** answers "is it getting better?". The point window is the shortest span that holds whole natural cycles and at least 3 observations while leaving at least 12 points across the horizon. Each point is the median of a flow over its window, or the last value of a positive level. Celeration is the multiplier per point from a median-based fit on the log scale, with bounce as the spread. It is provisional from 3 points and firm at 6. Each design change starts a new phase, judged by its jump (level) and turn (new celeration ÷ old). The swarm's own best celeration is the improvement exemplar.
-- **Floor and aim.** The floor line runs from the top measure's level after 3 points to the goal at the horizon: 3 points in a row below it calls for an opportunity review. The aim is a deliberate overshoot, the goal by half the remaining horizon, so the system never caps itself. Falling short of the aim is expected and triggers nothing. When the aim is met on 2 of the last 3 points it is raised.
+- **Floor and aim.** The floor line runs from the top measure's level after 3 points to the goal at the horizon: 3 points in a row below it brings the Strategist forward. The aim is a deliberate overshoot, the goal by half the remaining horizon, so the system never caps itself. Falling short of the aim is expected and triggers nothing. When the aim is met on 2 of the last 3 points it is raised.
 - **Resources.** The share of each declared resource in use, and the idle amount. One resource is always the worker's own capacity (time, actions or budget per period): when it is near its limit, more output per unit of it is the opportunity, and idle resources elsewhere are symptoms. Otherwise an idle resource while a driver is short is an opportunity.
-- **Guardrails.** Measures with a side that must not be crossed. Experiments run inside them. A breach is reverted first.
+- **Guardrails.** Measures with a side that must not be crossed. Aims stay inside them. A breach is put right first.
 - **Gap to the exemplar (PIP):** the ceiling divided by the swarm's performance.
 
 ## 9. Single-agent mode

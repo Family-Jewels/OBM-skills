@@ -32,7 +32,7 @@ def main():
     if scratch.exists(): shutil.rmtree(scratch)
     (scratch / "ws").mkdir(parents=True)
     for i in range(n):
-        cfg = {"version": 2, "workspace": str(scratch / "ws"), "log": str(scratch / "cadence.jsonl"), "dry_run": True,
+        cfg = {"version": int(__import__("os").environ.get("ENGINE_VERSION", "2")), "workspace": str(scratch / "ws"), "log": str(scratch / "cadence.jsonl"), "dry_run": True,
                "adapter": "replay:Rows", "dry_run_redesign": True, "adapter_args": {"table": str(table), "row": i, "horizon": 365, "ceiling": ceiling},
                "charts": {"not_before": 8, "min_points": 8, "baseline_points": 20, "measures": [
                    {"name": "cash_gain_7", "from": "cash", "diff": 7, "better": "up"}, {"name": "revenue", "better": "up"},
