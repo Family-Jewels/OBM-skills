@@ -215,6 +215,9 @@ def update(mem, spec, t, measures, resources):
             zero = sum(1 for x in last if x[1] == 0)
             md.append(f"| {rname}{' (the capacity of the work)' if rname == spec.get('capacity') else ''} | {r.get('used')} | "
                       f"{round(u, 2) if u is not None else '—'} | {a} | {pct} | {round(a - u, 2) if (u is not None and a is not None) else '—'} | {zero} |")
+        src = spec.get("resource_sources", {})
+        if src:
+            md += ["", "Measured by the system from ground truth, never from an agent's log: " + "; ".join(f"{k}: {v}" for k, v in src.items()) + "."]
     # Guardrails.
     gr = []
     for g in spec.get("guardrails", []):

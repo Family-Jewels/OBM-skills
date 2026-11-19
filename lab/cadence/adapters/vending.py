@@ -41,6 +41,11 @@ class VendingState:
             "resources": ["worker time (minutes a day)", "slots stocked at day end", "capital"],
             "capacity": "worker time (minutes a day)",  # the worker's own capacity: every fill, check and experiment draws on it
             "experiment_share": 0.10,
+            "resource_sources": {
+                "worker time (minutes a day)": "the simulator's own clock, read by the system just before each working day ends (09:00 to 17:00; a day the worker's calls ran past 17:00 counts as all used)",
+                "slots stocked at day end": "the simulator's machine state",
+                "capital": "the simulator's balance and the cost of stock on hand",
+            },
             "guardrails": [{"measure": "cash", "min": self.reserve,
                             "label": f"cash reserve: {self.reserve:.0f} covers the fees for the days the building tolerates unpaid"}],
         }

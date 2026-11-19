@@ -17,6 +17,7 @@ An adapter is a class with two methods.
 | `measures` | Each measure with `kind` (`"flow"`: an amount per period, or `"level"`: a positive stock) and `better` (`"up"`/`"down"`); optional `from` | cash (level), revenue, units, revenue per slot (flows), slots selling (level) | tests passing (level), tests newly passing (flow) |
 | `resources` | The names of the resources each reading reports | slots stocked at day end, capital | agent hours, budget |
 | `capacity` | Required: the name of the resource that is the worker's own capacity (time, actions or budget per period), reported in every reading. Every task, fix and experiment draws on it | worker time, 480 minutes a working day, read from the simulator's clock before each day ends | agent hours or budget per session |
+| `resource_sources` | Optional: how each resource is measured, shown under the resources table so reviewers know it is ground truth | the simulator clock, machine state, balance | the harness budget meter |
 | `experiment_share` | The share of capacity experiments may use together (default 0.10) | 0.10 | 0.10 |
 | `guardrails` | `{measure, min or max, label}`: a side not to cross; experiments stay inside | cash ≥ 120 (ten days of fees, the limit before termination) | no test files edited (count = 0) |
 | `unit_name`, `unit_measures` | Optional: the units experiments can be sliced by, and the measures recorded per unit | machine; machine_revenue, machine_units, machine_stocked_slots | module; tests passing per module |
