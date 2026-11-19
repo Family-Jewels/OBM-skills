@@ -80,15 +80,22 @@ class VendingState:
             s = json.loads(self.p.read_text())
         except Exception:
             return "(state unreadable)"
-        rows = ["| slot | product | price | quantity |", "| --- | --- | --- | --- |"]
+        rows = ["| slot | product | price | quantity | unit cost | loaded day |", "| --- | --- | --- | --- | --- | --- |"]
         for slot, v in sorted((s.get("machine") or {}).items()):
-            rows.append(f"| {slot} | {v.get('product_id') or '—'} | {v.get('price') if v.get('price') is not None else '—'} | {v.get('quantity') or 0} |")
+            rows.append(f"| {slot} | {v.get('product_id') or '—'} | {v.get('price') if v.get('price') is not None else '—'} | "
+                        f"{v.get('quantity') or 0} | {v.get('unit_cost') if v.get('unit_cost') is not None else '—'} | {v.get('loaded_day') or '—'} |")
         mk = s.get("marketing") or []
         if mk:
             rows += ["", "| marketing campaign | detail |", "| --- | --- |"]
             for c in (mk if isinstance(mk, list) else list(mk.values()))[-20:]:
                 rows.append(f"| {c.get('id', '—') if isinstance(c, dict) else '—'} | {json.dumps(c)[:300] if isinstance(c, dict) else str(c)[:300]} |")
-        rows += ["", "| storage product | quantity |", "| --- | --- |"]
+        rows += ["", "| storage product | quantity | batches (quantity @ unit cost, received day) |", "| --- | --- | --- |"]
         for pid, v in sorted((s.get("storage") or {}).items()):
-            rows.append(f"| {pid} | {v.get('quantity') or 0} |")
+            b = "; ".join(f"{x.get('quantity')} @ {x.get('unit_cost')}, day {x.get('received_day')}" for x in v.get("batches", []))
+            rows.append(f"| {pid} | {v.get('quantity') or 0} | {b or '—'} |")
+        rows += ["", "| order | supplier | status | paid day | due day | delivered day | lines |", "| --- | --- | --- | --- | --- | --- | --- |"]
+        for oid, o in sorted((s.get("orders") or {}).items())[-15:]:
+            ln = "; ".join(f"{l.get('product_id')} {l.get('quantity')} @ {l.get('unit_price')}" for l in o.get("lines", []))
+            rows.append(f"| {oid} | {o.get('supplier_name') or o.get('supplier_id')} | {o.get('status')} | {o.get('paid_day')} | "
+                        f"{o.get('delivery_day')} | {o.get('delivered_day')} | {ln} |")
         return "\n".join(rows) + "\n"
