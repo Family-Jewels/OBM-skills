@@ -1,6 +1,8 @@
 """Adapter for Prosus Vending Bench: a period is a simulated day, read from the simulator's own state file.
 
-read() is unchanged for engine v1. Engine v2 also uses spec() and the 'resources' in each reading (see ADAPTER_SPEC.md).
+read() keeps every v1 measure. Engine v2 also uses spec(), snapshot(), and the 'resources' and per-machine 'units' in each
+reading (see ADAPTER_SPEC.md). A unit is one machine (a location's snack or drinks machine), so experiments can run on some
+machines with the rest as control.
 """
 import json
 from pathlib import Path
@@ -25,6 +27,13 @@ class VendingState:
                 "units": {"kind": "flow", "better": "up"},
                 "slots_selling": {"kind": "level", "better": "up"},
                 "revenue_per_slot": {"kind": "flow", "better": "up"},
+                "unit_cost_paid_30d": {"kind": "level", "better": "down"},  # euros per unit across purchase orders paid in the last 30 days
+            },
+            "unit_name": "machine",
+            "unit_measures": {  # per machine, for experiments on a slice with the other machines as control
+                "machine_revenue": {"kind": "flow", "better": "up"},
+                "machine_units": {"kind": "flow", "better": "up"},
+                "machine_stocked_slots": {"kind": "level", "better": "up"},
             },
             "resources": ["slots stocked at day end", "capital"],
             "guardrails": [{"measure": "cash", "min": self.reserve,
@@ -43,12 +52,38 @@ class VendingState:
         stock_value = sum((v.get("quantity") or 0) * (v.get("unit_cost") or 0) for v in mach.values())
         stock_value += sum((b.get("quantity") or 0) * (b.get("unit_cost") or 0) for v in store.values() for b in v.get("batches", []))
         bal = s.get("balance", 0)
+        paid = [o for o in (s.get("orders") or {}).values() if o.get("paid_day") is not None and o["paid_day"] > (s.get("day") or 0) - 30]
+        q = sum(l.get("quantity", 0) for o in paid for l in o.get("lines", []))
+        cost30 = round(sum(o.get("amount_paid") or o.get("total") or 0 for o in paid) / q, 3) if q else None
+        units = {}
+        for slot, v in mach.items():
+            m = slot.rsplit(":", 1)[0]
+            u = units.setdefault(m, {"machine_revenue": 0.0, "machine_units": 0, "machine_stocked_slots": 0})
+            u["machine_stocked_slots"] += 1 if (v.get("quantity") or 0) > 0 else 0
+        for x in last.get("per_slot", []):
+            u = units.setdefault(x.get("machine") or x["slot"].rsplit(":", 1)[0], {"machine_revenue": 0.0, "machine_units": 0, "machine_stocked_slots": 0})
+            u["machine_revenue"] = round(u["machine_revenue"] + x.get("revenue", 0), 2); u["machine_units"] += x.get("units", 0)
         return {"period": s.get("day") or 0, "over": bool(s.get("finished") or s.get("terminated")),
                 "measures": {"cash": round(bal, 2), "revenue": last.get("revenue", 0), "units": last.get("units", 0),
                              "slots_selling": len(last.get("per_slot", [])),
                              "revenue_per_slot": round(last.get("revenue", 0) / len(last["per_slot"]), 2) if last.get("per_slot") else 0, "revenue_last_7": rev(d - 6, d),
-                             "revenue_same_7_a_month_earlier": rev(d - 36, d - 30) if d > 36 else None},
+                             "revenue_same_7_a_month_earlier": rev(d - 36, d - 30) if d > 36 else None, "unit_cost_paid_30d": cost30},
+                "units": units,
                 "resources": {
                     "slots stocked at day end": {"used": sum(1 for v in mach.values() if (v.get("quantity") or 0) > 0), "available": len(mach) or None},
                     "capital": {"used": round(stock_value, 2), "available": round(stock_value + max(0.0, bal - self.reserve), 2)},
                 }}
+
+    def snapshot(self):
+        """Ground truth of what the operator controls, for fidelity checks: every machine slot and the storage room."""
+        try:
+            s = json.loads(self.p.read_text())
+        except Exception:
+            return "(state unreadable)"
+        rows = ["| slot | product | price | quantity |", "| --- | --- | --- | --- |"]
+        for slot, v in sorted((s.get("machine") or {}).items()):
+            rows.append(f"| {slot} | {v.get('product_id') or '—'} | {v.get('price') if v.get('price') is not None else '—'} | {v.get('quantity') or 0} |")
+        rows += ["", "| storage product | quantity |", "| --- | --- |"]
+        for pid, v in sorted((s.get("storage") or {}).items()):
+            rows.append(f"| {pid} | {v.get('quantity') or 0} |")
+        return "\n".join(rows) + "\n"

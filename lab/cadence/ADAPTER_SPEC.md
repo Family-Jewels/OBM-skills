@@ -17,6 +17,7 @@ An adapter is a class with two methods.
 | `measures` | Each measure with `kind` (`"flow"`: an amount per period, or `"level"`: a positive stock) and `better` (`"up"`/`"down"`); optional `from` | cash (level), revenue, units, revenue per slot (flows), slots selling (level) | tests passing (level), tests newly passing (flow) |
 | `resources` | The names of the resources each reading reports | slots stocked at day end, capital | agent hours, budget |
 | `guardrails` | `{measure, min or max, label}`: a side not to cross; experiments stay inside | cash ≥ 120 (ten days of fees, the limit before termination) | no test files edited (count = 0) |
+| `unit_name`, `unit_measures` | Optional: the units experiments can be sliced by, and the measures recorded per unit | machine; machine_revenue, machine_units, machine_stocked_slots | module; tests passing per module |
 
 ## `read()`: one reading per period, from ground truth
 
@@ -24,8 +25,13 @@ An adapter is a class with two methods.
 {"period": int, "over": bool,
  "clock": number,                      # only when clock is "budget"
  "measures": {name: number},           # from the task's own state, never from an agent's report
+ "units": {unit_id: {measure: number}}, # optional: per-unit measures, for slice-against-control experiments
  "resources": {name: {"used": number, "available": number}}}
 ```
+
+## `snapshot()`: optional, for experiment fidelity
+
+Returns text (markdown) of the ground truth the swarm controls, such as every slot's product, price and stock. The system saves one each period in `swarm/snapshots/`, and the checker compares them to confirm an experiment's change was made as written, on its slice only.
 
 ## What the system derives from it
 

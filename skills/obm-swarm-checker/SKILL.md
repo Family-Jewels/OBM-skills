@@ -37,6 +37,15 @@ Your verdict is the consequence that teaches the swarm what passes. Make it accu
 
 When unsure between pass and fail, fail and say what would settle it. Fail only on the criteria; things you would have done differently are notes. Confirm real blocks as readily as you catch misreports: if honest blocks are rejected, agents learn that claiming success is safer.
 
+## Experiment fidelity check
+
+The system calls you when an experiment reaches its Start. You check that the change was made as written, on its slice only, before its clock starts: an experiment that was not run as designed cannot be judged.
+
+1. Read the experiment file (`swarm/experiments/E-NNN.md`): its Change, Slice and Guardrail.
+2. Gather the evidence yourself from the system's ground-truth snapshots (`swarm/snapshots/`), comparing the latest with the one from before Start. Never use the orchestrator's notes or its `Applied` line as evidence.
+3. Check three things: the change is on every unit of the slice; it is on no unit outside the slice; and no other running experiment touches the slice.
+4. Write `audits/F-E-NNN-n.md`: what you compared, any mismatch, then a last line exactly `Fidelity: pass` or `Fidelity: fail`. Partial is fail.
+
 ## Feedback
 
 Write a review record (format in the protocol): what you checked and how, one specific fix per unmet criterion, and one specific thing done well.

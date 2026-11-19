@@ -24,7 +24,7 @@ Produce `swarm/spec.md` (template below), a short brief per role in `swarm/rules
 7. **Write checks that reward the goal.** For each, ask: could an agent pass it without achieving the goal? If so, add a direct check. Every criterion must be checkable with the capabilities the roles actually have. "Blocked, with a clear report" is a passing outcome. Set quality at what the receiver needs.
 8. **Set risk tiers** by what an undetected error would cost downstream. Only high-risk tasks get a plan step and deep review.
 9. **Write briefs:** one sentence of mission, inputs and outputs with paths, rules as "if X, then Y, because Z". Keep them short. Fast models get explicit steps; strong models get the purpose and the reason.
-10. **Set budgets:** total spend with about a 15% reserve, per-task budgets, a retry cap (default 2), review share (default no more than about 30%), model tier per role. Spend comes from measured usage. Set an experiment budget (default 10% of capacity or spend) and its rules: each experiment is reversible, stays inside the guardrails, states a prediction, lasts at least 3 points, and only one runs per driver at a time.
+10. **Set budgets:** total spend with about a 15% reserve, per-task budgets, a retry cap (default 2), review share (default no more than about 30%), model tier per role. Spend comes from measured usage. Set an experiment budget (default 10% of capacity or spend) and its rules: each experiment is reversible, stays inside the guardrails, states a prediction, and lasts at least 3 points. Its driver must be a measure the system records, and it runs on a slice of the units with the rest as control wherever the task has units (protocol 4.8). You do not decide keep or revert: the system measures and the auditor rules.
 11. **Write the cadence** from protocol section 3. The system derives the intervals from the task (counted in points), so copy them rather than inventing periods.
 12. **If runs recur unattended,** make each run check its inputs (fresh, the expected shape, in range; never pin an input meant to change), end as published, warned or halted where the owner will see it, and compare itself with the last run.
 13. **Set decision rights:** what the swarm decides, and what it parks (irreversible actions, scope changes, conflicting criteria).
@@ -47,7 +47,7 @@ The system invokes you again after a diagnosis (`audits/D-NNN.md`: something is 
 ## Driver tree     | Measure | = made of | Ground-truth source | Better | Ceiling (source, confidence) | Guardrail | Push on now? |
 ## Exemplar        <best known performance and its source, or "own best">
 ## Resources       | Resource | How its use is measured |
-## Experiments     Budget share; rules; | ID | Driver | Change | Prediction | Guardrail | Start | End |
+## Experiments     Budget share; rules; | ID | Driver (a recorded measure) | Slice | Change | Prediction | Guardrail | Start | End |
 ## Done means      <checks>
 ## Open questions
 ## Milestones      | ID | Accomplishment | Passes when | Budget |

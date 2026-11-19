@@ -16,10 +16,10 @@ The protocol has two halves. The safety half keeps the floor: honest records, co
 | Role | Does | Never |
 | --- | --- | --- |
 | Designer | Turns the human's goal into a driver tree, checks, budgets and cadence; reworks the design when the evidence says it is off course | Does the work; lowers the goal |
-| Orchestrator | Runs the work: dispatches, routes outcomes, paces spend, keeps the core moving | Grades work; changes the design |
+| Orchestrator | Runs the work: dispatches, routes outcomes, paces spend, keeps the core moving, makes experiments' changes and applies their verdicts | Grades work, including its own experiments; changes the design |
 | Worker | Any agent doing a task (no skill of its own): follows section 5 | Grades its own work; edits tests, criteria, measures or records |
-| Checker | Verifies work against criteria, gathering the evidence itself | Checks its own work; adds criteria; softens a verdict |
-| Auditor | Pulse reviews of the charts; full audits of direction, honesty, cost and records | Waits for the orchestrator's approval |
+| Checker | Verifies work against criteria, gathering the evidence itself; checks each experiment was made as written, on its slice only | Checks its own work; adds criteria; softens a verdict |
+| Auditor | Pulse reviews of the charts; full audits of direction, honesty, cost and records; the verdict on each experiment | Waits for the orchestrator's approval |
 | Diagnostician | Finds what is going wrong and why; in opportunity mode, where the most room for improvement is | Writes the fix (the designer does) |
 
 Workers and checkers run in separate contexts. With only one agent, see section 9.
@@ -58,6 +58,8 @@ Intervals are counted in **points**, not fixed periods. The task's adapter state
 | Designer | At the start; after a diagnosis or opportunity review | spec with driver tree, briefs, experiments, cadence; later a redesign record and new versions |
 | Measurement (the system) | Every period | `metrics_system.md` and `charts.md`: measures, limits, signals, celeration, floor and aim, resources, guardrails, experiments, gap to the exemplar |
 | Checker | Each submission, or a random sample | review records, with the evidence it gathered |
+| Checker, experiment fidelity | When an experiment reaches its Start (after the orchestrator writes Applied), and again after a failed check | `audits/F-E-NNN-n.md`: `Fidelity: pass` or `fail` |
+| Auditor, experiment verdict | When an experiment's clock ends, with the system's comparison | `audits/V-E-NNN.md`: `Verdict: keep`, `revert` or `too small to read` |
 | Auditor, pulse | Every point; every second point after three quiet pulses, back to every point on any signal, redesign or experiment end | `audits/P-NNN.md` |
 | Auditor, full audit | At each quarter of the horizon, at milestones and before done | `audits/A-NNN.md` |
 | Diagnostician, fault | When a pulse or audit ends `Diagnosis needed: yes` | `audits/D-NNN.md`: what is wrong and why |
@@ -116,10 +118,22 @@ Why: ...   Prediction: <measure> shifts <up/down> by <period>   Cost: ...   Reve
 ### 4.8 Experiment (experiments/E-NNN.md)
 
 ```
-Driver: <measure>   Change: <what is done differently>   Prediction: <measure> shifts <up/down> by <amount>
+Driver: <exactly one measure the system records>   Slice: <the units it touches, or all>   Control: rest
+Change: <what is done differently>   Prediction: <the driver> shifts <up/down> by <amount>
 Guardrail: <measure and side it must not cross>   Start: <period number>   End: <period number, at least 3 points later>
-Result: keep | revert, written by the orchestrator at the end, against the system's charts
+Applied: <period number>, written by the orchestrator once it has made the change on the slice
+Verdict: written by the system from the auditor's ruling
 ```
+
+**The lifecycle, run by the system.** No role judges its own work.
+
+1. The designer writes the experiment. Its driver must be a measure the system records; one that is not is void.
+2. Experiments whose slices overlap run one after another: a later one is queued until the earlier one ends. A slice with the rest as control is best; a whole-system experiment is judged against its own earlier line and runs alone.
+3. The orchestrator makes the change on the slice only and writes `Applied`.
+4. The system calls the checker for a fidelity check against its ground-truth snapshots. The clock starts only when it passes; after three failed checks the experiment is void.
+5. While it runs, the system enforces the guardrails; a breach means revert at once.
+6. At the end, the system compares the driver on the slice against the control (or against its own earlier line), and reads the effect against the envelope of the earlier bounce. The auditor rules: keep, revert, or too small to read.
+7. The orchestrator applies the ruling. A keep is folded into the design at the next redesign.
 
 ## 5. Rules for whoever does the work
 

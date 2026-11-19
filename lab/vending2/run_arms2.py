@@ -115,11 +115,13 @@ def main():
                           "resources the work uses; an experiments section; and the cadence table. The system writes ground-truth measures to "
                           "swarm/metrics_system.md and swarm/charts.md every simulated day: level charts with limits computed from the data, celeration "
                           "per measure over 7-day points (derived from the task: demand has a weekly pattern), the top measure's floor line and a "
-                          "deliberate overshoot aim, selling slots and capital in use and idle, a cash-reserve guardrail of EUR 120, and the experiments "
-                          "in swarm/experiments/ judged on its data. It runs a pulse review every point, full audits at each quarter of the year, "
+                          "deliberate overshoot aim, slots and capital in use and idle, a cash-reserve guardrail of EUR 120, per-machine measures "
+                          "for the six machines (machine_revenue, machine_units, machine_stocked_slots), and daily ground-truth snapshots of every "
+                          "slot. Experiments run on a slice of the machines with the others as control: the checker confirms each was made as "
+                          "written, the system measures it, and the auditor rules keep, revert or too small to read. It runs a pulse review every point, full audits at each quarter of the year, "
                           "opportunity reviews on its own rules, diagnoses when a review asks, and calls you back to redesign from either, handing "
                           "every result to the operator. The system's daily measures are: cash, revenue, units, slots_selling, revenue_per_slot, "
-                          "revenue_last_7 and revenue_same_7_a_month_earlier. Exemplar and ceiling: the benchmark's scripted reference operator, which "
+                          "revenue_last_7, revenue_same_7_a_month_earlier and unit_cost_paid_30d. Exemplar and ceiling: the benchmark's scripted reference operator, which "
                           "knows the economy's hidden parameters, reaches about EUR 3,228 at day 30 and EUR 61,219 at day 365 from EUR 1,500. You cannot use the business tools; design only.")
             p, r = claude(['-p', design, '--permission-mode', 'acceptEdits', '--max-budget-usd', '2', '--model', a.model, '--output-format',
                            'stream-json', '--verbose', '--tools', TOOLS, '--allowedTools', TOOLS, '--strict-mcp-config', '--system-prompt', prompt],
@@ -135,8 +137,9 @@ def main():
                               "system the designer left in swarm/ (read swarm/index.md and swarm/spec.md first). You do the operating yourself. You do "
                               "not need to call the other roles: the system writes ground-truth measures and charts every day, runs pulse reviews, full "
                               "audits, opportunity reviews, diagnoses and redesigns on its own schedule, and hands you their results in the result of "
-                              "wait_for_next_day. Act on what it hands you: do the fixes, keep doing what it says works, adopt any redesign, and run the "
-                              "experiments in swarm/experiments/ inside their guardrails. Log events only, not a line every day. Keep operating until the simulation ends.")
+                              "wait_for_next_day. Act on what it hands you: do the fixes, keep doing what it says works, adopt any redesign, and carry out "
+                              "the experiments in swarm/experiments/: make each change on its slice only, write 'Applied: <day>' in its file, and "
+                              "apply the auditor's verdict. Never judge an experiment yourself. Log events only, not a line every day. Keep operating until the simulation ends.")
             p, r = claude(['-p', run_prompt, '--permission-mode', 'acceptEdits', '--max-budget-usd', f'{left:.2f}', *common], cfg, ws, stream, a.timeout)
             results.append(r)
         elif a.arm in ('native', 'native_cadence'):

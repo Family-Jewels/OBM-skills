@@ -17,6 +17,7 @@ import importlib, json, re, subprocess, sys, time
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import charts, progress
+import experiments as X
 
 GAP_POINTS = 3
 
@@ -39,7 +40,9 @@ def preflight(spec, reading):
         p.append("no goal value or ceiling: the floor and aim lines cannot be drawn")
     for name, d in spec.get("measures", {}).items():
         v = m.get(d.get("from", name))
-        if v is None or not isinstance(v, (int, float)):
+        if v is None:
+            continue  # some measures only exist once there is data (e.g. the first purchase)
+        if not isinstance(v, (int, float)):
             p.append(f"measure {name} gives no number")
         elif v < 0:
             p.append(f"measure {name} is negative ({v}): celeration needs a positive flow or level")
@@ -52,18 +55,6 @@ def preflight(spec, reading):
     if not progress.derive_window(spec["horizon"], spec.get("cycle", 1), spec.get("clock", "period"))["ok"]:
         p.append("horizon too short for celeration; level charts only")
     return p
-
-def experiments(sw, t):
-    out = []
-    for f in sorted((sw / "experiments").glob("E-*.md")) if (sw / "experiments").exists() else []:
-        txt = f.read_text(errors="ignore")
-        # "Start: 12", "Start: day 12" or "**Start:** session 12", anywhere on a line
-        g = lambda k: (re.search(rf"\b{k}\b\W*:\W*[^\d\n]{{0,15}}?(\d+)", txt, re.I) or [None, None])[1]
-        drv = re.search(r"\bDriver\b\W*:\W*(.+?)(?:\s{2,}|\s+Change\b|$)", txt, re.I | re.M)
-        s, e = g("Start"), g("End")
-        out.append({"id": f.stem, "start": int(s) if s else None, "end": int(e) if e else None,
-                    "driver": drv.group(1).strip()[:60] if drv else "?"})
-    return out
 
 def design_hash(sw):
     import hashlib
@@ -116,29 +107,25 @@ def main(cfg, cfg_path=None):
     cfg.setdefault("charts", {})["own_best_window"] = W
     cmd_md, chart_bad = charts.update(cfg, mem, period, measures, unit)
     prog_md, events = progress.update(mem, spec, t, measures, resources)
-    exps = experiments(sw, t)
-    exp_md = []
-    if exps:
-        top = spec["top"]; ser = mem["progress"]["series"].get(top, [])
-        exp_md = ["", "## Experiments (judged on the system's data)", "",
-                  f"| experiment | driver | start | end | {top} celeration before | since start | status |", "| --- | --- | --- | --- | --- | --- | --- |"]
-        kind = spec["measures"][top].get("kind", "flow")
-        pts = progress.points(ser, W, kind, now=t)
-        for e in exps:
-            if e["start"] is None:
-                exp_md.append(f"| {e['id']} | {e['driver']} | ? | ? | | | no Start line |"); continue
-            ks = (e["start"] - 1) // W + 1
-            before = progress.fit([p for p in pts if p[0] < ks][-6:]); after = progress.fit([p for p in pts if p[0] >= ks])
-            done = e["end"] is not None and t >= e["end"]
-            exp_md.append(f"| {e['id']} | {e['driver']} | {e['start']} | {e['end'] or '?'} | {progress.fmt_cel(before['cel']) if before else '—'} | "
-                          f"{progress.fmt_cel(after['cel']) if after else 'collecting'} | {'ended: keep or revert' if done else 'running'} |")
-            ann = mem.setdefault("exp_announced", [])
-            if done and e["id"] not in ann:
-                ann.append(e["id"]); mem["flag_since_pulse"] = True
-                handoff += (f"\n\nSYSTEM CADENCE: experiment {e['id']} has reached its end ({unit} {e['end']}). The system's charts "
-                            f"(swarm/charts.md, Experiments) show its result. Keep or revert it against its prediction, and record which in the experiment file.")
-                log.write(json.dumps({"t": time.time(), "period": period, "event": "experiment_end", "id": e["id"]}) + "\n")
-    (sw / "charts.md").write_text(cmd_md + prog_md + ("\n".join(exp_md) + "\n" if exp_md else ""))
+    X.record_units(mem, t, reading.get("units"))
+    if hasattr(adapter, "snapshot"):  # ground truth of what the swarm controls, for the checker's fidelity checks
+        snap = sw / "snapshots"; snap.mkdir(exist_ok=True)
+        (snap / f"{period:05d}.md").write_text(f"# Snapshot at {unit} {period} (written by the system from ground truth; do not edit)\n\n" + adapter.snapshot())
+        for old in sorted(snap.glob("*.md"))[:-(3 * W + 2)]:
+            old.unlink()
+    exp_md, exp_acts = X.step(mem, spec, sw, t, mem["progress"]["last_point"], True, W)
+    unit_md = ""
+    if mem.get("units"):
+        ums = list(mem["units"]); ids = sorted({u for m in ums for u in mem["units"][m]})
+        unit_md = ("\n## Units (for experiment slices; latest point, median per " + unit + ")\n\n| unit | " + " | ".join(ums) + " |\n| --- |"
+                   + " --- |" * len(ums) + "\n")
+        for u in ids:
+            vals = []
+            for m in ums:
+                pts = progress.points(mem["units"][m].get(u, []), W, "flow", now=t)
+                vals.append(str(round(pts[-1][1], 2)) if pts else "—")
+            unit_md += f"| {u} | " + " | ".join(vals) + " |\n"
+    (sw / "charts.md").write_text(cmd_md + prog_md + unit_md + exp_md)
     log.write(json.dumps({"t": time.time(), "period": period, "event": "measure", "chart_signals": chart_bad,
                           "progress": [e["kind"] for e in events if e["kind"] != "new_point"]}) + "\n")
 
@@ -169,15 +156,18 @@ def main(cfg, cfg_path=None):
                "--permission-mode", "acceptEdits", "--max-budget-usd", str(budget), "--no-session-persistence"]
         shell = " ".join("'" + c.replace("'", "'\\''") + "'" for c in cmd) + f" > '{out}.tmp' 2>/dev/null; mv '{out}.tmp' '{out}'"
         if cfg.get("dry_run"):  # replay and tests: no model call; the job "finishes" at once with a neutral report
-            out.write_text(json.dumps({"result": f"dry run {jid}. Diagnosis needed: {cfg.get('dry_run_diagnosis', 'no')}", "total_cost_usd": 0}))
+            out.write_text(json.dumps({"result": f"dry run {jid}. Diagnosis needed: {cfg.get('dry_run_diagnosis', 'no')}\nFidelity: pass\n"
+                                                 f"Verdict: {cfg.get('dry_run_verdict', 'keep')}", "total_cost_usd": 0}))
             if kind == "redesign":  # alternate between changing the design and setting up an experiment
                 mem["dry_n"] = mem.get("dry_n", 0) + 1
                 if mem["dry_n"] % 2:
                     with (sw / "spec.md").open("a") as fh: fh.write(f"\nchange {jid}\n")
                 else:
                     (sw / "experiments").mkdir(exist_ok=True)
+                    ids = sorted({u for m in mem.get("units", {}).values() for u in m})
                     (sw / "experiments" / f"E-{mem['dry_n']:03d}.md").write_text(
-                        f"Driver: dry run\nStart: {period + 1}\nEnd: {period + GAP_POINTS * W}\n")
+                        f"Driver: {next(iter(spec.get('unit_measures', {})), spec['top'])}\nSlice: {ids[0] if ids else 'all'}\nControl: rest\n"
+                        f"Start: {period + 1}\nEnd: {period + GAP_POINTS * W}\nApplied: {period + 1}\n")
         else:
             subprocess.Popen(["sh", "-c", shell], cwd=ws, start_new_session=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         new_jobs.append({"id": jid, "kind": kind, "period": period, "started": time.time(), "out": str(out), **extra})
@@ -189,6 +179,7 @@ def main(cfg, cfg_path=None):
         return not busy and (la is None or newest - la >= GAP_POINTS)
 
     where = f"{unit} {period} of {horizon}"
+    measure_names = ", ".join(list(spec.get("unit_measures", {})) + list(spec.get("measures", {})))
     charts_note = ("swarm/charts.md (written by the system: level charts with limits from the data; Progress: celeration per measure, the "
                    "top measure's floor and aim lines, own best; Resources in use and idle; Guardrails; Experiments)")
 
@@ -202,12 +193,45 @@ def main(cfg, cfg_path=None):
               f"{what} Read {charts_note} and the driver tree in swarm/spec.md. First ask whether the direction is right, then make the "
               f"smallest design change that addresses it: fix the cause, elevate the constraint, put an idle resource to work, scale up what "
               f"works, or set up up to two experiments inside the spec's experiment budget. Write each experiment to swarm/experiments/E-NNN.md "
-              f"with lines 'Driver:', 'Change:', 'Prediction:', 'Guardrail:', 'Start: <{unit} number>' and 'End: <{unit} number>', lasting at "
-              f"least {GAP_POINTS} points ({GAP_POINTS * W} {unit}s). The goal and the aim are the human's: never lower them. State a prediction "
+              f"with lines 'Driver:' (exactly one of the measures the system records: {measure_names}), 'Slice:' (the units it touches, "
+              f"from the Units table in swarm/charts.md, or 'all'), 'Control: rest', 'Change:', 'Prediction:', 'Guardrail:', "
+              f"'Start: <{unit} number>' and 'End: <{unit} number>', lasting at least {GAP_POINTS} points ({GAP_POINTS * W} {unit}s). "
+              f"Prefer a slice with the rest as control; experiments whose slices overlap run one after another. You do not decide "
+              f"keep or revert: the system measures, and the auditor rules. The goal and the aim are the human's: never lower them. State a prediction "
               f"in the record: which measure should shift, which way, by which {unit}. Never change anything in a way that stops the core "
               f"work. Before changing swarm/spec.md or a rule file, copy the old version to swarm/history/ with its version number; keep the "
               f"current version at its usual path. Then write the redesign record to swarm/audits/{rid}.md. Reply with the change in under 150 words.",
               budgets.get("redesign", 1.5), 25, {"after": src_id})
+
+    # 0. Experiments: notes, fidelity checks (checker) and verdicts (auditor), all called by the system.
+    for act in exp_acts:
+        if act[0] == "note":
+            handoff += "\n\nSYSTEM CADENCE: " + act[1]; mem["flag_since_pulse"] = True
+            log.write(json.dumps({"t": time.time(), "period": period, "event": "experiment_note", "text": act[1][:200]}) + "\n")
+        elif act[0] == "fidelity":
+            e = act[1]; fid = f"F-{e['id']}-{mem['exp'][e['id']]['fails'] + 1}"
+            (sw / "audits").mkdir(exist_ok=True)
+            spawn(fid, "fidelity", f"Use the obm-swarm-checker skill for an EXPERIMENT FIDELITY CHECK, invoked by the system at {where}. "
+                  f"Experiment {e['id']} (swarm/experiments/{e['id']}.md) is due to start. Verify from ground truth, never from the "
+                  f"orchestrator's notes, that its Change was made as written and on its Slice only. The system's snapshots of what the "
+                  f"swarm controls are in swarm/snapshots/ (one per {unit}, written from ground truth): compare the latest with the one "
+                  f"before the experiment's Start. Check that units outside the slice did not get the change, and that no other "
+                  f"running experiment touches this slice. Write swarm/audits/{fid}.md: what you compared, any mismatch, then a last "
+                  f"line exactly 'Fidelity: pass' or 'Fidelity: fail'.", budgets.get("pulse", 0.6), 15, {"exp": e["id"]})
+        elif act[0] == "verdict":
+            e, c = act[1], act[2]; vid = f"V-{e['id']}"
+            eff = f"{c['effect']:.3f}" if c["effect"] else "none"
+            env = f"x{c['envelope']:.2f}" if c["envelope"] else "none"
+            spawn(vid, "verdict", f"Use the obm-swarm-auditor skill for an EXPERIMENT VERDICT, invoked by the system at {where}. Experiment "
+                  f"{e['id']} (swarm/experiments/{e['id']}.md) has ended. The system's comparison on its driver ({c['how']}): "
+                  f"{c['before_n']} points before, {c['after_n']} during; effect {eff} (1.0 = no change; better is {c['better']}); "
+                  f"envelope of the earlier bounce {env}; the system reads this as: {c['reading']}. Judge it against the experiment's "
+                  f"prediction and guardrail, using the system's data, not the orchestrator's notes. Keep only an effect beyond the "
+                  f"bounce in the right direction; revert one in the wrong direction or one that crossed a guardrail; call an effect "
+                  f"inside the bounce too small to read and say whether a larger or longer test is worth it. Write swarm/audits/{vid}.md "
+                  f"briefly, ending with a line exactly 'Verdict: keep', 'Verdict: revert' or 'Verdict: too small to read'.",
+                  budgets.get("pulse", 0.6), 12, {"exp": e["id"]})
+    mem["pending"] += new_jobs; new_jobs = []
 
     # 1. Deliver anything finished.
     still = []
@@ -233,6 +257,28 @@ def main(cfg, cfg_path=None):
             mem["design_hash"] = h; mem["flag_since_pulse"] = True
             handoff += (f"\n\nSYSTEM CADENCE: the designer redesigned the work system after {j['after']} (swarm/audits/{j['id']}.md). "
                         f"Adopt it from now on: re-read swarm/spec.md, swarm/rules/ and swarm/experiments/.\n\n{rec[-2000:]}")
+            continue
+        if j["kind"] == "fidelity":
+            ok, state = X.fidelity_result(mem, j["exp"], rec, period, W)
+            if ok:
+                handoff += (f"\n\nSYSTEM CADENCE: the checker confirmed experiment {j['exp']} was made as written ({j['id']}). Its clock "
+                            f"starts now and ends at {unit} {mem['exp'][j['exp']]['end_t']}. Leave the slice as it is until the verdict.")
+            else:
+                handoff += (f"\n\nSYSTEM CADENCE: the checker found experiment {j['exp']} was not made as written ({j['id']}); "
+                            + ("it is void after three failed checks." if state == "void" else "fix it on the slice only; it will be checked again.")
+                            + f"\n\n{rec[-1200:]}")
+            log.write(json.dumps({"t": time.time(), "period": period, "event": "fidelity_" + ("pass" if ok else "fail"), "exp": j["exp"]}) + "\n")
+            continue
+        if j["kind"] == "verdict":
+            v = X.verdict_result(mem, j["exp"], rec)
+            ef = sw / "experiments" / f"{j['exp']}.md"
+            if ef.exists():
+                with ef.open("a") as fh:
+                    fh.write(f"\n\n## Verdict (by the auditor in swarm/audits/{j['id']}.md; written by the system): {v}\n")
+            handoff += (f"\n\nSYSTEM CADENCE: the auditor's verdict on experiment {j['exp']} is '{v}' ({j['id']}). Apply it this {unit}: "
+                        f"{'keep the change, and extend it where the spec allows' if v == 'keep' else 'undo the change on its slice' if v == 'revert' else 'leave it as it stands until the designer decides'}.\n\n{rec[-800:]}")
+            log.write(json.dumps({"t": time.time(), "period": period, "event": "experiment_verdict", "exp": j["exp"], "verdict": v}) + "\n")
+            mem["flag_since_pulse"] = True
             continue
         if j["kind"] in ("diagnosis", "opportunity"):
             label = "diagnosis" if j["kind"] == "diagnosis" else "opportunity review"
@@ -271,7 +317,7 @@ def main(cfg, cfg_path=None):
     # 2. Opportunity review: on the progress rules, or every 3 points without one.
     if "design_hash" not in mem:
         mem["design_hash"] = design_hash(sw)
-    running = [e["id"] for e in exps if e["start"] is not None and e["start"] <= t and (e["end"] is None or t < e["end"])]
+    running = [k for k, v in mem.get("exp", {}).items() if v.get("state") in ("queued", "fidelity", "running", "verdict")]
     lo0 = mem.get("last_opp_point", mem.get("first_point"))
     overdue = lo0 is not None and newest - lo0 >= 2 * GAP_POINTS  # experiments may not hold off the review for ever
     if new_point and win["ok"] and running and not overdue:

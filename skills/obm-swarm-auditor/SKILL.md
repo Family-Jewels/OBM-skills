@@ -47,6 +47,17 @@ Read the index, spec, measures, the orchestrator's log since the last audit, and
 
 Write `audits/A-NNN.md`: findings, at most five items for the orchestrator (about one keep-doing to four fixes), then the diagnosis line.
 
+## Experiment verdict
+
+The system calls you when an experiment's clock ends and hands you its comparison: the driver on the slice against the control (or against its own earlier line), the effect, and the envelope of the earlier bounce. You rule; the orchestrator, who ran the experiment, does not.
+
+- **Keep** only an effect beyond the bounce in the right direction, with the guardrail held.
+- **Revert** an effect beyond the bounce in the wrong direction, or any experiment that crossed a guardrail.
+- **Too small to read** when the effect sits inside the bounce, or the comparison has too few points. Say whether a larger slice or a longer run is worth it.
+- Judge against the prediction in the experiment file, from the system's data. The orchestrator's notes are context, not evidence.
+
+Write `audits/V-E-NNN.md` briefly, ending with a line exactly `Verdict: keep`, `Verdict: revert` or `Verdict: too small to read`. The system writes it into the experiment file.
+
 ## Final audit
 
 Before done: re-verify the final product against every done criterion yourself, confirm the open questions were resolved or reported, and confirm no quarantined output is in the product.
