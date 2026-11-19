@@ -16,6 +16,8 @@ An adapter is a class with two methods.
 | `goal` | `{"type": "target" or "maximize", "value": number, "source": text}`; for maximize, `value` is the best known ceiling | maximize; ceiling 61,219 (the reference operator) | target: every hidden test |
 | `measures` | Each measure with `kind` (`"flow"`: an amount per period, or `"level"`: a positive stock) and `better` (`"up"`/`"down"`); optional `from` | cash (level), revenue, units, revenue per slot (flows), slots selling (level) | tests passing (level), tests newly passing (flow) |
 | `resources` | The names of the resources each reading reports | slots stocked at day end, capital | agent hours, budget |
+| `capacity` | Required: the name of the resource that is the worker's own capacity (time, actions or budget per period), reported in every reading. Every task, fix and experiment draws on it | worker time, 480 minutes a working day, read from the simulator's clock before each day ends | agent hours or budget per session |
+| `experiment_share` | The share of capacity experiments may use together (default 0.10) | 0.10 | 0.10 |
 | `guardrails` | `{measure, min or max, label}`: a side not to cross; experiments stay inside | cash ≥ 120 (ten days of fees, the limit before termination) | no test files edited (count = 0) |
 | `unit_name`, `unit_measures` | Optional: the units experiments can be sliced by, and the measures recorded per unit | machine; machine_revenue, machine_units, machine_stocked_slots | module; tests passing per module |
 
@@ -46,7 +48,7 @@ On its first reading, the engine checks the adapter and logs any problem (`event
 1. a horizon exists, and the top measure is one of the measures;
 2. a goal value or ceiling exists, so the floor and aim lines can be drawn;
 3. every measure returns a number, and none is negative (celeration needs a positive flow or level);
-4. every resource reports an available amount above zero;
+4. every resource reports an available amount above zero, and the capacity resource is declared and reported;
 5. every guardrail has a side;
 6. the horizon is long enough for celeration.
 

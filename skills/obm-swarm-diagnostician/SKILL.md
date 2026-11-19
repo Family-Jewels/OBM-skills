@@ -31,11 +31,11 @@ The system invokes you in fault mode when a pulse or audit ends `Diagnosis neede
 Nothing need be broken. A stable process far from its ceiling is the question: where is the most room, and what is the cheapest way to find out how to use it? Read `swarm/charts.md` (celeration per measure, the floor and aim lines, resources in use and idle, guardrails, experiments), the driver tree in `swarm/spec.md`, `swarm/experiments/` and the earlier records in `swarm/audits/`.
 
 1. **Rank drivers by gap × leverage.** The gap is the distance to the driver's ceiling, or its celeration against its own best. Leverage is how far the top measure moves when this driver moves, from the tree's arithmetic. A flat celeration on a high-leverage driver ranks high.
-2. **Find the constraint:** the one driver that limits the top measure now. Improving anything else adds little until it moves.
-3. **List idle resources** and what one more unit put to work would likely return. An idle resource beside a short driver is usually the best opening.
+2. **Find the constraint:** the one driver that limits the top measure now. Start with the worker's own capacity (its time, actions or budget per period, in the resources table): when it is near its limit, the constraint is output per unit of capacity, and idle cash or empty slots elsewhere are symptoms, not levers. Improving anything else adds little until the constraint moves.
+3. **List idle resources** and what one more unit put to work would likely return, given the capacity it would take. An idle resource beside a short driver is usually the best opening, but only if there is capacity to use it.
 4. **Study the own-best stretch.** When was this driver at its best level or celeration, and what was different then, in what was done or what was given? Gilbert's exemplar analysis, turned inward.
 5. **Learn from experiments so far.** Which predictions held, which missed, and what that says about the tree.
-6. **Name up to two candidate experiments,** each with the driver, the change, the predicted shift and the guardrail it must respect. Prefer cheap, reversible tests of the highest-stakes, least-certain link.
+6. **Sort what you found into known fixes and uncertain levers.** A known fix is one the evidence already supports, such as what the own-best stretch did differently: the designer applies it to the whole system at once, without a test. An uncertain lever gets an experiment: name up to two, each a one-time setting (a price, an assortment, a configuration, not a habit the worker must remember), with its driver, predicted shift, guardrail and capacity cost. Prefer cheap, reversible tests of the highest-stakes, least-certain link.
 7. **Write `audits/O-NNN.md`** (protocol 4.7). Keep it short: the designer reads it to decide.
 
 Do not propose stopping or pausing the core work, and do not lower the goal or the aim to close a gap.

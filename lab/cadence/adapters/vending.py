@@ -8,8 +8,11 @@ import json
 from pathlib import Path
 
 class VendingState:
-    def __init__(self, state_path, horizon=365, ceiling=None, ceiling_source=None, daily_fee=12.0, max_unpaid_days=10):
+    DAY_MINUTES = 480  # the working day, 09:00 to 17:00: the worker's capacity
+
+    def __init__(self, state_path, horizon=365, ceiling=None, ceiling_source=None, daily_fee=12.0, max_unpaid_days=10, clock_log=None):
         self.p = Path(state_path); self.horizon = horizon
+        self.clock_log = Path(clock_log) if clock_log else None
         self.ceiling, self.ceiling_source = ceiling, ceiling_source
         self.reserve = daily_fee * max_unpaid_days  # below this the business is at risk of termination for non-payment
 
@@ -35,7 +38,9 @@ class VendingState:
                 "machine_units": {"kind": "flow", "better": "up"},
                 "machine_stocked_slots": {"kind": "level", "better": "up"},
             },
-            "resources": ["slots stocked at day end", "capital"],
+            "resources": ["worker time (minutes a day)", "slots stocked at day end", "capital"],
+            "capacity": "worker time (minutes a day)",  # the worker's own capacity: every fill, check and experiment draws on it
+            "experiment_share": 0.10,
             "guardrails": [{"measure": "cash", "min": self.reserve,
                             "label": f"cash reserve: {self.reserve:.0f} covers the fees for the days the building tolerates unpaid"}],
         }
@@ -70,6 +75,7 @@ class VendingState:
                              "revenue_same_7_a_month_earlier": rev(d - 36, d - 30) if d > 36 else None, "unit_cost_paid_30d": cost30},
                 "units": units,
                 "resources": {
+                    "worker time (minutes a day)": {"used": self._minutes_used(s.get("day") or 0), "available": self.DAY_MINUTES},
                     "slots stocked at day end": {"used": sum(1 for v in mach.values() if (v.get("quantity") or 0) > 0), "available": len(mach) or None},
                     "capital": {"used": round(stock_value, 2), "available": round(stock_value + max(0.0, bal - self.reserve), 2)},
                 }}
@@ -99,3 +105,17 @@ class VendingState:
             rows.append(f"| {oid} | {o.get('supplier_name') or o.get('supplier_id')} | {o.get('status')} | {o.get('paid_day')} | "
                         f"{o.get('delivery_day')} | {o.get('delivered_day')} | {ln} |")
         return "\n".join(rows) + "\n"
+
+    def _minutes_used(self, day):
+        """Minutes of the working day used on the last completed day, from the simulator's clock read just before the day
+        ended. A day missing from the log rolled over by itself, because the worker's calls ran past 17:00: all used."""
+        if not self.clock_log or day <= 1:
+            return None
+        rec = {}
+        try:
+            for line in self.clock_log.read_text().splitlines():
+                r = json.loads(line); rec[r["day"]] = r["minute"]
+        except Exception:
+            return None
+        m = rec.get(day - 1)
+        return self.DAY_MINUTES if m is None else max(0, min(self.DAY_MINUTES, m - 540))

@@ -7,7 +7,10 @@ auditor for the verdict (keep, revert, or too small to read); the orchestrator a
 
 Experiment file (swarm/experiments/E-NNN.md), one field per line, in any wording around the colon:
   Driver: <one of the measures the system records>   Slice: <unit ids, comma-separated, or 'all'>   Control: rest
-  Change: ...   Prediction: ...   Guardrail: ...   Start: <period>   End: <period>
+  Change: ...   Prediction: ...   Guardrail: ...   Capacity: <the worker's capacity it uses per period>
+  Start: <period>   End: <period>
+An experiment does not start before the baseline (the first 3 points), without a Capacity line when the task declares a
+capacity, or when the running experiments' capacity would exceed the experiment budget (share x capacity available).
 States: planned -> queued (its slice overlaps a running experiment) -> fidelity -> running -> verdict -> done, or void
 (driver not measured, or fidelity failed 3 times).
 """
@@ -32,7 +35,8 @@ def parse(sw):
         sl = (_field(txt, "Slice") or "all")
         out.append({"id": f.stem, "file": f, "driver_text": _field(txt, "Driver") or "?", "slice_text": sl,
                     "slice": "all" if sl.lower().startswith("all") else [u.strip(" .`*") for u in re.split(r"[,;]", sl) if u.strip(" .`*")],
-                    "start": _num(txt, "Start"), "end": _num(txt, "End"), "applied": _num(txt, "Applied")})
+                    "start": _num(txt, "Start"), "end": _num(txt, "End"), "applied": _num(txt, "Applied"),
+                    "capacity": _num(txt, "Capacity"), "change": _field(txt, "Change") or ""})
     return out
 
 def driver_of(text, spec):
@@ -111,7 +115,11 @@ def compare(mem, spec, e, s, W):
     return {"how": how, "before_n": len(before), "after_n": len(after), "effect": effect, "envelope": half, "reading": reading,
             "better": better}
 
-def step(mem, spec, sw, t, newest, new_point, W):
+def _once(s, key, acts, text):
+    if not s.get(key):
+        s[key] = True; acts.append(("note", text))
+
+def step(mem, spec, sw, t, newest, new_point, W, capacity_available=None):
     """Advance every experiment's state. Returns (markdown, actions). Actions: ('fidelity', e), ('verdict', e, cmp),
     ('note', text)."""
     exps = parse(sw); S = mem.setdefault("exp", {}); acts = []
@@ -138,22 +146,45 @@ def step(mem, spec, sw, t, newest, new_point, W):
                          f"({', '.join(spec['unit_measures'])}) would let the system compare the slice with the rest."))
         if s["state"] in ("planned", "queued") and e["start"] is not None and t >= e["start"]:
             busy = [o for o in exps if o["id"] != e["id"] and S.get(o["id"], {}).get("state") in ACTIVE and _overlap(o["slice"], e["slice"])]
-            if busy:
+            cap_name = spec.get("capacity")
+            budget = (spec.get("experiment_share", 0.10) * capacity_available) if (cap_name and capacity_available) else None
+            in_use = sum((o["capacity"] or 0) for o in exps if o["id"] != e["id"] and S.get(o["id"], {}).get("state") in ACTIVE)
+            if newest + 1 < P.START:
+                s["state"] = "queued"
+                _once(s, "noted_baseline", acts, f"experiment {e['id']} waits for the baseline: no experiment starts before {P.START} points "
+                      f"({P.START * W} periods) are in, so it does not compete with getting the core work going. Do not make its change yet.")
+                continue_row = True
+            elif cap_name and e["capacity"] is None:
+                _once(s, "noted_capacity", acts, f"experiment {e['id']} cannot start: it has no 'Capacity:' line. Every experiment draws on "
+                      f"the worker's {cap_name}; the designer must state how much it uses per period.")
+                continue_row = True
+            elif budget is not None and in_use + e["capacity"] > budget:
+                s["state"] = "queued"
+                _once(s, "noted_budget", acts, f"experiment {e['id']} is queued: with it, running experiments would use "
+                      f"{in_use + e['capacity']} of the worker's {cap_name}, above the experiment budget of {budget:.0f}.")
+                continue_row = True
+            else:
+                continue_row = False
+            if continue_row:
+                pass
+            elif busy:
                 if s["state"] != "queued":
                     acts.append(("note", f"experiment {e['id']} is queued: its slice overlaps {', '.join(o['id'] for o in busy)}, which is still "
                                  f"running. Do not make its change until the system says it may start."))
                 s["state"] = "queued"
             else:
                 if s["state"] == "queued":
-                    acts.append(("note", f"experiment {e['id']} may start now: make its change on its slice only, then write 'Applied: <period>' in its file."))
                     s["state"] = "planned"; s["release_t"] = t
+                _once(s, "noted_start", acts, f"experiment {e['id']} starts now. Make exactly this change, on "
+                      f"{', '.join(e['slice']) if e['slice'] != 'all' else 'the whole system'} only, then write 'Applied: <period>' in "
+                      f"swarm/experiments/{e['id']}.md: {e['change'][:400]}")
                 ready = e["applied"] is not None or t >= max(e["start"], s.get("release_t", 0)) + max(1, W // 2)
                 if ready and not s.get("check_pending") and t >= s.get("next_check_t", 0):
                     s["state"] = "fidelity"; s["check_pending"] = True; acts.append(("fidelity", e))
         if s["state"] == "running" and t >= s["end_t"]:
             cmp = compare(mem, spec, e, s, W); s["cmp"] = cmp; s["state"] = "verdict"; acts.append(("verdict", e, cmp))
         c = s.get("cmp")
-        rows.append(f"| {e['id']} | {drv or 'not measured'} | {', '.join(e['slice']) if e['slice'] != 'all' else 'all'} | {e['start'] or '?'} | {e['end'] or '?'} | "
+        rows.append(f"| {e['id']} | {drv or 'not measured'} | {', '.join(e['slice']) if e['slice'] != 'all' else 'all'} | {e['capacity'] if e['capacity'] is not None else '—'} | {e['start'] or '?'} | {e['end'] or '?'} | "
                     f"{s.get('start_t', '—')} | {s['state']}{(': ' + s['verdict']) if s.get('verdict') else ''} | "
                     + (f"{P.fmt_cel(c['effect']) if c['effect'] else '—'} | {('within x' + format(c['envelope'], '.2f')) if c['envelope'] else '—'} | {c['reading']} |" if c else " | | |"))
     md = []
@@ -163,8 +194,8 @@ def step(mem, spec, sw, t, newest, new_point, W):
               "(the clock started when fidelity passed), verdict (the auditor is ruling), done. Effect: the driver after the start "
               "divided by its expected value (slice against control where the driver is measured per unit); read against the "
               "envelope of the earlier bounce.", "",
-              "| experiment | driver | slice | start | end | clock started | state | effect | envelope | reading |",
-              "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |"] + rows
+              "| experiment | driver | slice | capacity | start | end | clock started | state | effect | envelope | reading |",
+              "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |"] + rows
     return "\n".join(md) + ("\n" if md else ""), acts
 
 def fidelity_result(mem, eid, rec, t, W):

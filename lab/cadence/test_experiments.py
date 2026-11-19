@@ -31,7 +31,7 @@ def run(lift, days=84, start=43, slice_=("A",), seed=1):
     return mem["exp"]["E-001"], acts_all, md
 
 s, acts, md = run(1.5)
-assert [a for _, a in acts] == ["fidelity", "verdict"], acts
+assert [a for _, a in acts] == ["note", "fidelity", "verdict"], acts   # the start note hands over the change
 assert s["state"] == "done" and s["start_t"] == 46 and s["end_t"] == 67, s   # clock starts at the fidelity check, not at Start
 c = s["cmp"]; assert c["effect"] > 1.3 and c["reading"].startswith("better beyond"), c
 assert "slice (A) / control" in c["how"]
@@ -48,11 +48,12 @@ assert mem["exp"]["E-002"]["state"] == "void" and acts[0][0] == "note" and "mach
 
 # Overlapping slices queue; disjoint ones run side by side
 sw = Path(tempfile.mkdtemp()) / "swarm"; (sw / "experiments").mkdir(parents=True)
-(sw / "experiments" / "E-001.md").write_text("Driver: machine_revenue\nSlice: A, B\nStart: 5\nEnd: 30\nApplied: 5\n")
-(sw / "experiments" / "E-002.md").write_text("Driver: machine_revenue\nSlice: B\nStart: 5\nEnd: 30\nApplied: 5\n")
-(sw / "experiments" / "E-003.md").write_text("Driver: machine_revenue\nSlice: C\nStart: 5\nEnd: 30\nApplied: 5\n")
-mem = {}; P.update(mem, spec, 5, {"cash": 1500}, {})
-md, acts = X.step(mem, spec, sw, 5, 0, True, W)
+(sw / "experiments" / "E-001.md").write_text("Driver: machine_revenue\nSlice: A, B\nStart: 25\nEnd: 50\nApplied: 25\n")
+(sw / "experiments" / "E-002.md").write_text("Driver: machine_revenue\nSlice: B\nStart: 25\nEnd: 50\nApplied: 25\n")
+(sw / "experiments" / "E-003.md").write_text("Driver: machine_revenue\nSlice: C\nStart: 25\nEnd: 50\nApplied: 25\n")
+mem = {}
+for t in range(1, 26): P.update(mem, spec, t, {"cash": 1500}, {})
+md, acts = X.step(mem, spec, sw, 25, mem["progress"]["last_point"], True, W)
 st = {k: v["state"] for k, v in mem["exp"].items()}
 assert st == {"E-001": "fidelity", "E-002": "queued", "E-003": "fidelity"}, st
 assert any(a[0] == "note" and "E-002 is queued" in a[1] for a in acts)
@@ -73,4 +74,28 @@ c = mem["exp"]["E-004"]["cmp"]; assert c["effect"] < 0.8 and c["reading"].starts
 # Fidelity failing three times voids the experiment
 mem = {"exp": {"E-9": {"state": "fidelity", "fails": 2, "check_pending": True}}}
 ok, state = X.fidelity_result(mem, "E-9", "mismatch\nFidelity: fail", 10, W); assert not ok and state == "void"
+# Baseline: nothing starts before 3 points; then it starts with the exact change handed over
+sw = Path(tempfile.mkdtemp()) / "swarm"; (sw / "experiments").mkdir(parents=True)
+(sw / "experiments" / "E-006.md").write_text("Driver: machine_revenue\nSlice: A\nChange: set price 1.50 on A1\nStart: 5\nEnd: 40\n")
+mem = {}
+for t in range(1, 6): P.update(mem, spec, t, {"cash": 1500}, {})
+md, acts = X.step(mem, spec, sw, 5, mem["progress"]["last_point"], True, W)
+assert mem["exp"]["E-006"]["state"] == "queued" and "baseline" in acts[0][1], acts
+for t in range(6, 23): P.update(mem, spec, t, {"cash": 1500}, {})
+md, acts = X.step(mem, spec, sw, 22, mem["progress"]["last_point"], True, W)
+assert any("starts now" in a[1] and "set price 1.50 on A1" in a[1] for a in acts if a[0] == "note"), acts
+
+# Capacity: required when the task declares one, and held to the experiment budget
+cspec = dict(spec, capacity="worker time", experiment_share=0.10)
+sw = Path(tempfile.mkdtemp()) / "swarm"; (sw / "experiments").mkdir(parents=True)
+(sw / "experiments" / "E-007.md").write_text("Driver: machine_revenue\nSlice: A\nStart: 25\nEnd: 50\nApplied: 25\n")
+(sw / "experiments" / "E-008.md").write_text("Driver: machine_revenue\nSlice: B\nCapacity: 30 minutes a day\nStart: 25\nEnd: 50\nApplied: 25\n")
+(sw / "experiments" / "E-009.md").write_text("Driver: machine_revenue\nSlice: C\nCapacity: 30\nStart: 25\nEnd: 50\nApplied: 25\n")
+mem = {}
+for t in range(1, 26): P.update(mem, cspec, t, {"cash": 1500}, {})
+md, acts = X.step(mem, cspec, sw, 25, mem["progress"]["last_point"], True, W, 480)
+st = {k: v["state"] for k, v in mem["exp"].items()}
+assert st == {"E-007": "planned", "E-008": "fidelity", "E-009": "queued"}, st   # 30 + 30 > 48 (10% of 480)
+notes = " ".join(a[1] for a in acts if a[0] == "note")
+assert "no 'Capacity:' line" in notes and "above the experiment budget of 48" in notes, notes
 print("all experiment tests passed")

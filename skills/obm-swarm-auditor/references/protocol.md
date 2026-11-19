@@ -115,16 +115,17 @@ Why: ...   Prediction: <measure> shifts <up/down> by <period>   Cost: ...   Reve
 ```
 Driver: <exactly one measure the system records>   Slice: <the units it touches, or all>   Control: rest
 Change: <what is done differently>   Prediction: <the driver> shifts <up/down> by <amount>
-Guardrail: <measure and side it must not cross>   Start: <period number>   End: <period number, at least 3 points later>
+Guardrail: <measure and side it must not cross>   Capacity: <how much of the worker's capacity it uses per period>
+Start: <period number, after the first 3 points>   End: <period number, at least 3 points later>
 Applied: <period number>, written by the orchestrator once it has made the change on the slice
 Verdict: written by the system from the auditor's ruling
 ```
 
 **The lifecycle, run by the system.** No role judges its own work.
 
-1. The designer writes the experiment. Its driver must be a measure the system records; one that is not is void.
+1. The designer writes the experiment, only for a lever whose effect is uncertain: a known fix goes into the design for the whole system instead. It is a one-time setting, not a habit. Its driver must be a measure the system records; one that is not is void. It states its capacity cost; running experiments together stay within the experiment budget (default 10% of the worker's capacity), and none starts before the first 3 points.
 2. Experiments whose slices overlap run one after another: a later one is queued until the earlier one ends. A slice with the rest as control is best; a whole-system experiment is judged against its own earlier line and runs alone.
-3. The orchestrator makes the change on the slice only and writes `Applied`.
+3. At the start, the system hands the orchestrator the exact change. The orchestrator makes it on the slice only and writes `Applied`.
 4. The system calls the checker for a fidelity check against its ground-truth snapshots. The clock starts only when it passes; after three failed checks the experiment is void.
 5. While it runs, the system enforces the guardrails; a breach means revert at once.
 6. At the end, the system compares the driver on the slice against the control (or against its own earlier line), and reads the effect against the envelope of the earlier bounce. The auditor rules: keep, revert, or too small to read.
@@ -174,7 +175,7 @@ Every measure here is computed by the system from ground truth, never reported b
 - **Process behavior charts** answer "is it stable?". Limits come from the measure's own data (centre ± 2.66 × average moving range). A signal is a point beyond a limit or 8 in a row on one side of the centre. Everything else is routine variation: do not react to it.
 - **Celeration** answers "is it getting better?". The point window is the shortest span that holds whole natural cycles and at least 3 observations while leaving at least 12 points across the horizon. Each point is the median of a flow over its window, or the last value of a positive level. Celeration is the multiplier per point from a median-based fit on the log scale, with bounce as the spread. It is provisional from 3 points and firm at 6. Each design change starts a new phase, judged by its jump (level) and turn (new celeration ÷ old). The swarm's own best celeration is the improvement exemplar.
 - **Floor and aim.** The floor line runs from the top measure's level after 3 points to the goal at the horizon: 3 points in a row below it calls for an opportunity review. The aim is a deliberate overshoot, the goal by half the remaining horizon, so the system never caps itself. Falling short of the aim is expected and triggers nothing. When the aim is met on 2 of the last 3 points it is raised.
-- **Resources.** The share of each declared resource in use, and the idle amount. An idle resource while a driver is short is an opportunity.
+- **Resources.** The share of each declared resource in use, and the idle amount. One resource is always the worker's own capacity (time, actions or budget per period): when it is near its limit, more output per unit of it is the opportunity, and idle resources elsewhere are symptoms. Otherwise an idle resource while a driver is short is an opportunity.
 - **Guardrails.** Measures with a side that must not be crossed. Experiments run inside them. A breach is reverted first.
 - **Gap to the exemplar (PIP):** the ceiling divided by the swarm's performance.
 

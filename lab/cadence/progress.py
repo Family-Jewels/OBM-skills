@@ -206,7 +206,7 @@ def update(mem, spec, t, measures, resources):
         for rname, r in resources.items():
             u, a = r.get("used"), r.get("available")
             pct = f"{100 * u / a:.0f}%" if (u is not None and a) else "—"
-            md.append(f"| {rname} | {u} | {a} | {pct} | {round(a - u, 2) if (u is not None and a is not None) else '—'} |")
+            md.append(f"| {rname}{' (the capacity of the work)' if rname == spec.get('capacity') else ''} | {u} | {a} | {pct} | {round(a - u, 2) if (u is not None and a is not None) else '—'} |")
     # Guardrails.
     gr = []
     for g in spec.get("guardrails", []):

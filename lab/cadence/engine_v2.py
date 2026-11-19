@@ -52,6 +52,12 @@ def preflight(spec, reading):
     for gd in spec.get("guardrails", []):
         if gd.get("min") is None and gd.get("max") is None:
             p.append(f"guardrail {gd.get('label')} has no side")
+    cap = spec.get("capacity")
+    if not cap:
+        p.append("no capacity declared: the worker's own time, actions or budget per period must be a resource, or the system "
+                 "cannot see when the work is at its limit")
+    elif cap not in (reading.get("resources") or {}):
+        p.append(f"the capacity resource '{cap}' is not reported in the readings")
     if not progress.derive_window(spec["horizon"], spec.get("cycle", 1), spec.get("clock", "period"))["ok"]:
         p.append("horizon too short for celeration; level charts only")
     return p
@@ -113,7 +119,8 @@ def main(cfg, cfg_path=None):
         (snap / f"{period:05d}.md").write_text(f"# Snapshot at {unit} {period} (written by the system from ground truth; do not edit)\n\n" + adapter.snapshot())
         for old in sorted(snap.glob("*.md"))[:-(3 * W + 2)]:
             old.unlink()
-    exp_md, exp_acts = X.step(mem, spec, sw, t, mem["progress"]["last_point"], True, W)
+    cap_av = (resources.get(spec.get("capacity")) or {}).get("available") if spec.get("capacity") else None
+    exp_md, exp_acts = X.step(mem, spec, sw, t, mem["progress"]["last_point"], True, W, cap_av)
     unit_md = ""
     if mem.get("units"):
         ums = list(mem["units"]); ids = sorted({u for m in ums for u in mem["units"][m]})
@@ -191,11 +198,16 @@ def main(cfg, cfg_path=None):
         spawn(rid, "redesign",
               f"Use the obm-swarm-designer skill in REDESIGN mode, invoked by the system at {where} of the work the swarm in swarm/ is doing. "
               f"{what} Read {charts_note} and the driver tree in swarm/spec.md. First ask whether the direction is right, then make the "
-              f"smallest design change that addresses it: fix the cause, elevate the constraint, put an idle resource to work, scale up what "
-              f"works, or set up up to two experiments inside the spec's experiment budget. Write each experiment to swarm/experiments/E-NNN.md "
+              f"smallest design change that addresses it. Apply known fixes to the whole system now: fix the cause, elevate the constraint "
+              f"(when the worker's capacity is the limit, more output per unit of it), put an idle resource to work, scale up what works. "
+              f"Use an experiment only for a lever whose effect is genuinely uncertain, and make it a one-time setting that persists (a "
+              f"price, an assortment, a configuration), never a standing habit the worker must remember. Set up at most two, inside the "
+              f"spec's experiment budget. Write each experiment to swarm/experiments/E-NNN.md "
               f"with lines 'Driver:' (exactly one of the measures the system records: {measure_names}), 'Slice:' (the units it touches, "
               f"from the Units table in swarm/charts.md, or 'all'), 'Control: rest', 'Change:', 'Prediction:', 'Guardrail:', "
-              f"'Start: <{unit} number>' and 'End: <{unit} number>', lasting at least {GAP_POINTS} points ({GAP_POINTS * W} {unit}s). "
+              f"'Capacity:' (how much of the worker's {spec.get('capacity') or 'capacity'} it uses per {unit}), 'Start: <{unit} number>' and "
+              f"'End: <{unit} number>', lasting at least {GAP_POINTS} points ({GAP_POINTS * W} {unit}s), and starting no earlier than "
+              f"point {progress.START} ({progress.START * W} {unit}s). "
               f"Prefer a slice with the rest as control, judged on a per-unit driver ({", ".join(spec.get("unit_measures", {})) or "none in this task"}); a whole-system driver can only be judged on the whole system; experiments whose slices overlap run one after another. Change exactly one lever on the slice and leave the core work going on as usual on slice and control alike: never freeze restocking or other core work on a slice. You do not decide "
               f"keep or revert: the system measures, and the auditor rules. The goal and the aim are the human's: never lower them. State a prediction "
               f"in the record: which measure should shift, which way, by which {unit}. Never change anything in a way that stops the core "
@@ -341,8 +353,12 @@ def main(cfg, cfg_path=None):
                       f"Use the obm-swarm-diagnostician skill in OPPORTUNITY mode, invoked by the system ({why}), at {where} of the work the "
                       f"swarm in swarm/ is doing. Nothing may be broken: the question is where the most room for improvement is. Read {charts_note}, "
                       f"the driver tree in swarm/spec.md, swarm/experiments/ and earlier records in swarm/audits/. Rank the drivers by gap x leverage, "
-                      f"find the constraint, list idle resources and what one more unit put to work would likely return, study the own-best stretch "
-                      f"(what was different then), and name up to two candidate experiments, each with its driver, predicted shift and guardrail. "
+                      f"find the constraint, starting with the worker's own capacity: if it is near its limit, the constraint is output per unit of "
+                      f"capacity, not idle cash or empty capacity elsewhere. List idle resources and what one more unit put to work would likely "
+                      f"return, given the capacity it would take. Study the own-best stretch (what was different then). Then sort what you find "
+                      f"into known fixes (the evidence already shows they work, e.g. from the own-best stretch: the designer applies them to the "
+                      f"whole system at once) and uncertain levers (up to two candidate experiments, each a one-time setting with its driver, "
+                      f"predicted shift, guardrail and capacity cost). "
                       f"Do not write a fix or change anything: the designer will redesign from your findings. Write swarm/audits/{oid}.md and reply "
                       f"with it in under 200 words.", budgets.get("diagnosis", 1.0), 20, {"trigger": why})
             else:

@@ -92,10 +92,14 @@ def main():
                 if a.arm == 'native_cadence': ccfg['prompts'] = 'plain'  # same cadence, charts and exemplar; reviews without OBM skills
                 if a.arm == 'obm_v2':  # engine v2: timing from the adapter's spec, celeration, floor and aim, resources, opportunity reviews
                     ccfg['version'] = 2
-                    ccfg['adapter_args'].update({'horizon': a.days, 'ceiling': 61219, 'ceiling_source': "the benchmark's scripted reference operator"})
+                    ccfg['adapter_args'].update({'horizon': a.days, 'ceiling': 61219, 'ceiling_source': "the benchmark's scripted reference operator",
+                                                 'clock_log': str(statedir / 'clock.jsonl')})
                 (statedir / 'cadence.json').write_text(json.dumps(ccfg))
                 hook['hooks']['PostToolUse'] = [{'matcher': 'mcp__vending__wait_for_next_day', 'hooks': [{'type': 'command', 'timeout': 1600,
                     'command': f'python3 -I /home/claude/obm-lab/cadence/engine.py {statedir / "cadence.json"}'}]}]
+                if a.arm == 'obm_v2':  # the worker's capacity, read from the simulator's clock just before each day ends
+                    hook['hooks']['PreToolUse'] = [{'matcher': 'mcp__vending__wait_for_next_day', 'hooks': [{'type': 'command', 'timeout': 20,
+                        'command': f'python3 -I /home/claude/obm-lab/cadence/adapters/vending_clock_hook.py {statedir / "state.json"} {statedir / "clock.jsonl"}'}]}]
             common += ['--settings', json.dumps(hook)]
         left = a.budget
         if a.arm in ('obm_cadence', 'obm_v2'):
@@ -115,9 +119,11 @@ def main():
                           "resources the work uses; an experiments section; and the cadence table. The system writes ground-truth measures to "
                           "swarm/metrics_system.md and swarm/charts.md every simulated day: level charts with limits computed from the data, celeration "
                           "per measure over 7-day points (derived from the task: demand has a weekly pattern), the top measure's floor line and a "
-                          "deliberate overshoot aim, slots and capital in use and idle, a cash-reserve guardrail of EUR 120, per-machine measures "
+                          "deliberate overshoot aim, the worker's time (480 minutes a working day; each tool call costs simulated minutes, a slot refill 45), "
+                          "slots and capital in use and idle, a cash-reserve guardrail of EUR 120, per-machine measures "
                           "for the six machines (machine_revenue, machine_units, machine_stocked_slots), and daily ground-truth snapshots of every "
-                          "slot. Experiments run on a slice of the machines with the others as control: the checker confirms each was made as "
+                          "slot. Known fixes go into the design for every machine at once. Experiments are only for uncertain levers, as one-time settings "
+                          "with a stated capacity cost, starting after the first three weekly points, on a slice of the machines with the others as control: the checker confirms each was made as "
                           "written, the system measures it, and the auditor rules keep, revert or too small to read. It runs a pulse review every point, full audits at each quarter of the year, "
                           "opportunity reviews on its own rules, diagnoses when a review asks, and calls you back to redesign from either, handing "
                           "every result to the operator. The system's daily measures are: cash, revenue, units, slots_selling, revenue_per_slot, "
