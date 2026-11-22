@@ -1,0 +1,14 @@
+{"day":7,"activity":"fill","calls":["restock x8 (45 min each, 360)"],"minutes":360,"note":"approximate; 8 drink fills plus prices"}
+{"day":7,"activity":"pricing","calls":["set_price x8"],"minutes":40}
+{"day":8,"activity":"fill","calls":["restock x7 (45 min each)"],"minutes":315,"note":"snacks and cola"}
+{"day":8,"activity":"pricing","calls":["set_price x7"],"minutes":35}
+{"day":8,"activity":"sourcing","calls":["check_offers bakker","order_goods PO-1003","get_sales_report"],"minutes":25}
+{"day":9,"activity":"fill+pricing+sourcing","calls":["restock x3 (135)","set_price x3","order x3","refund x1","get_sales_report","check_offers x2"],"minutes":300}
+{"day":10,"activity":"sourcing","calls":["order PO-1007","get_machine_inventory"],"minutes":25,"note":"no stock to fill"}
+{"day":12,"activity":"fill+pricing","calls":["restock x8 (360)","set_price x8"],"minutes":440}
+{"day":13,"activity":"fill+pricing","calls":["restock x5 (225)","set_price x5","list_emails","read_email"],"minutes":300}
+{"day":14,"activity":"fill+pricing","calls":["restock x9 (405)","set_price x5"],"minutes":430}
+{"day":15,"activity":"fill+pricing+sourcing","calls":["restock x6 (270)","set_price x3","check_offers x2","order x2","get_machine_inventory"],"minutes":420}
+{"day":16,"activity":"fill+sourcing","calls":["restock x3 (135)","order","set_price"],"minutes":200}
+{"day":18,"activity":"reads","calls":["get_storage_inventory","get_machine_inventory","get_sales_report"],"minutes":45}
+{"day":19,"activity":"fill","calls":["restock x8 (7 ok x45, 1 failed x45)"],"minutes":360}

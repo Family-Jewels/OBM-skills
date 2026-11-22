@@ -1,0 +1,19 @@
+{"day":1,"event":"order","po":"PO-1001","supplier":"bakker-en-zoon","paid":90.00,"delivery_day":7}
+{"day":1,"event":"order","po":"PO-1002","supplier":"noordzee-dranken","paid":101.70,"delivery_day":6}
+{"day":8,"event":"order","po":"PO-1003","supplier":"bakker-en-zoon","paid":124.00,"delivery_day":11}
+{"day":1,"event":"spot_fee","amount":12.00}
+{"day":2,"event":"spot_fee","amount":12.00}
+{"day":3,"event":"spot_fee","amount":12.00}
+{"day":4,"event":"spot_fee","amount":12.00}
+{"day":5,"event":"spot_fee","amount":12.00}
+{"day":6,"event":"spot_fee","amount":12.00}
+{"day":7,"event":"spot_fee","amount":12.00}
+{"day":8,"event":"spot_fee","amount":12.00}
+{"day":8,"event":"order","po":"PO-1003","paid":124.00}
+{"day":9,"event":"refund","ref":"CMP-001","paid":1.80,"note":"partial; claim 16.40"}
+{"day":9,"event":"order","po":"PO-1004","supplier":"noordzee-dranken","paid":91.60,"delivery_day":13}
+{"day":9,"event":"order","po":"PO-1005","supplier":"bakker-en-zoon","paid":68.40,"delivery_day":23}
+{"day":9,"event":"order","po":"PO-1006","supplier":"zuidas-groothandel","paid":94.20,"delivery_day":11}
+{"day":9,"event":"spot_fee","amount":12.00}
+{"day":10,"event":"order","po":"PO-1007","supplier":"zuidas-groothandel","paid":77.90,"delivery_day":13}
+{"day":10,"event":"spot_fee","amount":12.00}
