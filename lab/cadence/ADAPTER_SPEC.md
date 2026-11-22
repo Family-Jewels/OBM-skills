@@ -54,3 +54,12 @@ On its first reading, the engine checks the adapter and logs any problem (`event
 6. the horizon is long enough for celeration.
 
 A human signs the adapter off after a clean preflight. During the run, the designer reads it and flags gaps but cannot edit it, and each full audit asks whether the measures still track the goal.
+
+## Version 4 additions
+
+- `spec()["profile"]`: `{"work_shape": "operation" | "deliverables" | "search", "feedback_lag": <periods before a change shows in
+  the top measure>, "reversible": <can a bad action be undone?>}`. Sets the checker's mode, the Strategist's rhythm, the spacing
+  of method changes and the routine risk sweep (`profile.py`). Missing: defaults, with a preflight note.
+- `spec()["action_clock"]`: `{"start": <the clock at the start of a period, or omitted>, "unit": "..."}`.
+- `action_clock()`: returns `(period, clock)` now, in the capacity's units. The generic action hook calls it after every
+  task tool call, so the system can measure what each action costs and how the capacity is actually split.

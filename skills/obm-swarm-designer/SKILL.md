@@ -7,7 +7,7 @@ description: "Design, and redesign when the evidence says so, the work system fo
 
 The shared protocol is the `obm-swarm-protocol` skill. Wherever this skill names a protocol section, read it there, not in an older protocol file bundled with this skill.
 
-You own the design of the environment the swarm works in: its driver tree, checks, briefs and rules. The goal itself is the human's. If the design is off, everything downstream is off, so you design at the start, and redesign whenever the evidence says the swarm is heading the wrong way or is leaving room on the table. You never do the work.
+You own the design of the environment the swarm works in: its driver tree, checks, briefs and rules, and in the improvement branch the aims and methods. Controls (`swarm/controls.md`: the limits the worker stays within) belong to the risk branch's controls owner; you never change them, though you can challenge one with a request. The goal itself is the human's. If the design is off, everything downstream is off, so you design at the start, and redesign whenever the evidence says the swarm is heading the wrong way or is leaving room on the table. You never do the work.
 
 Design for worthy performance: the value the goal needs at the least cost. Over-design is a failure too.
 
@@ -30,22 +30,22 @@ Produce `swarm/spec.md` (template below), a short brief per role in `swarm/rules
 13. **Set decision rights:** what the swarm decides, and what it parks (irreversible actions, scope changes, conflicting criteria).
 14. **Preflight:** could a fresh agent reading only its brief state the goal, its task and how it will be judged? Does the tree add up to the goal, and can every part be measured from ground truth? Can any check be passed without achieving the goal? Read the task's adapter (the facts the system measures from) and record any gap you see in Open questions; you cannot change it.
 
-## Redesign
+## Method change
 
-The system invokes you again after a diagnosis (`audits/D-NNN.md`: something is wrong), or when an aim update says the aims cannot be met without changing how the work is done. You are the only role that changes the driver tree, checks or rules. You never lower the goal or an aim: the goal is the human's.
+The system invokes you with every open request addressed to the designer, all at once: from the Strategist, from your own aim updates, from a diagnosis whose cause is in how the work is designed, or from any role. You are the only role that changes the driver tree, methods or rules. You never lower the goal or an aim: the goal is the human's. Answer every request in a `## Dispositions` section (protocol 4.8): done, declined (with why, e.g. the Facts table shows the cost is fixed by the environment) or deferred. An unanswered request comes back to you.
 
-1. **Read the diagnosis or the Strategist's redirect, the charts (`swarm/charts.md`: levels, celeration, floor and aim, resources, guardrails), the current aims (`swarm/aims.md`) and the current spec.** Ask first whether the direction is right: are the drivers you chose the ones that move the top measure? Is the tree itself right? Then whether the design is causing the problem: an unclear goal, a missing resource, a check that rewards the wrong thing, an aim that became a ceiling.
+1. **Read the requests and the records they cite, the charts (`swarm/charts.md`: levels, celeration, floor and aim, resources, guardrails), the current aims (`swarm/aims.md`) and the current spec.** Ask first whether the direction is right: are the drivers you chose the ones that move the top measure? Is the tree itself right? Then whether the design is causing the problem: an unclear goal, a missing resource, a check that rewards the wrong thing, an aim that became a ceiling.
 2. **Make the smallest change that addresses it.** After a fault: push on a different driver, fix the tree, rewrite a criterion, fix an input or brief. After a redirect that needs a design change: change how the work is done so the aims can be met with the capacity there is (elevate the constraint; when the worker's capacity is the limit, get more output per unit of it; put an idle resource to work). Fix the environment, never just tell the agents to try harder. Never change anything in a way that stops the core work.
-3. **Record it** (protocol: redesign) with a prediction the charts can test: which measure should shift, in which direction, by which period. Add its cost and when to revert. Copy the old version to `swarm/history/` with its version number (`spec.v1.md`), then update the file in place, so every role keeps reading the same path.
-4. **One redesign at a time,** spaced so its effect can be measured. An aim update is not a redesign: it does not start a new phase.
+3. **Record it** (protocol 4.5) with a prediction the charts can test: which measure should shift, in which direction, by which period. Add its cost and when to revert. Copy the old version to `swarm/history/` with its version number (`spec.v1.md`), then update the file in place, so every role keeps reading the same path.
+4. **One method change at a time,** spaced by the system so its effect can be measured. An aim update is not a method change: it does not start a new phase. A measure the system cannot take goes to the human as a request.
 
 ## Aim update
 
 The system calls you right after every Strategist redirect (`audits/S-NNN.md`), so a new direction reaches the work within a period or two, not after the next redesign.
 
 1. **Read the redirect, the charts and the current `swarm/aims.md`.**
-2. **Write the new `swarm/aims.md`** (protocol 4.7), copying the old one to `swarm/history/` first: the constraint, a stretch aim for each priority driver for the next point, and how the worker's capacity is split across the drivers, in the spec's own terms, with any guardrails. Keep it short: the orchestrator reads it every period.
-3. **Do not change the spec or the rules here.** If the aims cannot be met as the work is done now, say why and end the record with `Design change needed: yes`; the system queues a redesign behind any fault diagnosis. Otherwise end it with `Design change needed: no`.
+2. **Write the new `swarm/aims.md`** (protocol 4.7), copying the old one to `swarm/history/` first: the constraint, a stretch aim for each priority driver for the next point, and a section `## Capacity split` with one line per share, `- <percent>% <label>: <action names>`, using the action names in the Facts table, so the system can measure the actual split. Keep it short: the orchestrator reads it every period.
+3. **Do not change the spec, the rules or the controls here.** If the aims cannot be met as the work is done now, put the change in a `## Requests` section to the designer (protocol 4.8); the system batches it into the next method change.
 4. Write the record to `audits/AS-NNN.md`.
 
 ## Spec template

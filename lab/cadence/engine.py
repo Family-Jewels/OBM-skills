@@ -31,6 +31,9 @@ OPS = {"==": operator.eq, "<": operator.lt, "<=": operator.le, ">": operator.gt,
 def main():
     sys.stdin.read()
     cfg = json.loads(Path(sys.argv[1]).read_text())
+    if cfg.get("version", 1) >= 4 and cfg.get("prompts") != "plain":  # v4: separate risk and improvement branches (engine_v4.py)
+        import engine_v4
+        return engine_v4.main(cfg)
     if cfg.get("version", 1) >= 2 and cfg.get("prompts") != "plain":  # v2: the improvement half (engine_v2.py); v1 below is unchanged
         import engine_v2
         return engine_v2.main(cfg)

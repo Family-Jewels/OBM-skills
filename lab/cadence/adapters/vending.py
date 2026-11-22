@@ -46,6 +46,9 @@ class VendingState:
                 "slots stocked at day end": "the simulator's machine state",
                 "capital": "the simulator's balance and the cost of stock on hand",
             },
+            # v4: the task's shape. A day of sales shows a change within the week; cash spent cannot be taken back.
+            "profile": {"work_shape": "operation", "feedback_lag": 7, "reversible": False},
+            "action_clock": {"start": 540, "unit": "minutes of the working day"},  # the clock reads minutes since midnight; the day starts at 09:00
             "guardrails": [{"measure": "cash", "min": self.reserve,
                             "label": f"cash reserve: {self.reserve:.0f} covers the fees for the days the building tolerates unpaid"}],
         }
@@ -110,6 +113,14 @@ class VendingState:
             rows.append(f"| {oid} | {o.get('supplier_name') or o.get('supplier_id')} | {o.get('status')} | {o.get('paid_day')} | "
                         f"{o.get('delivery_day')} | {o.get('delivered_day')} | {ln} |")
         return "\n".join(rows) + "\n"
+
+    def action_clock(self):
+        """For the generic action hook (v4): the period and the task's clock after an action, in the capacity's units."""
+        try:
+            s = json.loads(self.p.read_text())
+            return s.get("day"), s.get("minute")
+        except Exception:
+            return None, None
 
     def _minutes_used(self, day):
         """Minutes of the working day used on the last completed day, from the simulator's clock read just before the day

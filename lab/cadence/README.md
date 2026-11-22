@@ -49,3 +49,30 @@ No role judges its own work. The designer writes an experiment with a recorded d
 ## Version 3: the Strategist
 
 Set `"version": 3` (arm `obm_v3`). Same engine file as v2, with experiments and opportunity reviews switched off. The system calls the Strategist (`obm-swarm-strategist`) after the first 3 points and every 3 points, brought forward after at least 2 when the top measure has 3 points below its floor line or a flat or wrong-way celeration. Right after each strategy it calls the designer in AIM UPDATE mode to rewrite `swarm/aims.md`, in its own lane, not held back by redesign spacing. An aim update that ends `Design change needed: yes` queues a redesign behind any fault diagnosis; deferred diagnoses queue instead of being dropped. `ENGINE_VERSION=3 python3 -I replay.py <run> <scratch>` replays a recorded run through v3.
+
+## Version 4: separate risk and improvement branches
+
+`"version": 4` routes to `engine_v4.py`. Two branches, each with its own triggers, queue, change lane and review budget,
+so neither can starve the other (v2's experiments crowded out fault diagnoses; v3's diagnoses crowded out the Strategist's
+design changes):
+
+- **Risk branch** (keep the floor): risk pulse (auditor) on each risk event, fired once when it starts (a guardrail crossed,
+  a chart signal in the wrong direction, a measure gone missing, the work off its planned capacity split), plus a routine
+  sweep; claim samples (checker) in operations; the diagnostician on reported faults, all at once, latest evidence per
+  fault key; the controls owner (`obm-swarm-controls`) writes `swarm/controls.md`.
+- **Improvement branch** (raise the ceiling): the Strategist on a rhythm set by the task's feedback lag, brought forward
+  when the top measure newly falls below its floor or its celeration newly turns flat; the designer's aim update right
+  after; method changes from all open requests to the designer, at once.
+- **Full audit** (third line) and the **Organizer** (`obm-swarm-organizer`) at each inner quarter of the horizon. The
+  Organizer may change one setting within the bounds the task profile allows (`profile.py`).
+- The worker reads one file, `swarm/instructions.md`, assembled each period: controls first, then aims.
+
+Mechanics are code, not agents:
+
+- `ledger.py`: requests between roles (`## Requests` in any record), merged by key, reopened on repeat, answered in
+  `## Dispositions`, escalated to `swarm/escalations.md` when open 3 points or asked 3 times.
+- `facts.py`: the fact register and the pursuit measure, from the action log written by `adapters/action_hook.py`
+  (a PostToolUse hook on every task tool; the adapter only supplies `action_clock()`).
+- `profile.py`: the task profile (`work_shape`, `feedback_lag`, `reversible`) to settings with bounds.
+
+Tests: `python3 -I test_engine_v4.py`. Replay a recorded run: `ENGINE_VERSION=4 python3 -I replay.py <run> <scratch>`.
