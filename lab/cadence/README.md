@@ -81,4 +81,13 @@ Mechanics are code, not agents:
   (`no_record`) and counted in System health.
 - `profile.py`: the task profile (`work_shape`, `feedback_lag`, `reversible`) to settings with bounds.
 
-Tests: `python3 -I test_engine_v4.py`. Replay a recorded run: `ENGINE_VERSION=4 python3 -I replay.py <run> <scratch>`.
+- The checker follows the task's shape. In an operation it samples the worker's claims. For deliverables and search, the
+  adapter reports finished submissions or attempts as `work_items` from ground truth. The system hands new ones to the
+  checker, sampled by the protocol's schedule, and reads one `Verdict:` line per item: fails go back to the worker,
+  misreports to the risk branch. Without `work_items`, preflight says so and the checker samples claims.
+- Clocks: the point window is in clock units. The Facts and Pursuit window is the periods the last point actually spanned,
+  and `feedback_lag` is in clock units, so a budget or wall clock works like a calendar one.
+
+Tests: `python3 -I test_engine_v4.py`, and `python3 -I test_agnostic.py`, which runs the same engine on non-vending tasks:
+a search task on a budget clock with scored attempts, and deliverables with and without work items. Replay a recorded run:
+`ENGINE_VERSION=4 python3 -I replay.py <run> <scratch>` (any task: `REPLAY_SPEC=<spec.json>`).

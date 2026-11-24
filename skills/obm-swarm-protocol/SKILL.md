@@ -69,7 +69,7 @@ Intervals are counted in **points**, not fixed periods (section 8). The task's a
 | — | Measurement (the system) | Every period | `metrics_system.md`, `charts.md` (levels, celeration, floor and aim, resources, guardrails, Facts, Pursuit, Requests, System health), `instructions.md` |
 | Improvement | Designer, initial design | At the start | spec with driver tree, briefs, first `aims.md` |
 | Risk | Risk pulse (auditor) | On a risk event, once when it starts: a guardrail crossed, a chart signal in the wrong direction, a measure gone missing, the work off its planned split; plus a routine sweep every `risk_sweep_every` points (1 if mistakes cannot be undone, else 2) | `audits/P-NNN.md`, ending `Fault: yes/no` |
-| Risk | Checker | Each submission (deliverables), each attempt (search), or a claim sample every `checker_every` points (operations) | review records; `audits/K-NNN.md` ending `Misreport: yes/no` |
+| Risk | Checker | Each submission (deliverables) or attempt (search) the adapter reports from ground truth, sampled by section 7; or a claim sample every `checker_every` points (operations) | `audits/K-NNN.md`: a `Verdict: <id> \| <verdict> \| <reason>` line per item, ending `Misreport: yes/no` |
 | Risk | Diagnostician | When faults are reported; all reported since the last diagnosis at once, the latest evidence per fault key | `audits/D-NNN.md`, with requests to whoever must change what (controls owner, designer or strategist); with none, the system files it to the controls owner |
 | Risk | Controls owner | Every open request to `controls`, at once; at least `control_gap` points between adopted changes, and inside that gap it still answers (decline or defer) | `controls.md`, `audits/C-NNN.md` |
 | Improvement | Strategist | Every `strategy_every` points (the feedback lag plus a point, at least 3); brought forward (after at least 2) when the top measure newly falls below its floor or its celeration newly turns flat or wrong | `audits/S-NNN.md` |
@@ -91,7 +91,7 @@ Intervals are counted in **points**, not fixed periods (section 8). The task's a
 ### 4.1 Task (one line of board.jsonl)
 
 ```json
-{"id": "T-0042", "driver": "slots_selling", "milestone": "M2", "title": "...", "pinpoint": "the product this task leaves behind",
+{"id": "T-0042", "driver": "tests_passing", "milestone": "M2", "title": "...", "pinpoint": "the product this task leaves behind",
  "acceptance": ["checkable criterion"], "inputs": ["..."], "risk_tier": "low|standard|high", "model_tier": "fast|strong",
  "status": "open", "attempts": 0, "retry_cap": 2, "budget": "...", "review_mode": "full|sampled"}
 ```

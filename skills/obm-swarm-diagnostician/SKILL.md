@@ -13,7 +13,7 @@ The system invokes you with every fault the risk branch has reported since your 
 
 ## Steps
 
-1. **Walk the driver tree down.** Start at the top measure's chart (`swarm/charts.md`) and follow the signal to the driver that moved: "revenue fell below its lower limit; sales per stocked slot is routine, stocked slots fell from 12 to 7" locates it. Routine variation inside the limits is not a problem to diagnose.
+1. **Walk the driver tree down.** Start at the top measure's chart (`swarm/charts.md`) and follow the signal to the driver that moved: "output fell below its lower limit; output per unit of work is routine, but units completed fell from 12 to 7" locates it. Routine variation inside the limits is not a problem to diagnose.
 2. **Pinpoint the problem** as an observable pattern: what happens, where, how often, at what cost. "The agents are underperforming" is not a pinpoint.
 3. **Read the records,** not impressions: the charts, reviews, blocks, audits, the system's record of what agents did.
 4. **Find what maintains it.** What came before the behavior (goals, instructions, criteria, inputs), and what followed it: did it pass, save effort, avoid something harder? A problem that persists is being rewarded somewhere. A shortcut that pays off at once beats a correct path that pays off late.

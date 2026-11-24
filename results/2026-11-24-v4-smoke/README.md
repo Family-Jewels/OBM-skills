@@ -70,6 +70,27 @@ describe routing, deferral and the Pursuit basis. Tests: `python3 -I lab/cadence
 the v1–v3 tests still pass. A replay of v3 seed 1 through the fixed engine gives the same rhythm as before: 16 strategies,
 57 pulses, 24 claim samples, 3 audits.
 
+## Follow-up: agnosticism fixes
+
+The smoke run exercised only an operation on a calendar clock. A review of the engine for anything that works only on
+that shape found:
+
+8. **The checker never ran for deliverables or search.** The profile set its mode, but the engine only started claim
+   samples. Now the adapter reports submissions or attempts as `work_items` from ground truth. The checker reviews them,
+   sampled by protocol section 7, with one `Verdict:` line per item: fails go back to the worker, misreports to the risk
+   branch. An adapter that declares deliverables or search without `work_items` gets a preflight note and claim samples.
+9. **Window units mixed on non-calendar clocks.** The point window is in clock units, but Facts and Pursuit used it as a
+   number of periods. They now use the periods the last point actually spanned. `feedback_lag` is now defined in clock
+   units.
+10. **Cumulative action clocks** (spend, seconds) lost each period's first action. It is now costed from the last action
+    before it.
+11. **Vending-only examples in the skills** (slots, cash, ordering) were replaced with neutral ones, and the protocol copies
+    bundled with each skill were re-synced; they had drifted after the earlier protocol edit. `replay.py` takes any task's
+    spec (`REPLAY_SPEC`).
+
+`test_agnostic.py` runs the whole engine on an ALE-like search task with a budget clock, and on deliverables with and
+without work items. Vending behaviour is unchanged: all tests pass, and the v3 seed 1 replay gives the same rhythm.
+
 ## Found, not fixed (for a decision)
 
 - **The floor and aim lines used the day-365 ceiling on a 91-day run.** The harness passes €61,219 whatever `--days` is, so

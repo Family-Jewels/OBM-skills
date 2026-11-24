@@ -34,13 +34,15 @@ def short(tool):
 
 def costs(actions, start=None):
     """[(period, tool, cost)] from the clock's advance between actions in the same period."""
-    out, prev = [], {}
+    out, prev, last = [], {}, None
     for a in actions:
         p, c = a["period"], a["clock"]
-        base = prev.get(p, start)
+        # within a period: since the previous action; a period's first action: since the period's start when the clock
+        # resets each period (start given), else since the last action before it (a cumulative clock: budget, seconds)
+        base = prev.get(p, start if start is not None else last)
         if base is not None and c >= base:
             out.append((p, short(a["tool"]), c - base))
-        prev[p] = c
+        prev[p] = c; last = c
     return out
 
 def register(cs, period, window):

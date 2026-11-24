@@ -76,6 +76,10 @@ def main(cfg, cfg_path=None):
         if not spec.get("profile"):
             probs.append("no task profile (work_shape, feedback_lag, reversible): defaults used (operation, lag of one point, irreversible)")
         prof, conf, bounds = profile.derive(spec, W)
+        if conf["checker"] in ("submissions", "attempts") and "work_items" not in reading:
+            probs.append(f"the task is shaped as {prof['shape']}, but readings carry no 'work_items', so the checker cannot see "
+                         f"{conf['checker']}: it samples the worker's claims instead")
+            conf["checker"] = "sample_claims"; bounds["checker"] = ["off", "sample_claims"]
         mem.update({"profile": prof, "config": conf, "bounds": bounds})
         ev("preflight", problems=probs, window=win, profile=prof, config=conf)
         if probs:
@@ -98,11 +102,17 @@ def main(cfg, cfg_path=None):
     # Facts and pursuit, from the harness's log of every action.
     actions = facts.load_actions(cfg.get("action_log"))
     cs = facts.costs(actions, (spec.get("action_clock") or {}).get("start"))
-    reg = facts.register(cs, period, W)
+    # The Facts window is the last point, in periods: exact on a calendar clock; on a budget or wall clock, the number of
+    # periods the last point actually spanned.
+    pp = mem.setdefault("point_periods", [])
+    if new_point:
+        pp.append(period)
+    FW = W if spec.get("clock", "period") == "period" else max(1, (pp[-1] - pp[-2]) if len(pp) >= 2 else (pp[-1] if pp else period))
+    reg = facts.register(cs, period, FW)
     aims_text = (sw / "aims.md").read_text() if (sw / "aims.md").exists() else ""
     split = facts.parse_split(aims_text)
     avail = (resources.get(spec.get("capacity")) or {}).get("available")
-    prow = facts.pursuit(split, cs, period, W, avail if isinstance(avail, (int, float)) and avail > 0 else None)
+    prow = facts.pursuit(split, cs, period, FW, avail if isinstance(avail, (int, float)) and avail > 0 else None)
 
     # Risk events, on a change of state only.
     risk_now = []
@@ -237,6 +247,19 @@ def main(cfg, cfg_path=None):
                 f"('Review at point N'), and never stops the core work or sets aims. Copy the old controls.md to swarm/history/ first. "
                 f"Write swarm/audits/{cid}.md: what you changed and why. {disp_howto} {REQ_HOWTO}")
 
+    def review_prompt(kid, items, mode):
+        lst = "\n".join(f"- {i['id']}" + (f" ({i['kind']})" if i.get("kind") else "") + (f": {i['ref']}" if i.get("ref") else "")
+                         + (f"; score recorded by the system: {i['score']}" if i.get("score") is not None else "") for i in items)
+        what = ("Each is an attempt scored by the task's own grader: confirm the score from ground truth, and check that the "
+                "attempt is what the worker says it is (the version, what changed, no special-casing of the grader or its inputs)."
+                if mode == "attempts" else
+                "Each is a submission: verify every acceptance criterion yourself, gathering your own evidence, and compare the "
+                "worker's note with the artifact.")
+        return (f"Use the obm-swarm-checker skill to review new work ({kid}), invoked by the system {common} These came in from "
+                f"ground truth since the last review:\n{lst}\n{what} Write swarm/audits/{kid}.md: for each item a line exactly "
+                f"'Verdict: <id> | pass|fail|misreport|block-confirmed|block-rejected | <one-line reason or fix>', the evidence under "
+                f"it, then the line 'Misreport: yes' or 'Misreport: no'. {REQ_HOWTO}")
+
     def check_prompt(kid):
         return (f"Use the obm-swarm-checker skill for a CLAIM SAMPLE ({kid}), invoked by the system {common} Pick three concrete "
                 f"claims from the last point of the worker's log (an amount, a count, an action done) and verify each against ground "
@@ -315,6 +338,16 @@ def main(cfg, cfg_path=None):
             for rid, st in L.answer(j["id"], rec, point, j.get("opens")):
                 ev("request_" + st, id=rid, by=j["id"])
         k = j["kind"]
+        if k == "check" and j.get("items"):
+            for iid, verdict, why in parse_verdicts(rec, j["items"]):
+                review_outcome(mem, verdict)
+                ev("verdict", item=iid, verdict=verdict, by=j["id"])
+                if verdict in ("fail", "block-rejected"):
+                    handoff.append(f"checker {j['id']} returned {iid} ({verdict}): {why[:300]} Fix it and resubmit; the full review is "
+                                   f"in swarm/audits/{j['id']}.md.")
+                elif verdict == "misreport":
+                    handoff.append(f"checker {j['id']}: the report for {iid} does not match the evidence (swarm/audits/{j['id']}.md). "
+                                   f"It cannot advance until corrected; your submissions go back to full review.")
         if k == "pulse" or k == "audit" or k == "check":
             fault = re.search(r"^\s*Fault\s*:\s*yes\b(.*)$", rec, re.M | re.I)
             mis = re.search(r"^\s*Misreport\s*:\s*yes\b", rec, re.M | re.I)
@@ -433,6 +466,19 @@ def main(cfg, cfg_path=None):
         cid = nid("C"); L.take(creqs, cid)
         spawn(cid, "controls", controls_prompt(cid, L.prompt_list(creqs)) + answer_only(opens), budgets.get("controls", 1.0), 20,
               {"reqs": [r["id"] for r in creqs], "opens": opens})
+    for it in reading.get("work_items") or []:  # submissions or attempts, from ground truth: each is seen once
+        iid = str(it.get("id"))
+        if iid and iid not in mem.setdefault("items_seen", []):
+            mem["items_seen"].append(iid)
+            if review_due(mem):
+                mem.setdefault("items_queue", []).append({k: it.get(k) for k in ("id", "kind", "ref", "score") if it.get(k) is not None})
+            else:
+                ev("item_unsampled", item=iid)
+    if C["checker"] in ("submissions", "attempts") and mem.get("items_queue") and not busy("check"):
+        items = mem.pop("items_queue")[-8:]
+        kid = nid("K")
+        spawn(kid, "check", review_prompt(kid, items, C["checker"]), budgets.get("check", 0.6), 20,
+              {"trigger": f"{len(items)} new {C['checker']}", "items": [str(i["id"]) for i in items]})
     if C["checker"] == "sample_claims" and new_point and win["ok"] and not busy("check"):
         lk = mem.get("last_check_point")
         if lk is None or newest - lk >= C["checker_every"]:
@@ -471,6 +517,34 @@ def main(cfg, cfg_path=None):
         if not busy("organizer"):
             oid_ = nid("O"); spawn(oid_, "organizer", organizer_prompt(oid_), budgets.get("organizer", 0.8), 15, {"trigger": f"{q} of {n_aud}"})
     return finish(mem, mem_p, log, handoff, cfg)
+
+VERDICTS = ("pass", "fail", "misreport", "block-confirmed", "block-rejected")
+
+def parse_verdicts(rec, ids):
+    """'Verdict: <id> | <verdict> | <reason>' lines for the items handed to the checker."""
+    out = []
+    for m in re.finditer(r"^\s*[-*]?\s*Verdict\s*:\s*([^|]+?)\s*\|\s*([a-z-]+)\s*(?:\|\s*(.*))?$", rec, re.M | re.I):
+        iid, v = m.group(1).strip(), m.group(2).lower()
+        if iid in ids and v in VERDICTS:
+            out.append((iid, v, (m.group(3) or "").strip()))
+    return out
+
+def review_due(mem):
+    """Protocol section 7: every item at first and after a fail or misreport; after 5 first-pass successes in a row, 1 in 3;
+    after 10 more, 1 in 5. Sampling changes how often, never how carefully."""
+    streak = mem.get("pass_streak", 0)
+    every = 1 if streak < 5 else 3 if streak < 15 else 5
+    mem["since_review"] = mem.get("since_review", 0) + 1
+    if mem["since_review"] >= every:
+        mem["since_review"] = 0
+        return True
+    return False
+
+def review_outcome(mem, verdict):
+    if verdict == "pass":
+        mem["pass_streak"] = mem.get("pass_streak", 0) + 1
+    elif verdict in ("fail", "misreport", "block-rejected"):
+        mem["pass_streak"] = 0; mem["since_review"] = 0
 
 def finish(mem, mem_p, log, handoff, cfg):
     mem_p.write_text(json.dumps(mem)); log.close()

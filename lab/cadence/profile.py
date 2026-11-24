@@ -2,7 +2,8 @@
 
 spec['profile'] = {
   'work_shape': 'operation' | 'deliverables' | 'search',
-  'feedback_lag': periods before a change shows in the top measure,
+  'feedback_lag': how long before a change shows in the top measure, in the task's clock units (periods on a calendar
+                  clock, spend on a budget clock, seconds on a wall clock),
   'reversible': bool, can a bad action be undone?
 }
 """

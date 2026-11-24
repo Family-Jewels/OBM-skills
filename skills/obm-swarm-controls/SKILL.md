@@ -14,7 +14,7 @@ The system calls you with every open request addressed to `controls`, all at onc
 ## Steps
 
 1. **Read the requests, the diagnoses they cite, `swarm/charts.md` (guardrails, signals, the Facts table, Pursuit) and the current `swarm/controls.md`.**
-2. **For each fault, make the fewest, smallest control that closes it.** Prefer a check before an action ("before ordering, confirm cash after the order stays above the reserve") over a ban. Prefer fixing the environment the worker reads (a clearer limit, a number from the Facts table) over a new rule. Never a control that stops the core work, sets a target or lowers the goal.
+2. **For each fault, make the fewest, smallest control that closes it.** Prefer a check before an action ("before an irreversible action, confirm the guardrail still holds after it") over a ban. Prefer fixing the environment the worker reads (a clearer limit, a number from the Facts table) over a new rule. Never a control that stops the core work, sets a target or lowers the goal.
 3. **Write each control in one line:** `- <the control> | guards: <the risk> | review at point <N> | from <D-NNN or REQ-NNN>`. Keep the file short enough for the worker to read every period.
 4. **Review controls that are due.** For each one past its review point: is the risk still live, and what does it cost the top measure (the charts, the Pursuit table)? Keep it with a new review point, loosen it, or remove it. A control nobody can tie to a live risk goes.
 5. **Answer a challenge on its merits.** If the improvement branch shows a control costs more than its risk, change it. If not, decline with the risk it guards.
