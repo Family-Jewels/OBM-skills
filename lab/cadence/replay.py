@@ -1,11 +1,10 @@
 """Replay engine v2 on a recorded run, with no model calls, to see what it would have triggered and when.
 
 usage: python3 -I replay.py <recorded run folder> <scratch folder> [ceiling]
-Any task: set REPLAY_SPEC=<the adapter's spec() as a JSON file>; without it the vending adapter's spec is used.
 Reads the run's swarm/metrics_system.md (written by the system each period) and feeds it to engine v2 one row at a time,
 in dry-run mode (each review "finishes" at once with a neutral report). Prints the event counts and the periods of each.
 """
-import json, os, subprocess, sys, shutil
+import json, subprocess, sys, shutil
 from pathlib import Path
 HERE = Path(__file__).resolve().parent
 
@@ -16,9 +15,7 @@ class Rows:
         self.head = [h.strip() for h in Path(table).read_text().splitlines()[2].strip("|").split("|")]
         self.i = int(row); self.h = horizon; self.c = ceiling
     def spec(self):
-        if os.environ.get("REPLAY_SPEC"):  # any task: the adapter's spec() saved as JSON
-            return json.loads(Path(os.environ["REPLAY_SPEC"]).read_text())
-        sys.path.insert(0, str(HERE)); from adapters.vending import VendingState  # default: the recorded vending runs
+        sys.path.insert(0, str(HERE)); from adapters.vending import VendingState
         return VendingState("/dev/null", self.h, self.c, "replay").spec()
     def read(self):
         cells = [c.strip() for c in self.rows[self.i].strip("|").split("|")]
