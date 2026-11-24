@@ -1,0 +1,131 @@
+# Operator log (events only)
+
+- D1 (5 Jan): baseline read; supplier scan (zuidas, noordzee, bakker, kanaal); PO-1001 bakker €116.80, delivery D7 (arrived D8). Catalogue requests to zuidas and noordzee.
+- D8 (12 Jan): first refills, all 6 machines stocked and priced (refill fills slot to capacity; set_price keeps price on restock). Diagnosis-relevant: stock was first placed D8 because delivery was D7 (overnight to D8).
+- D9 (13 Jan): CMP-001 paid €1.90 of €16.40 claim (unsupported claim; complaint open). PO-1002 bakker cola/crisps €74.70, delivery D23 (14-day lead). Second refills: AI-HOUSE:SNACK:B1 choco, MAIN-LOUNGE:SNACK:A1 stroopwafel.
+- D10 (14 Jan): pulse P-001 read (snapshot D7; fixes already done D8). PO-1003 zuidas crisps/nuts/energy €91.90, delivery D13.
+- D12 (16 Jan): all selling slots found empty. PO-1004 zuidas stroopwafel/choco/cola/nuts €113.56, delivery D14. Oat latte refill AI-LOUNGE:DRINKS:A1.
+- D13 (17 Jan): CMP-002 paid €2.70 of €13.16 claim (complaint open).
+- D14 (18 Jan): crisps refilled AI-LOUNGE:SNACK:C1, MAIN-LOUNGE:SNACK:C1; new AI-HOUSE:SNACK:C1 crisps @2.70; nuts refill AI-HOUSE:SNACK:A1; new MAIN-LOUNGE:DRINKS:B1 energy @2.20.
+- D15 (19 Jan): PO-1004 arrived. Diagnosis D-P-001 received (stale on refill timing; slot counts to be checked against inventory). PO-1005 bakker cola40/oat20/crisps10 €66.40 due D27.
+- D16 (20 Jan): pulse P-002 checked against inventory (its slot count was stale). PO-1006 zuidas crisps30/energy20/oat20 €107.90 (D19). Refills cola, energy, choco, stroopwafel. Cash 1025.74.
+- D17 (21 Jan): nuts refills (AI-HOUSE A1, new AI-LOUNGE A1 @1.90), new MAIN-LOUNGE:SNACK:B1 choco @1.60.
+- D18 (22 Jan): PO-1007 zuidas cola40/stroopwafel30/nuts30 €77.00 (D22).
+- D19 (23 Jan): MAIN stroopwafel refill; PO-1008 zuidas choco50/energy20/stroopwafel10 €76.30 (D23).
+- D20 (24 Jan): redesign R-P-001 adopted (order to cover lead time + one sell-through). Refills crisps x3, oat, energy x2 (new AI-HOUSE:DRINKS:B1 energy @2.20).
+- D21 (25 Jan): day-21 sales 46 units in 3 days; no action beyond refills.
+- D22 (26 Jan): CMP-003 Sanne Willems claim €17.29 for one crisps bag; paid €2.70 goodwill (complaint open). Reputation 0.88.
+- D23 (27 Jan): PO-1007 arrived; refills cola x2, nuts x2, stroopwafel, AI-LOUNGE nuts.
+- D24 (28 Jan): PO-1002/PO-1008 arrived. Refills crisps x3, energy x2, cola MAIN, choco x2. Sold 103 units €212.40 on D24.
+- D25 (29 Jan): PO-1009 zuidas crisps40/nuts36/energy30 €133.94 (D27). Refills cola x2, stroopwafel MAIN, oat AI-LOUNGE, choco AI-HOUSE. Clock ~375 min.
+- D26 (30 Jan): prices raised on fast sellers per S-001: cola €2.10 (AI-HOUSE:DRINKS:A1, MAIN-LOUNGE:DRINKS:A1), choco €1.80 (both B1), stroopwafel MAIN €1.70, nuts €2.00 (both A1). Sales D25 (4d): 221 units.
+- D27 (31 Jan): CMP-004 Priya Nair claim 23.38 (double charge), paid 2.70 goodwill. New AI-LOUNGE:DRINKS:B1 cola @2.10.
+- D28 (1 Feb): sales D27 3 units (weekend). PO-1005/PO-1009 arrived. Refills 8: crisps x3, cola x2, energy AI-HOUSE B1 (new load), nuts AI-HOUSE A1, energy MAIN B1.
+- D29 (2 Feb): PO-1010 zuidas €181.96 (due D31). Nuts AI-LOUNGE A1; NEW crisps AI-HOUSE:SNACK:C2 and MAIN-LOUNGE:SNACK:C2 @2.70; NEW cola AI-HOUSE:DRINKS:A2 and MAIN-LOUNGE:DRINKS:A2 @2.10.
+- D30 (3 Feb): aims updated to point 4 (15 selling slots, 408 min, 72 slack). CMP-005 (Sanne Willems, 7.69) paid 2.70 goodwill. MAIN cola A1 refill. Sales D29: 63 units €149.
+- D31 (4 Feb): pulse P-004 (snapshot D28) received; its worker-time reading (115 min) is out of date vs my clock use (~210 min by 12:30). Refills: AI-HOUSE:DRINKS:B1 energy x10; AI-LOUNGE:DRINKS:A1 oat x10; MAIN energy refill FAILED (depot had only 10 energy). PO-1011 zuidas cola40 + energy30 €76.70, due D33. Cash 1424.44.
+- D32 (5 Feb): PO-1010 arrived. 9 refills (crisps x4, energy MAIN, choco x2, stroopwafel MAIN, nuts AI-LOUNGE). Sales D31 34 units.
+- D33 (6 Feb): sales D32 70 units €153.80. PO-1012 bakker cola60 + nuts15 €62.85, due D50 (bakker lead 17 days).
+- D34 (7 Feb): PO-1013 zuidas crisps50 + nuts30 + cola20 €150.50 (due D36). 7 refills (cola x4, energy x2, stroopwafel MAIN).
+- D36 (9 Feb): nuts AI-HOUSE top-up (8).
+- D37 (10 Feb): CMP-006 Chloe Martin (5.12, out-of-date nuts) paid 2.00. 5 crisps refills, cola AI-LOUNGE, nut top-ups.
+- D38 (11 Feb): PO-1014 zuidas crisps60 + cola40 + choco40 €137.40 (due D42). 6 refills (cola, energy x2, choco, stroopwafel).
+- D40-42 (13-15 Feb): weekend slump; CMP-007 (Sanne Willems, 23.60, wrong item) paid 1.70 (one stroopwafel price), open.
+- D43 (16 Feb): all 12 selling slots empty; 8 refills (crisps x5, cola x3).
+- D44 (17 Feb): D-P-002 and P-005 received (orders too thin). PO-1015 zuidas energy40 + stroopwafel40 + nuts40 + cola30 + crisps30 €186.40 (due D47). 6 refills + new AI-LOUNGE:SNACK:C2 crisps @2.70. Buffer rule adopted: depot holds a full refill of each product plus a week.
+- D45 (18 Feb): sales D44 59 units €135.00. Cash 1767.79.
+- D46-47 (19-20 Feb): sales 40 and 25 units. D48 (21 Feb): PO-1015 arrived; 8 refills (stroopwafel, nuts x2, energy x2, cola x3). Sales D47 1 unit (slots empty).
+- D49 (22 Feb): S-002 (point 6) received: minutes median >=270, 12+ slots, revenue/slot >=10, cash >=2220. Price rises: crisps 2.90 (6 slots), cola 2.30 (4 slots), energy 2.40 (2), nuts 2.20 (2), stroopwafel MAIN 1.90, choco 1.90 (2); NEW AI-HOUSE:SNACK:B2 stroopwafel @1.90. Crisps refilled x3.
+- D50 (23 Feb): sales D49 18 units. PO-1016 zuidas crisps60/cola60/choco40/nuts40 €255.00 (due D54). Energy top-ups.
+- D51 (24 Feb): PO-1012 bakker arrived; R-P-002 adopted (depot check before refill); cola/nuts top-ups; depot check done.
+- D52-53: sales 46 and 22 units. D54 (27 Feb): CMP-008 Tom de Boer (22.75) paid 2.90; cola/energy/nuts/stroopwafel refills. Aims S-002 consistent with practice.
+- D55 (28 Feb): PO-1016 arrived; weekend stocking: 6 crisps slots and 2 choco slots full.
+- D56 (1 Mar): PO-1017 zuidas stroopwafel40/energy40/crisps60 €192.80 (due D58). Sales D55 16 units.
+- D57-58: sales 12 and 53 units. D58 (3 Mar): 7 top-ups (cola x4, nuts x2, choco).
+- D59 (4 Mar): PO-1017 arrived; 8 refills (stroopwafel x2, energy x2, crisps x4). Sales D58 55 units €131.60.
+- D60 (5 Mar): sales D59 76 units €179.20. PO-1018 zuidas choco60/oat20/cola30/nuts40 €146.90 (due D63); PO-1019 zuidas crisps60/cola40 €155.60 (due D64). Top-ups cola/crisps (depot near empty).
+- D61-63: sales 71, 22, 4 units. D63 Sunday: no action.
+- D64 (9 Mar): PO-1018 arrived. Pulse P-007 (snapshot D56) received; its daily-log request is met from here. Refills (7, clock ~385 min): AI-HOUSE:DRINKS:A1 cola x10, AI-HOUSE:DRINKS:A2 cola x10, MAIN-LOUNGE:DRINKS:A1 cola x10, AI-HOUSE:DRINKS:B1 energy x10, MAIN-LOUNGE:DRINKS:B1 energy x10, AI-HOUSE:SNACK:B1 choco x18, MAIN-LOUNGE:SNACK:B1 choco x18, AI-LOUNGE:DRINKS:A1 oat x10. Cash 2210.79. Still to load: crisps (PO-1019 arrives D64/65) to AI-LOUNGE C1, C2, AI-HOUSE C1, C2, MAIN C1, C2; stroopwafel to AI-HOUSE B2, MAIN A1 (depot 4); nuts (depot ~53) to AI-HOUSE A1, AI-LOUNGE A1.
+- D65 (10 Mar): bakker & zoon insolvent (notice D64; no open orders). CMP-009 Chloe Martin (13.89) paid 2.30, open. PO-1019 crisps60/cola40 arrived. Crisps x6 slots filled; nut top-ups. Sales D64 45 units.
+- D66 (11 Mar): sales D65 68 units €166.70. ORDER PO-1020 zuidas stroopwafel60/energy60/crisps60/cola40 €260 (due D68).
+- D67-68: sales 50 and 24. D68 (13 Mar): S-003 received (point 10 aims). Refills: choco x2, cola x5 (clock ~365 min).
+- D69 (14 Mar): PO-1020 arrived. Weekend stocking: energy x2, stroopwafel x2, crisps x5 (clock ~345).
+- D70 (15 Mar): sales D69 27 units. D71 (16 Mar): sales D70 20. ORDER PO-1021 zuidas choco80/nuts30 €107.50 (due D73). Refills 7 (clock ~415 - 7 min over the 408 ceiling; noted).
+- D72 (17 Mar): sales D71 81 units €192.20. Top-ups crisps x2, energy, cola (clock ~360).
+- D73 (18 Mar): sales D72 82 units €195.20. ORDER PO-1022 zuidas crisps60 + cola30 €146.10 (due D79).
+- D74 (19 Mar): PO-1021 arrived. Choco x2, nuts x2, stroopwafel top-ups (clock ~225).
+- D75 (20 Mar): CMP-010 Tom de Boer (23.89, out-of-date nuts) paid 2.20, open. Stroopwafel top-ups. Depot stroopwafel out.
+- D76 (21 Mar): an order below the €75 minimum was refused (no charge; check totals).
+- D77 (22 Mar): ORDER PO-1023 zuidas stroopwafel40 + energy40 €77.60 (due D79).
+- D78 (23 Mar): sales D77 6 units. Refills cola x2, energy x2, choco x2, nuts x1 (clock ~365). Failed-crisps calls: crisps not yet delivered (PO-1022 due D79); each failed restock still costs 45 minutes - check storage before restock.
+- D79 (24 Mar): sales D78 42 units €90.40. Crisps restock failed x6 (PO-1022 not yet in depot; clock lost ~225 min). Depot: choco 9, energy 4, oat 1. PO-1022/PO-1023 arrive D80. Cash 2747.89.
+- Pulse P-008 (day 70): unit cost rising x1.03 (watch; check quotes at equal quantity before ordering); D2 revenue/slot 7.86 vs 10 aim: raise mix/price only with stock present.
+- D80 (25 Mar): PO-1022 crisps60 + cola30 and PO-1023 stroopwafel40 + energy40 arrived. Refills: crisps x6 slots, stroopwafel x2 (clock ~360). Sales D79 32 units.
+- D81 (26 Mar): sales D80 66 units €151. PO-1024 zuidas choco80/nuts40/cola60/energy40/oat20 €217.60 (due D85). Refills cola x3, energy, choco.
+- D82-84: sales 81, 32, 3 units. Weekend stock held.
+- D85 (30 Mar): PO-1025 zuidas crisps60 €117.60 (I had left crisps out of PO-1024; due D88).
+- D86 (31 Mar): PO-1024 arrived; all slots empty; 8 refills (choco x2, nuts x2, cola x4), clock ~385.
+- D87 (1 Apr): energy x2, oat, cola, stroopwafel 4 (clock ~225). Sales D86 31 units.
+- D88 (2 Apr): sales D87 68 units. PO-1026 refused (below €75); accepted version D89: stroopwafel40 + nuts30 + cola20 €78.50 (due D99).
+- D89 (3 Apr): PO-1025 arrived; crisps x6 slots; clock ~295. Sales D88 29 units.
+- D90-91 (4-5 Apr): sales 28 and 8. Q1 milestone (day 91): cash 3144.79.
+- D92 (6 Apr): AI-HOUSE drinks all empty (drinks sell out in <1 day). ORDER PO-1027 zuidas cola80, nuts40, crisps60 €224.80 (due D96). Refills: AI-HOUSE cola x10, AI-HOUSE energy x10, MAIN energy x10, choco top-ups x2. Clock ~330.
+- D94-D98: sales 42, 21, 7, 3, 11 units. D97 (11 Apr): PO-1027 arrived; cola x5 slots, crisps x3 (clock ~360).
+- D99 (13 Apr): nuts x2, energy x2, crisps C2 x3, choco top-up (clock ~410; 2 min over ceiling). PO-1028 zuidas choco60/energy60/oat20 €146 ordered (due D101).
+- D100 (14 Apr): PO-1026 arrived; stroopwafel x2; choco and energy restocks FAILED (depot empty, 90 min lost); cola top-ups.
+- D101 (15 Apr): CMP-011 Daan Smit (16.86) paid 2.30, open. Cola top-up; "already full" call wasted 45 min.
+- D102 (16 Apr): PO-1028 arrived; choco x2, oat, energy x2, nuts top-ups (clock ~315).
+- D103 (17 Apr): sales D102 80 units €177. ORDER PO-1029 zuidas crisps60 + cola40 €155.60 (due D105).
+- D104-105 weekend: sales 23, 6.
+- D106 (20 Apr): PO-1029 arrived; crisps x6 slots (60), cola x2 top-ups (clock ~315).
+- D107-108: sales 46, 35. D108 (22 Apr): stock read first; choco x2, energy x2, cola x4 (clock ~410, 2 min over). Cash 3577.69. Pulse P-010 (day 98) received: stale snapshot; its fixes (depot check, dated log, aims copy) applied from here.
+- D109-D112: sales 54, 37, 14, 5. D112 (26 Apr): sales near zero; D113 (27 Apr): PO-1030 arrived (crisps60, stroopwafel40, nuts40); one-pass refill block (nuts x2, stroopwafel x2, crisps x4; clock ~410, 2 over). ORDER PO-1031 zuidas cola60 + crisps20 (€92.40, due D117).
+- D114 (28 Apr): sales D113 0. Reputation 0.70 with 11 open complaints. PAID FULL REMAINING BALANCE on all 11 complaints (~€158); all withdrawn; reputation recovers. Sales D115 51 units.
+- D115 (29 Apr): S-005 received (point 16 aims). ORDER PO-1032 zuidas choco80 + oat20 (€112.20, due D119).
+- D116 (30 Apr): CMP-012 Tom de Boer claim 14.85 paid in full (withdrawn).
+- D118 (2 May): PO-1031 arrived; cola/energy refills (6, clock ~365).
+- D120 (4 May): PO-1032 arrived; choco x2, crisps x4, nuts x1, oat (clock ~385). ORDER PO-1033 zuidas cola60 + energy40 (€108.60, due D122).
+- D123 (7 May): PO-1033 arrived; energy x2, cola x2 (clock ~285). Crisps refills FAILED x2 (depot empty, 90 min). ORDER PO-1034 zuidas crisps60 + stroopwafel40 (€143.60, due D125).
+- D126 (10 May, Sunday): PO-1034 arrived; crisps x6, stroopwafel x2 (clock ~360). Weekend sales ~0 as usual.
+- D127 (11 May): pulse P-012 received. Product-mix test: ORDER PO-1035 zuidas protein-bar40 + gummy-bears40 + cola40 + nuts40 (€154.40, due D131).
+- D130 (14 May): MAIN-LOUNGE snacks all empty (highest footfall); refills MAIN choco, stroopwafel, cola x2, energy; AI-HOUSE energy and cola. ORDER PO-1036 zuidas crisps60 + stroopwafel40 + choco40 (€184.00, due D134).
+- D132 (16 May): PO-1035 arrived; NEW lines: AI-HOUSE:SNACK:A2 protein bar x18 @2.40; MAIN-LOUNGE:SNACK:A2 gummy bears x18 @1.80. Nuts x2, cola x2, choco top-up.
+- D135 (19 May): PO-1036 arrived; crisps x6, stroopwafel x2, choco MAIN (clock ~405). Sales D134 44, D135 106 units €248.30 (best since D59).
+- Audit A-001 (day 92) received: keep one-pass refill block with depot check first; reserve and price rule held; log events.
+- D136-D139: PO-1037 zuidas crisps60/energy60/nuts40 €223.80 (arrived D139). CMP-013 Sanne Willems (23.40) paid in full. Refills crisps, energy, nut slots.
+- D140 (24 May): S-006 (point 20) aims; price rises on fast sellers (crisps 3.10, cola 2.50, energy 2.60, choco 2.00, nuts 2.40, stroopwafel 2.00).
+- D141 (25 May): PO-1038 zuidas crisps60/stroopwafel40/choco40/cola40 €222 (arrived D144). Refills cola x2, choco x1.
+- D144 (28 May): PO-1038 arrived; crisps x6, choco, stroopwafel x2 (clock ~405). Sales D143 15.
+- D145 (29 May): drinks refilled (cola x4, energy x2, choco) clock ~340. PO-1039 zuidas cola60/energy60/nuts40 €178.80 (arrived D147).
+- D148 (1 Jun): PO-1040 zuidas crisps60/choco40/stroopwafel40 €184 (arrived D151). Refills cola x4, energy x2, nuts (clock ~345).
+- D152 (5 Jun): PO-1040 arrived; crisps x6, choco MAIN, stroopwafel x2 (clock ~405). Aims S-006/AS-006 read.
+- D155 (8 Jun): PO-1041 zuidas cola60/gummy40/oat20 €108.80 (arrived D160). Gummy load failed (no stock; 45 min).
+- D156 (9 Jun): refills MAIN energy/cola x3, choco x2, nuts, AI-HOUSE energy/choco (clock ~365).
+- D159 (12 Jun): machines almost all empty. ORDERS PO-1042 zuidas crisps100/cola120/energy60/nuts60 €454 (arrived D164) and PO-1043 choco60/stroopwafel60/gummy40/protein20 €148.60 (arrived D162). New rule: weekly buy covers ~5 days of refill capacity.
+- D160 (13 Jun): PO-1041 arrived; gummy, oat, cola x5, energy (clock ~360).
+- D162 (15 Jun): PO-1043 arrived; choco x2, stroopwafel x2, protein (clock ~225).
+- D164 (17 Jun): PO-1042 arrived; crisps x6, nuts, energy (clock ~405). S-007 (point 22) read.
+- D166 (19 Jun): drinks refilled (cola x6, energy, cola AI-LOUNGE) (clock ~365).
+- D169 (22 Jun): stroopwafel x2, gummy, nuts x2, choco x2, cola (clock ~385). PO-1044 zuidas crisps60/energy60/choco40 €208 (due D171).
+- D170 (23 Jun): energy x2, crisps x4, cola x2 (clock ~360). Sales D170 94 units €230 (D171 report).
+- Pulse P-015 (day 161) received: wrong-way cash gain (distorted by the D159-D161 empty-machine tail). Keep: refill-first, depot check, cover orders.
+- D171-D175: PO-1044 arrived D172 (crisps60, energy60, choco40); crisps x4 + choco x2 + cola (clock ~360). ORDER PO-1045 zuidas stroopwafel80, choco60, crisps60, oat20, gummy40 (arrived D178).
+- D176 (29 Jun): CMP-014 (4.44) paid in full. Energy x2, cola x4, gummy (clock ~375).
+- D178 (1 Jul): PO-1045 arrived; stroopwafel x2, choco x2, crisps x5 (clock ~405).
+- D180 (3 Jul): drinks (energy, cola) and crisps, oat, nut top-up (clock ~270). ORDER PO-1046 zuidas cola80, nuts60, protein30, crisps60 (~€309, arrived D183).
+- D183 (6 Jul): PO-1046 arrived; protein, nuts, cola x3, crisps x3 (clock ~360).
+- D186 (9 Jul): ORDER PO-1047 zuidas choco60, crisps60, cola60 (€235, arrived D189). Refills (clock ~385).
+- D190 (13 Jul): CMP-015 (9.80) paid in full. Refills choco, crisps, cola, oat, protein (clock ~395).
+- D193 (16 Jul): refills gummy, choco, nuts, cola x4, energy (clock ~385).
+- D194 (17 Jul): CMP-016 (11.92) paid in full. ORDER PO-1048 zuidas crisps80, protein30, stroopwafel40 (€222, arrived D198). Failed crisps restock (45 min).
+- D198 (21 Jul): CMP-017 (16.43) paid in full. ORDER PO-1049 zuidas nuts60, cola60 (€107, arrived D202 with nuts/cola).
+- D199 (22 Jul): CMP-018 (19.20) paid in full. Crisps x5, stroopwafel AI-LOUNGE A2 (new slot), protein (clock ~350).
+- D201-D204: depot reads (per R-P-006); refills AI-HOUSE drinks, stroopwafel, crisps, choco, MAIN crisps, AI-LOUNGE nuts. ORDER PO-1050 zuidas crisps80, choco60, energy60 (€295, arrived D209).
+- D209 (1 Aug): PO-1050 arrived; choco x2, crisps x6 (clock ~360).
+- D211 (3 Aug): MAIN drinks refilled (cola x2, energy, AI-HOUSE energy, stroopwafel, gummy, protein) (clock ~340). ORDER PO-1051 zuidas cola80, oat20 (€107, arrived D215).
+- D214 (6 Aug): crisps x2, nuts, choco x2, energy x2 (clock ~300). ORDER PO-1052 zuidas crisps80, choco60, stroopwafel60, protein30, nuts60 (€363, due D219).
+- D215 (7 Aug): PO-1051 arrived; cola x5, oat, gummy, nuts (clock ~360). Sales D214 57 units.
+- D216-D218: sales 40, 8, 8 (weekend tail; stock short of crisps/choco/stroopwafel until PO-1052).
+- Pulse P-018 (day 203) and P-016/P-017 received; log is the source for days 171-218 (charts disagree on worker minutes; open question 7).
+- D93 (7 Apr): sales D92 61 units €149.50. Cash 2968.69. Redesign R-P-004 (spec v4) received: cover rule up to 12 stocked slots; no spec change to operator rules. Pulse P-009 (day 84) items: keep cash-first loop; check depot before refill; restate aims for points 11-12 (Strategist/designer pending).
+- D25 pulse P-003 (snapshot D21) and Strategist S-001 (day 21, point 3) received. S-001: constraint is stocked margin-positive slots; spend spare minutes on refills; change margin per slot (price, mix, unit cost) before more slots. Stretch aims point 4: cash ≥1366, slots_selling 15, revenue/slot 8.8, minutes 380 with 72 slack.
