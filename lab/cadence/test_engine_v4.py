@@ -71,11 +71,23 @@ first = reqs[0]
 assert first["asked"] >= 5 and len(st.get("method", [])) >= 3, (first, st.get("method"))  # declined, re-asked: reopened and taken again
 assert any(e["event"] == "escalation" for e in ev) or first["asked"] < 3, [e for e in ev if e["event"] == "escalation"]
 assert len(st.get("method", [])) >= 1
-# Unanswered requests go back to open and are taken again.
+# Deferred requests are answered and held, never closed; repeats still escalate by count.
 ev, st, mem, sw = run(84, dry={"pulse": ask, "disposition": "deferred"})
-assert all(r["status"] in ("open", "in_progress") for r in mem["ledger"]["reqs"]), mem["ledger"]["reqs"]
+assert all(r["status"] in ("open", "in_progress", "deferred") for r in mem["ledger"]["reqs"]), mem["ledger"]["reqs"]
 assert sum(1 for r in mem["ledger"]["reqs"] if r["key"] == "chart-minutes") == 1   # never queued twice
 assert any(e["event"] == "escalation" and "asked" in e["text"] for e in ev)
+# Unanswered requests (no disposition) go back to open and escalate by age.
+once = "Pulse {id}.\nFault: no\n" + "\n## Requests\n- to: designer | key: once | Chart it.\n"
+L0 = ledger.Ledger({}); L0.file("P-1", ledger.parse_requests(once), 1, 7); L0.take(L0.open_for("designer"), "M-1")
+assert L0.answer("M-1", "## Dispositions\n", 1) == [("REQ-001", "open")]
+assert [w for _, w in L0.escalations(4)] == ["unanswered 3 points"]
+# A request filed inside the method lane's gap is answered at once (answer-only), not left waiting to escalate.
+L1 = ledger.Ledger({}); L1.file("P-1", ledger.parse_requests(once), 5, 35); L1.take(L1.open_for("designer"), "M-2")
+assert L1.answer("M-2", "## Dispositions\n- REQ-001: deferred | will chart it at point 8\n", 5, 8) == [("REQ-001", "deferred")]
+assert L1.escalations(7) == [] and L1.open_for("designer") == []
+L1.release(8); assert [r["id"] for r in L1.open_for("designer")] == ["REQ-001"] and L1.escalations(8) == []
+ev, st, mem, sw = run(84, dry={"pulse": ask, "disposition": "deferred"})
+assert not any(e["event"] == "escalation" and "unanswered" in e["text"] for e in ev), [e["text"] for e in ev if e["event"] == "escalation"]
 
 # 4. Faults go through the risk branch and never wait for the improvement branch.
 flt = "Pulse {id}.\nFault: yes\nFault key: unpriced-slots\n\n## Corrections\n- price slot 3\n"
@@ -115,4 +127,44 @@ assert ledger.parse_requests("x\n## Requests\n- to: Controls | key: A B | do it\
 assert ledger.parse_dispositions("## Dispositions\n- REQ-002: declined | fixed by sim\n")["REQ-002"] == ("declined", "fixed by sim")
 assert facts.parse_split("## Capacity split\n- 75% fills: mcp__v__restock_machine, check\n")[0]["tools"] == ["restock_machine", "check"]
 assert profile.validate("checker", "off", {"checker": "sample_claims"}, {"checker": ["off", "sample_claims"]}) == (True, "off")
+
+# 8. Records decorated with markdown parse the same as plain ones.
+import mdtext
+assert ledger.parse_requests("**Requests**\n- to: `designer` | key: `x-y` | do it\n") == [{"to": "designer", "key": "x-y", "text": "do it"}]
+assert ledger.parse_dispositions("## Dispositions (2)\n- **REQ-004**: done | added\n")["REQ-004"][0] == "done"
+assert facts.parse_split("## Capacity split:\n- **60%** fills: `restock_machine`\n* 40% orders: order\n")[1]["planned"] == 0.4
+assert "Fault: yes" in mdtext.plain("**Fault: yes**") and "Fault key: cash-low" in mdtext.plain("*Fault key:* `cash-low`")
+assert mdtext.plain("* bullet stays\n5 * 3") == "* bullet stays\n5 * 3"
+bold = "Pulse {id}.\n**Fault: yes**\n**Fault key:** `unpriced-slots`\n\n**Corrections**\n- price slot 3\n"
+ev, st, mem, sw = run(35, dry={"pulse": bold})
+assert any(e["event"] == "fault" and e["key"] == "unpriced-slots" for e in ev), [e for e in ev if e["event"] == "fault"]
+ev, st, mem, sw = run(100, dry={"organizer": "**Config change:** `strategy_every = 2`\nreason"})
+assert mem["config"]["strategy_every"] == 2
+
+# 9. A diagnosis that names the designer as the owner of the change is not also filed to the controls owner.
+to_des = "D {id}\n\n## Requests\n- to: designer | key: day-order | the aims starve prices\n"
+ev, st, mem, sw = run(70, dry={"pulse": flt, "diagnosis": to_des})
+reqs = mem["ledger"]["reqs"]
+assert any(r["to"] == "designer" and r["key"] == "day-order" for r in reqs) and not any(r["to"] == "controls" for r in reqs), reqs
+assert "controls" not in st, st.get("controls")
+
+# 10. Actions named in the capacity split but never called are shown as measured zero.
+ev, st, mem, sw = run(35, dry={"aims_md": "# Aims\n\n## Capacity split\n- 80% fills: fill\n- 20% swaps: swap\n"}, actions=lambda d: [("mcp__t__fill", 45, 4)])
+assert "never called (0 calls, measured): swap" in (sw / "charts.md").read_text()
+# 11. Pursuit is on the plan's basis: shares of the capacity of the days worked, with slack compared to unused capacity.
+sp = facts.parse_split("## Capacity split\n- 50% fills: fill\n- 20% slack: none\n")
+cs = [(1, "fill", 240), (1, "read", 96), (2, "fill", 240), (2, "read", 96)]   # 336 of 480 minutes used each day
+rows = {r["label"]: r for r in facts.pursuit(sp, cs, 2, 7, 480)}
+assert abs(rows["fills"]["actual"] - 0.5) < 1e-9 and abs(rows["slack"]["actual"] - 0.3) < 1e-9 and abs(rows["other (not in the split)"]["actual"] - 0.2) < 1e-9, rows
+rows = {r["label"]: r for r in facts.pursuit(facts.parse_split("## Capacity split\n- 50% fills: fill\n"), cs, 2, 7, 480)}
+assert abs(rows["unused capacity"]["actual"] - 0.3) < 1e-9, rows
+rows = {r["label"]: r for r in facts.pursuit(sp, cs, 2, 7)}   # no capacity reported: shares of what was spent
+assert abs(rows["fills"]["actual"] - 480 / 672) < 1e-9
+# 12. The Requests table always lists every live request, however many were closed recently.
+L2 = ledger.Ledger({})
+for i in range(30):
+    L2.file("P-1", [{"to": "designer", "key": f"k{i}", "text": "x"}], 1, 7)
+L2.take(L2.open_for("designer")[5:], "M-1"); L2.answer("M-1", "## Dispositions\n" + "".join(f"- REQ-{i:03d}: done | ok\n" for i in range(6, 31)), 2)
+tab = L2.table(2)
+assert all(f"REQ-{i:03d}" in tab for i in range(1, 6)), tab
 print("all v4 engine tests passed")

@@ -13,6 +13,7 @@ Each line: a share, a label, then the action (tool) names it covers. Tools not n
 """
 import json, re, statistics
 from pathlib import Path
+from mdtext import section
 
 def load_actions(path):
     p = Path(path) if path else None
@@ -57,31 +58,45 @@ def register(cs, period, window):
     return rows
 
 def parse_split(aims_text):
-    m = re.search(r"^#+\s*Capacity split\s*$(.*?)(?=^#+\s|\Z)", aims_text or "", re.M | re.S | re.I)
-    if not m:
+    body = section(aims_text, "Capacity split")
+    if not body:
         return []
     out = []
-    for line in m.group(1).splitlines():
+    for line in body.splitlines():
         mm = re.match(r"\s*[-*]\s*(\d+(?:\.\d+)?)\s*%\s*([^:]+):\s*(.*)$", line)
         if mm:
             tools = [short(x.strip().strip("`")) for x in re.split(r"[,;]", mm.group(3)) if x.strip()]
             out.append({"label": mm.group(2).strip(), "planned": float(mm.group(1)) / 100, "tools": [t for t in tools if t]})
     return out
 
-def pursuit(split, cs, period, window):
-    """Planned vs actual share of capacity per label over the last window. Actual shares are of all cost spent."""
-    recent = [(t, c) for p, t, c in cs if p > period - window]
-    total = sum(c for _, c in recent)
-    if not split or not total:
+def pursuit(split, cs, period, window, available=None):
+    """Planned vs actual share of capacity per label over the last window.
+
+    With `available` (the capacity per period, from the adapter's reading), shares are of the capacity of the periods
+    worked, the same basis as the plan, and the capacity left unused is measured too: a split line that names no actions
+    (slack, reserve) is compared with it. Without it, shares are of all cost spent."""
+    recent = [(p, t, c) for p, t, c in cs if p > period - window]
+    spent = sum(c for _, _, c in recent)
+    if not split or not spent:
         return []
+    days = len({p for p, _, _ in recent})
+    total = max(spent, (available or 0) * days)
+    unused = 1 - spent / total
+    idle_lines = [x for x in split if not [t for t in x["tools"] if t.lower() not in ("none", "-", "—")]]
+    idle_plan = sum(x["planned"] for x in idle_lines)
     rows, named = [], set()
-    for s in split:
-        named |= set(s["tools"])
-        act = sum(c for t, c in recent if t in s["tools"]) / total
-        rows.append({"label": s["label"], "planned": s["planned"], "actual": act, "gap": act - s["planned"]})
-    other = sum(c for t, c in recent if t not in named) / total
-    rows.append({"label": "other (not in the split)", "planned": max(0.0, 1 - sum(s["planned"] for s in split)), "actual": other,
-                 "gap": other - max(0.0, 1 - sum(s["planned"] for s in split))})
+    for x in split:
+        if x in idle_lines:
+            act = unused * (x["planned"] / idle_plan if idle_plan else 1 / len(idle_lines))
+        else:
+            named |= set(x["tools"])
+            act = sum(c for _, t, c in recent if t in x["tools"]) / total
+        rows.append({"label": x["label"], "planned": x["planned"], "actual": act, "gap": act - x["planned"]})
+    rest = max(0.0, 1 - sum(x["planned"] for x in split))
+    other = sum(c for _, t, c in recent if t not in named) / total
+    rows.append({"label": "other (not in the split)", "planned": rest, "actual": other, "gap": other - rest})
+    if total > spent and not idle_lines:
+        rows.append({"label": "unused capacity", "planned": 0.0, "actual": unused, "gap": unused})
     return rows
 
 def off_plan(rows, threshold=0.25, min_planned=0.2):
@@ -89,9 +104,8 @@ def off_plan(rows, threshold=0.25, min_planned=0.2):
     return [r["label"] for r in rows if r["planned"] >= min_planned and abs(r["gap"]) > threshold]
 
 def parse_proposed(text):
-    m = re.search(r"^#+\s*Facts\s*$(.*?)(?=^#+\s|\Z)", text or "", re.M | re.S | re.I)
     out = []
-    for line in (m.group(1).splitlines() if m else []):
+    for line in section(text, "Facts", suffix=False).splitlines():
         line = line.strip().lstrip("-*").strip()
         if line:
             parts = [p.strip() for p in line.split("|")]
@@ -99,7 +113,7 @@ def parse_proposed(text):
             out.append({"fact": parts[0][:200], "source": src[:200]})
     return out
 
-def markdown(reg, prow, proposed, cap_unit):
+def markdown(reg, prow, proposed, cap_unit, split=None):
     md = (f"\n## Facts measured by the system (from the harness's log of every action; cost in {cap_unit})\n\n"
           "Read these instead of asking: they are measured, not assumed.\n\n")
     if reg:
@@ -108,8 +122,13 @@ def markdown(reg, prow, proposed, cap_unit):
             md += f"| {r['tool']} | {r['calls']} | {round(r['median'], 2)} | {r['recent_share']:.0%} |\n"
     else:
         md += "No actions logged yet.\n"
+    seen = {r["tool"] for r in reg}
+    never = list(dict.fromkeys(t for x in (split or []) for t in x["tools"] if t not in seen))
+    if never:  # named in the plan but never called: measured as zero, not missing
+        md += "\nNamed in the capacity split but never called (0 calls, measured): " + ", ".join(never) + ".\n"
     if prow:
-        md += ("\n## Pursuit: planned vs actual capacity split (last point; plan from swarm/aims.md)\n\n"
+        md += ("\n## Pursuit: planned vs actual capacity split (last point; plan from swarm/aims.md; shares of the capacity of "
+               "the periods worked when the task reports it, else of what was spent)\n\n"
                "| label | planned | actual | gap |\n| --- | --- | --- | --- |\n")
         for r in prow:
             md += f"| {r['label']} | {r['planned']:.0%} | {r['actual']:.0%} | {r['gap']:+.0%} |\n"

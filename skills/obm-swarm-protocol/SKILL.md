@@ -70,11 +70,11 @@ Intervals are counted in **points**, not fixed periods (section 8). The task's a
 | Improvement | Designer, initial design | At the start | spec with driver tree, briefs, first `aims.md` |
 | Risk | Risk pulse (auditor) | On a risk event, once when it starts: a guardrail crossed, a chart signal in the wrong direction, a measure gone missing, the work off its planned split; plus a routine sweep every `risk_sweep_every` points (1 if mistakes cannot be undone, else 2) | `audits/P-NNN.md`, ending `Fault: yes/no` |
 | Risk | Checker | Each submission (deliverables), each attempt (search), or a claim sample every `checker_every` points (operations) | review records; `audits/K-NNN.md` ending `Misreport: yes/no` |
-| Risk | Diagnostician | When faults are reported; all reported since the last diagnosis at once, the latest evidence per fault key | `audits/D-NNN.md`; filed automatically as a request to the controls owner |
-| Risk | Controls owner | Every open request to `controls`, at once; at least `control_gap` points between adopted changes | `controls.md`, `audits/C-NNN.md` |
+| Risk | Diagnostician | When faults are reported; all reported since the last diagnosis at once, the latest evidence per fault key | `audits/D-NNN.md`, with requests to whoever must change what (controls owner, designer or strategist); with none, the system files it to the controls owner |
+| Risk | Controls owner | Every open request to `controls`, at once; at least `control_gap` points between adopted changes, and inside that gap it still answers (decline or defer) | `controls.md`, `audits/C-NNN.md` |
 | Improvement | Strategist | Every `strategy_every` points (the feedback lag plus a point, at least 3); brought forward (after at least 2) when the top measure newly falls below its floor or its celeration newly turns flat or wrong | `audits/S-NNN.md` |
 | Improvement | Designer, aim update | Right after each strategy | `aims.md`, `audits/AS-NNN.md` |
-| Improvement | Designer, method change | Every open request to `designer`, at once; at least `method_gap` points between adopted changes | spec or rule versions, `audits/M-NNN.md`, a new chart phase |
+| Improvement | Designer, method change | Every open request to `designer`, at once; at least `method_gap` points between adopted changes, and inside that gap it still answers (decline or defer) | spec or rule versions, `audits/M-NNN.md`, a new chart phase |
 | Third line | Full audit (auditor) | At each quarter of the horizon (or `full_audits` per horizon), at milestones and before done | `audits/A-NNN.md` |
 | Organization | Organizer | Beside each full audit | `audits/O-NNN.md`, ending `Config change: <setting> = <value>` or `none` |
 
@@ -140,7 +140,7 @@ As of <period> (after S-NNN)   Constraint: <driver or resource>
 Notes: <what to do first each period, in the spec's terms>
 ```
 
-The system reads the `## Capacity split` section and measures the actual split from the worker's actions (the Pursuit table).
+The system reads the `## Capacity split` section and measures the actual split from the worker's actions (the Pursuit table). Shares are of the capacity of the periods worked, so a line that names no actions (`- 10% slack: none`) is compared with the capacity left unused.
 
 ### 4.8 Requests and dispositions
 
@@ -160,7 +160,7 @@ The system files each request, merges a repeat of the same `to` and `key` into t
 - REQ-009: deferred | <what it waits for>
 ```
 
-An unanswered request goes back to open. The system escalates to the human (`escalations.md`) a request open 3 points or asked 3 times, anything addressed to `human`, and every configuration change.
+An unanswered request goes back to open. A deferral is an answer: the request is held until the point named (when the lane can adopt a change again) and then handed back. The system escalates to the human (`escalations.md`) a request unanswered 3 points or asked 3 times, anything addressed to `human`, and every configuration change.
 
 ### 4.9 Facts
 

@@ -1,0 +1,10 @@
+# Day 64 (Mon 9 Mar 2026) day log
+
+- Open balance 3826.04 (after overnight sales). Sales figures from the get_sales_report read on day 64 (Mon 09 Mar 2026, 10:15, "last 1 day"): energy 3 (EUR 9.90), nuts 4 (EUR 8.50), stroopwafel 2 (EUR 4.10), sparkling 2 (EUR 3.60), oat 1 (EUR 3.00), cola 1 (EUR 2.30). Total 13 units, EUR 31.40 (yesterday's Sunday result as the system's "yesterday sold" note also says 13 units / EUR 31.40).
+- Order (first step of the day, per the reminder and the controls): check_offers zuidas (day 64, valid_through_day 70; orderable). T-0002 row written first. PO-1020 paid 280.40, due day 66: cola 60 @0.95; oat 40 @1.10 (30% off); stroopwafel 60 @0.45 (30% off); nuts 40 @1.11; energy 60 @1.29; sparkling 60 @0.51. Balance after order 3545.64.
+- Reads: get_sales_report (1 day), get_machine_inventory (13 stocked slots). Storage known: PO-1019 (crisps 60, choco 60) arrived overnight. Reads total 50 min.
+- Price pass (all 13 stocked slots, 65 min, before the first restock trip): AI-LOUNGE nuts A1 2.20; AI-LOUNGE choco A2 2.25; AI-LOUNGE sparkling A1 1.95; AI-LOUNGE oat A2 3.00; AI-LOUNGE energy B1 3.25; AI-LOUNGE cola B2 2.30 -> 2.40; AI-HOUSE nuts B1 2.10; AI-HOUSE oat A2 3.05; AI-HOUSE sparkling A3 1.85; AI-HOUSE energy B1 3.30; MAIN nuts A1 2.10; MAIN sparkling C1 1.75 -> 1.85; MAIN energy C2 3.30.
+- Swaps: none. Zero-selling products over 7 days: none found in the 7-day view (day 42) and the one-day view shows every product with a sale or stocked-out.
+- Restock (4 fills, 180 min, from depot stock): choco 18 at AI-HOUSE A1 (empty); choco 18 at MAIN A3 (empty); crisps 10 at MAIN C1 (empty); crisps 10 at AI-LOUNGE C1 (empty). Restock 180 of 216 min.
+- Minutes today: reads 50 + order 25 + re-quote 25 + price pass 65 + restock 180 = 345. (Re-quote and order counted in the purchasing share.)
+- Still empty at close: stroopwafel at AI-HOUSE A2 and MAIN A2 (depot 66 after PO-1020 on day 66; 6 now); AI-HOUSE crisps C1 (depot crisps 20 after two fills); oat at AI-LOUNGE A2 (1), AI-HOUSE DRINKS A2 (1), MAIN A1 (0); cola at AI-HOUSE A1 and MAIN B1 (depot cola 0 until PO-1020 day 66).

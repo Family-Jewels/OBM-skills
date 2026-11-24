@@ -7,7 +7,7 @@ description: "Diagnose a long-running multi-agent (swarm) task: pinpoint what is
 
 The shared protocol is the `obm-swarm-protocol` skill. Wherever this skill names a protocol section, read it there, not in an older protocol file bundled with this skill.
 
-You find what is broken and why, for the risk branch. A shortfall against the aims (below the floor, a flat celeration) is the Strategist's, not yours. You do not write the fix: the controls owner turns your diagnosis into controls. Keeping cause and change apart stops a quick rule from papering over the real cause.
+You find what is broken and why, for the risk branch. A shortfall against the aims (below the floor, a flat celeration) is the Strategist's, not yours. You do not write the fix: you say who must change what, and they make the change. Keeping cause and change apart stops a quick rule from papering over the real cause.
 
 The system invokes you with every fault the risk branch has reported since your last diagnosis (each with its key and the record that found it), all at once (the protocol's cadence section). Every human correction gets a diagnosis too.
 
@@ -23,7 +23,7 @@ The system invokes you with every fault the risk branch has reported since your 
    3. **Incentives:** does the right behavior pass reliably and at once? Does the wrong one ever pass? Is honesty safe? Has an aim become a ceiling?
 
    Only then consider knowledge or the model tier.
-6. **Say what would need to change,** in one or two lines, without writing it: a control (a limit or a check, for the controls owner, who receives your diagnosis automatically), or, when the cause is in how the work itself is designed, a request to the designer (protocol 4.8). Name the measure it should move. Read the Facts table first: a cost the system measures is a fact of the environment, not a cause to re-investigate.
+6. **Say what would need to change,** in one or two lines, without writing it: a control (a limit or a check), as a request to the controls owner; or, when the cause is in the aims, the order of the work, methods or rules, a request to the designer (or the strategist for direction) (protocol 4.8). The system routes your diagnosis by these requests; with none, it goes to the controls owner. A cause in the aims sent to the controls owner comes back declined and costs a round. Name the measure it should move. Read the Facts table first: a cost the system measures is a fact of the environment, not a cause to re-investigate.
 7. **Write `audits/D-NNN.md`** (the protocol's diagnosis format). Keep it short: the designer reads it to decide.
 
 **Environment failures are not performance.** Usage limits, outages, missing credentials or an unavailable model are reported as environment issues, never as agent behavior.

@@ -22,6 +22,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import charts, progress, facts, profile
 from ledger import Ledger, parse_requests
+from mdtext import plain
 from engine_v2 import load_spec, preflight
 
 ROLE_OF = {"pulse": "risk monitor", "check": "checker", "diagnosis": "diagnostician", "controls": "controls owner",
@@ -100,7 +101,8 @@ def main(cfg, cfg_path=None):
     reg = facts.register(cs, period, W)
     aims_text = (sw / "aims.md").read_text() if (sw / "aims.md").exists() else ""
     split = facts.parse_split(aims_text)
-    prow = facts.pursuit(split, cs, period, W)
+    avail = (resources.get(spec.get("capacity")) or {}).get("available")
+    prow = facts.pursuit(split, cs, period, W, avail if isinstance(avail, (int, float)) and avail > 0 else None)
 
     # Risk events, on a change of state only.
     risk_now = []
@@ -163,6 +165,8 @@ def main(cfg, cfg_path=None):
 
     def spawn(jid, kind, prompt, budget, turns, extra=None):
         extra = extra or {}
+        prompt += (f" You have at most {turns} turns: write swarm/audits/{jid}.md by turn {max(3, turns - 4)} at the latest, "
+                   f"then refine it if turns remain.")
         out = jobs / f"{jid}.json"
         cmd = ["claude", "-p", prompt, "--model", model, "--output-format", "json", "--max-turns", str(turns),
                "--tools", "Read,Write,Edit,Glob,Grep,Skill", "--allowedTools", "Read,Write,Edit,Glob,Grep,Skill", "--strict-mcp-config",
@@ -199,6 +203,14 @@ def main(cfg, cfg_path=None):
                   "changed>' or '- REQ-NNN: declined | <why, e.g. the Facts table shows it is fixed by the environment>' or "
                   "'- REQ-NNN: deferred | <what you are waiting for>'. A request you do not answer goes back to open.")
 
+    def answer_only(opens):
+        if opens is None:
+            return ""
+        return (f"\nThis lane's last change was adopted recently, so no change may be adopted before point {opens} (each change needs "
+                f"time to be judged). Do not change the files you own now. Answer every request: 'declined | <why>' when it needs no "
+                f"change or belongs to another role (say which), or 'deferred | <the change you will make at point {opens}>'. The "
+                f"system hands deferred requests back to this lane at point {opens}.")
+
     def pulse_prompt(pid, trig):
         return (f"Use the obm-swarm-auditor skill for a RISK PULSE ({pid}), invoked by the system ({trig}), {common} Your question is "
                 f"only: is anything broken, false, or about to cross a line? Not whether the work could be better: the improvement branch "
@@ -214,8 +226,9 @@ def main(cfg, cfg_path=None):
         lst = ", ".join(f"{f['key']} (from {f['from']}, swarm/audits/{f['from']}.md)" for f in fq)
         return (f"Use the obm-swarm-diagnostician skill ({did}), invoked by the system because the risk branch found these faults: {lst}. "
                 f"{common} For each, find what moved and what maintains it, cause in the environment first (information, resources, "
-                f"incentives, the facts in the Facts table), then the worker. Do not write a fix or change anything: the controls owner "
-                f"acts on your diagnosis. Write swarm/audits/{did}.md in under 250 words. {REQ_HOWTO}")
+                f"incentives, the facts in the Facts table), then the worker. Do not write a fix or change anything. Say who must change "
+                f"what: a request to the controls owner for a limit or check, or to the designer (or strategist) when the cause is in "
+                f"the aims, methods or rules; with no request, the system hands your diagnosis to the controls owner. Write swarm/audits/{did}.md in under 250 words. {REQ_HOWTO}")
 
     def controls_prompt(cid, reqs):
         return (f"Use the obm-swarm-controls skill ({cid}), invoked by the system {common} These requests are yours, all at once:\n{reqs}\n"
@@ -288,13 +301,18 @@ def main(cfg, cfg_path=None):
         mem["cost"][j["kind"]] += r.get("total_cost_usd") or 0
         ev(j["kind"], id=j["id"], branch=BRANCH[j["kind"]], started_period=j["period"], cost=r.get("total_cost_usd"), turns=r.get("num_turns"))
         rec_f = sw / "audits" / f"{j['id']}.md"
+        if not rec_f.exists():  # the job ended without its record (turn limit, error): visible, never silent
+            mem.setdefault("no_record", []).append(j["id"])
+            ev("no_record", id=j["id"], kind=j["kind"], subtype=r.get("subtype"), turns=r.get("num_turns"))
         rec = rec_f.read_text() if rec_f.exists() else (r.get("result") or "")
-        for req, how in L.file(j["id"], parse_requests(rec), point, period):
+        rec = plain(rec)  # '**Fault: yes**' and 'Fault key: `x`' read as plain lines
+        own = parse_requests(rec)
+        for req, how in L.file(j["id"], own, point, period):
             ev("request_" + how, id=req["id"], to=req["to"], key=req["key"], asked=req["asked"])
         for fct in facts.parse_proposed(rec):
             mem.setdefault("proposed_facts", []).append({**fct, "from": j["id"]})
         if j.get("reqs"):
-            for rid, st in L.answer(j["id"], rec, point):
+            for rid, st in L.answer(j["id"], rec, point, j.get("opens")):
                 ev("request_" + st, id=rid, by=j["id"])
         k = j["kind"]
         if k == "pulse" or k == "audit" or k == "check":
@@ -313,8 +331,11 @@ def main(cfg, cfg_path=None):
             if k == "audit":
                 handoff.append(f"full audit {j['id']} is in swarm/audits/{j['id']}.md.")
         elif k == "diagnosis":
-            L.file(j["id"], [{"to": "controls", "key": j.get("fault_key", "fault"), "text": f"Act on diagnosis {j['id']} (swarm/audits/{j['id']}.md)."}],
-                   point, period)
+            # The diagnosis names who must change what (protocol 4.4). Only when it files no request to a change owner
+            # does the system file one to the controls owner for it.
+            if not any(q["to"] in ("controls", "designer", "strategist") for q in own):
+                L.file(j["id"], [{"to": "controls", "key": j.get("fault_key", "fault"), "text": f"Act on diagnosis {j['id']} (swarm/audits/{j['id']}.md)."}],
+                       point, period)
         elif k == "controls":
             h = fhash([sw / "controls.md"])
             if h != mem.get("controls_hash"):
@@ -379,11 +400,13 @@ def main(cfg, cfg_path=None):
     # Charts: progress, facts, pursuit, requests, configuration and health.
     health = health_md(mem, L, point, prow, C, unit)
     prop = mem.get("proposed_facts", [])
-    (sw / "charts.md").write_text(cmd_md + prog_md + facts.markdown(reg, prow, prop, cap) + L.table(point) + health)
+    (sw / "charts.md").write_text(cmd_md + prog_md + facts.markdown(reg, prow, prop, cap, split) + L.table(point) + health)
     ev("measure", chart_signals=chart_bad, progress=[e["kind"] for e in events if e["kind"] != "new_point"])
 
     if over:
         return finish(mem, mem_p, log, handoff, cfg)
+
+    L.release(point)
 
     # 2. Risk branch.
     reasons = [f"{k}: {l}" for k, l in risk_now]
@@ -404,9 +427,12 @@ def main(cfg, cfg_path=None):
               {"fault_key": fq[-1]["key"] if len(fq) == 1 else "faults-" + "-".join(f["key"] for f in fq)[:40], "trigger": ", ".join(f["from"] for f in fq)})
     lc = mem.get("last_control_point")
     creqs = L.open_for("controls")
-    if creqs and not busy("controls") and (lc is None or newest - lc >= C["control_gap"]):
+    if creqs and not busy("controls"):
+        # Spacing applies to adopted changes, never to answering: inside the gap the owner answers only.
+        opens = None if (lc is None or newest - lc >= C["control_gap"]) else lc + C["control_gap"] + 1
         cid = nid("C"); L.take(creqs, cid)
-        spawn(cid, "controls", controls_prompt(cid, L.prompt_list(creqs)), budgets.get("controls", 1.0), 20, {"reqs": [r["id"] for r in creqs]})
+        spawn(cid, "controls", controls_prompt(cid, L.prompt_list(creqs)) + answer_only(opens), budgets.get("controls", 1.0), 20,
+              {"reqs": [r["id"] for r in creqs], "opens": opens})
     if C["checker"] == "sample_claims" and new_point and win["ok"] and not busy("check"):
         lk = mem.get("last_check_point")
         if lk is None or newest - lk >= C["checker_every"]:
@@ -430,9 +456,11 @@ def main(cfg, cfg_path=None):
                   {"trigger": "; ".join(why), "reqs": [r["id"] for r in sreqs]})
     lm = mem.get("last_method_point")
     dreqs = L.open_for("designer")
-    if dreqs and not busy("method", "aims") and (lm is None or newest - lm >= C["method_gap"]):
+    if dreqs and not busy("method", "aims"):
+        opens = None if (lm is None or newest - lm >= C["method_gap"]) else lm + C["method_gap"] + 1
         mid = nid("M"); L.take(dreqs, mid)
-        spawn(mid, "method", method_prompt(mid, L.prompt_list(dreqs)), budgets.get("method", 1.5), 25, {"reqs": [r["id"] for r in dreqs]})
+        spawn(mid, "method", method_prompt(mid, L.prompt_list(dreqs)) + answer_only(opens), budgets.get("method", 1.5), 25,
+              {"reqs": [r["id"] for r in dreqs], "opens": opens})
 
     # 4. Full audit (third line) and the Organizer, at even fractions of the horizon.
     n_aud = C["full_audits"]
@@ -464,6 +492,8 @@ def health_md(mem, L, point, prow, C, unit):
     runs["aims"] = runs["strategist"]
     md = ["\n## System health (for the Organizer; computed by the system)\n",
           f"- Requests open: {len(live)}; oldest {oldest} points; asked 3 or more times: {rep}.",
+          f"- Jobs that ended without their record: {len(mem.get('no_record', []))}"
+          + (f" ({', '.join(mem['no_record'][-5:])})" if mem.get("no_record") else "") + ".",
           f"- Strategy to aims reaching the worker: {('median ' + str(sorted(lat)[len(lat) // 2]) + ' ' + unit + 's') if lat else 'none yet'}.",
           f"- Largest gap between planned and actual capacity share: {('%.0f points' % (gap * 100)) if gap is not None else 'no plan yet'}.",
           "- Jobs run: " + ", ".join(f"{ROLE_OF[k]} {v}" for k, v in runs.items() if v) + ".",

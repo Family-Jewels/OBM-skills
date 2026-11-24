@@ -70,9 +70,15 @@ design changes):
 Mechanics are code, not agents:
 
 - `ledger.py`: requests between roles (`## Requests` in any record), merged by key, reopened on repeat, answered in
-  `## Dispositions`, escalated to `swarm/escalations.md` when open 3 points or asked 3 times.
+  `## Dispositions`, escalated to `swarm/escalations.md` when unanswered 3 points or asked 3 times. A deferral is an answer,
+  held until the point the lane can change again. Spacing applies to adopted changes only: inside a lane's gap its owner is
+  still called, to decline or defer. A diagnosis is routed by its own requests (controls owner, designer or strategist).
+- `mdtext.py`: records are read with markdown emphasis removed, so `**Fault: yes**` parses like `Fault: yes`.
 - `facts.py`: the fact register and the pursuit measure, from the action log written by `adapters/action_hook.py`
-  (a PostToolUse hook on every task tool; the adapter only supplies `action_clock()`).
+  (a PostToolUse hook on every task tool; the adapter only supplies `action_clock()`). Pursuit shares are of the capacity of
+  the periods worked (from the capacity resource's `available`), so slack in the plan is compared with unused capacity;
+  actions named in the split but never called are listed as measured zero. A job that ends without its record is logged
+  (`no_record`) and counted in System health.
 - `profile.py`: the task profile (`work_shape`, `feedback_lag`, `reversible`) to settings with bounds.
 
 Tests: `python3 -I test_engine_v4.py`. Replay a recorded run: `ENGINE_VERSION=4 python3 -I replay.py <run> <scratch>`.

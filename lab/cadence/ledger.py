@@ -12,17 +12,19 @@ A job that takes requests answers each in a section
     - REQ-007: done | added the chart
     - REQ-008: declined | the restock cost is fixed by the environment (see Facts)
     - REQ-009: deferred | needs two more points of data
-An unanswered request goes back to open. 'deferred' keeps it open.
+An unanswered request goes back to open. 'deferred' is an answer: the request is held until the point the job names
+(or the next point) and then reopens for the next job that can change things. Age, for escalation, runs from the last
+answer, so a request deferred to when its lane reopens is not escalated for waiting; one asked 3 times still is.
 """
 import re
+from mdtext import section as _md_section
 
 TARGETS = ("controls", "designer", "strategist", "human")
 BRANCH = {"controls": "risk", "designer": "improvement", "strategist": "improvement", "human": "human"}
 ESCALATE_AGE, ESCALATE_ASKED = 3, 3  # points open; times asked
 
 def _section(text, title):
-    m = re.search(rf"^#+\s*{title}\s*$(.*?)(?=^#+\s|\Z)", text or "", re.M | re.S | re.I)
-    return m.group(1) if m else ""
+    return _md_section(text, title)
 
 def parse_requests(text):
     out = []
@@ -79,7 +81,7 @@ class Ledger:
                 continue
             self.m["n"] += 1
             r = {"id": f"REQ-{self.m['n']:03d}", "from": frm, "to": it["to"], "key": it["key"], "text": it["text"], "status": "open",
-                 "opened_point": point, "opened_period": period, "asked": 1, "reason": "", "closed_point": None, "escalated": []}
+                 "opened_point": point, "waiting_since": point, "opened_period": period, "asked": 1, "reason": "", "closed_point": None, "escalated": []}
             self.reqs.append(r); done.append((r, "new"))
         return done
 
@@ -91,8 +93,9 @@ class Ledger:
         for r in reqs:
             r["status"] = "in_progress"; r["job"] = job_id
 
-    def answer(self, job_id, text, point):
-        """Apply a job's dispositions. Requests the job held but did not answer go back to open."""
+    def answer(self, job_id, text, point, defer_to=None):
+        """Apply a job's dispositions. Requests the job held but did not answer go back to open; deferred ones are held
+        until defer_to (default: the next point)."""
         disp = parse_dispositions(text)
         res = []
         for r in self.reqs:
@@ -101,20 +104,30 @@ class Ledger:
             d = disp.get(r["id"])
             if d and d[0] in ("done", "declined"):
                 r["status"], r["reason"], r["closed_point"] = d[0], d[1], point
+            elif d:  # deferred: answered, held until its lane can act
+                r["status"], r["reason"] = "deferred", d[1]
+                r["until"] = max(point + 1, defer_to or 0); r["waiting_since"] = r["until"]
             else:
                 r["status"] = "open"; r["reason"] = d[1] if d else "not answered"
             res.append((r["id"], r["status"]))
         return res
 
+    def release(self, point):
+        """Deferred requests whose point has come reopen for the next job."""
+        for r in self.reqs:
+            if r["status"] == "deferred" and point >= r.get("until", 0):
+                r["status"] = "open"
+
     def escalations(self, point):
         """Requests to escalate now: open too long or asked too often (each reason once per request)."""
         out = []
         for r in self.reqs:
-            if r["status"] not in ("open", "in_progress"):
+            if r["status"] not in ("open", "in_progress", "deferred"):
                 continue
             why = []
-            if point - r["opened_point"] >= ESCALATE_AGE and "age" not in r["escalated"]:
-                why.append(f"open {point - r['opened_point']} points"); r["escalated"].append("age")
+            age = point - r.get("waiting_since", r["opened_point"])
+            if r["status"] != "deferred" and age >= ESCALATE_AGE and "age" not in r["escalated"]:
+                why.append(f"unanswered {age} points"); r["escalated"].append("age")
             if r["asked"] >= ESCALATE_ASKED and "asked" not in r["escalated"]:
                 why.append(f"asked {r['asked']} times"); r["escalated"].append("asked")
             if r["to"] == "human" and "human" not in r["escalated"]:
@@ -124,15 +137,17 @@ class Ledger:
         return out
 
     def table(self, point, limit=20):
-        live = [r for r in self.reqs if r["status"] in ("open", "in_progress")]
+        """Every live request (open, in progress, deferred), then recently closed ones up to the limit."""
+        live = [r for r in self.reqs if r["status"] in ("open", "in_progress", "deferred")]
         recent = [r for r in self.reqs if r["status"] not in ("open", "in_progress") and r["closed_point"] is not None
                   and point - r["closed_point"] <= 3]
         if not live and not recent:
             return "\n## Requests (filed and tracked by the system)\n\nNone open.\n"
         rows = ["\n## Requests (filed and tracked by the system; answer each in a '## Dispositions' section when it is handed to you)\n",
                 "| id | from | to | key | age (points) | asked | status | reason |", "| --- | --- | --- | --- | --- | --- | --- | --- |"]
-        for r in (live + recent)[-limit:]:
-            rows.append(f"| {r['id']} | {r['from']} | {r['to']} | {r['key']} | {point - r['opened_point']} | {r['asked']} | {r['status']} | "
+        for r in live + recent[-max(0, limit - len(live)):] if limit > len(live) else live:  # every open request, always
+            st = r["status"] + (f" to point {r['until']}" if r["status"] == "deferred" else "")
+            rows.append(f"| {r['id']} | {r['from']} | {r['to']} | {r['key']} | {point - r['opened_point']} | {r['asked']} | {st} | "
                         f"{(r['reason'] or '').replace('|', '/')[:120]} |")
         return "\n".join(rows) + "\n"
 
