@@ -1,0 +1,356 @@
+{"t": 1795544267.9701061, "period": 2, "event": "preflight", "problems": [], "window": {"w": 7, "n": 52, "ok": true, "why": "7 periods per point: whole cycles of 7, at least 3 observations each, 52 points across the horizon of 365"}}
+{"t": 1795544267.9704394, "period": 2, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544269.4541678, "period": 3, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544270.1298296, "period": 4, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544270.6753795, "period": 5, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544282.3755162, "period": 6, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544295.743377, "period": 7, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544295.7441483, "period": 7, "event": "started", "id": "P-001", "kind": "pulse", "trigger": "scheduled"}
+{"t": 1795544298.419309, "period": 8, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544301.6379647, "period": 9, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544309.0437584, "period": 10, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544327.2708132, "period": 11, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544347.66305, "period": 12, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544347.6632514, "period": 7, "delivered": 12, "event": "pulse", "id": "P-001", "trigger": "scheduled", "cost": 0.01194235, "turns": 13}
+{"t": 1795544347.663967, "period": 12, "event": "started", "id": "D-P-001", "kind": "diagnosis", "trigger": "pulse review"}
+{"t": 1795544362.9018312, "period": 13, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544370.6106288, "period": 14, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544370.611448, "period": 14, "event": "started", "id": "P-002", "kind": "pulse", "trigger": "scheduled"}
+{"t": 1795544372.4818103, "period": 15, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544380.16954, "period": 16, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544403.9981778, "period": 17, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544403.9984634, "period": 12, "delivered": 17, "event": "diagnosis", "id": "D-P-001", "trigger": "pulse review", "cost": 0.00889475, "turns": 8}
+{"t": 1795544403.9990416, "period": 17, "event": "started", "id": "R-P-001", "kind": "redesign", "trigger": null}
+{"t": 1795544410.357715, "period": 18, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544410.357906, "period": 14, "delivered": 18, "event": "pulse", "id": "P-002", "trigger": "scheduled", "cost": 0.01068181, "turns": 13}
+{"t": 1795544410.357968, "period": 18, "event": "diagnosis_queued", "after": "P-002"}
+{"t": 1795544422.545044, "period": 19, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544439.7149434, "period": 20, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544451.076889, "period": 21, "event": "measure", "chart_signals": [], "progress": ["flat_or_wrong"]}
+{"t": 1795544451.0814593, "period": 21, "event": "started", "id": "S-001", "kind": "strategist", "trigger": "cash celeration flat (x1.01, range /1.04 to x1.06); first strategy, after the baseline"}
+{"t": 1795544451.0820382, "period": 21, "event": "started", "id": "P-003", "kind": "pulse", "trigger": "scheduled"}
+{"t": 1795544453.809486, "period": 22, "event": "measure", "chart_signals": [], "progress": ["flat_or_wrong"]}
+{"t": 1795544453.8097334, "period": 17, "delivered": 22, "event": "redesign", "id": "R-P-001", "trigger": null, "cost": 0.0143638, "turns": 19}
+{"t": 1795544471.7903044, "period": 23, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544480.3902428, "period": 24, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544480.3904786, "period": 21, "delivered": 24, "event": "strategist", "id": "S-001", "trigger": "cash celeration flat (x1.01, range /1.04 to x1.06); first strategy, after the baseline", "cost": 0.007581009999999999, "turns": 8}
+{"t": 1795544480.3916006, "period": 24, "event": "started", "id": "AS-001", "kind": "aims", "trigger": null}
+{"t": 1795544504.005805, "period": 25, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544504.0064197, "period": 21, "delivered": 25, "event": "pulse", "id": "P-003", "trigger": "scheduled", "cost": 0.0114383, "turns": 11}
+{"t": 1795544532.705175, "period": 27, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544540.7031403, "period": 28, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544540.7039409, "period": 28, "event": "started", "id": "P-004", "kind": "pulse", "trigger": "scheduled"}
+{"t": 1795544543.268239, "period": 29, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544557.9110725, "period": 30, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544567.8159885, "period": 31, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544577.7969139, "period": 32, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544577.7971618, "period": 24, "delivered": 32, "event": "aims", "id": "AS-001", "trigger": null, "cost": 0.02339685, "turns": 18}
+{"t": 1795544577.7975664, "period": 28, "delivered": 32, "event": "pulse", "id": "P-004", "trigger": "scheduled", "cost": 0.010492070000000003, "turns": 12}
+{"t": 1795544577.7976282, "period": 32, "event": "diagnosis_queued", "after": "P-004"}
+{"t": 1795544594.6402433, "period": 33, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544607.796751, "period": 34, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544619.9845417, "period": 35, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544619.9852395, "period": 35, "event": "started", "id": "P-005", "kind": "pulse", "trigger": "scheduled"}
+{"t": 1795544621.2639809, "period": 36, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544633.3158712, "period": 37, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544645.8787327, "period": 38, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544653.7394092, "period": 39, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544660.5694516, "period": 40, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544685.6776597, "period": 41, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544685.6778512, "period": 35, "delivered": 41, "event": "pulse", "id": "P-005", "trigger": "scheduled", "cost": 0.01161066, "turns": 10}
+{"t": 1795544685.6779132, "period": 41, "event": "diagnosis_queued", "after": "P-005"}
+{"t": 1795544688.2249997, "period": 42, "event": "measure", "chart_signals": [], "progress": ["aim_raised"]}
+{"t": 1795544688.2250435, "period": 42, "event": "aim_raised", "label": "aim met on 2 of the last 3 points: redrawn toward 122,438"}
+{"t": 1795544688.22594, "period": 42, "event": "started", "id": "D-P-002", "kind": "diagnosis", "trigger": "pulse review"}
+{"t": 1795544688.22656, "period": 42, "event": "started", "id": "S-002", "kind": "strategist", "trigger": "scheduled: 3 points since the last strategy"}
+{"t": 1795544688.2272387, "period": 42, "event": "started", "id": "P-006", "kind": "pulse", "trigger": "scheduled"}
+{"t": 1795544696.5727673, "period": 43, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544706.1168497, "period": 44, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544714.7764375, "period": 45, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544716.618437, "period": 46, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544725.9431865, "period": 47, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544727.7378721, "period": 48, "event": "measure", "chart_signals": ["slots_selling beyond the lower limit"], "progress": []}
+{"t": 1795544732.6901178, "period": 49, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544732.690326, "period": 42, "delivered": 49, "event": "diagnosis", "id": "D-P-002", "trigger": "pulse review", "cost": 0.010052950000000001, "turns": 8}
+{"t": 1795544732.6909127, "period": 49, "event": "started", "id": "R-P-002", "kind": "redesign", "trigger": null}
+{"t": 1795544746.7598274, "period": 50, "event": "measure", "chart_signals": ["slots_selling beyond the lower limit"], "progress": []}
+{"t": 1795544746.7600648, "period": 42, "delivered": 50, "event": "strategist", "id": "S-002", "trigger": "scheduled: 3 points since the last strategy", "cost": 0.01261136, "turns": 9}
+{"t": 1795544746.7607741, "period": 50, "event": "started", "id": "AS-002", "kind": "aims", "trigger": null}
+{"t": 1795544746.7609951, "period": 42, "delivered": 50, "event": "pulse", "id": "P-006", "trigger": "scheduled", "cost": 0.014817800000000002, "turns": 14}
+{"t": 1795544746.761072, "period": 50, "event": "diagnosis_queued", "after": "P-006"}
+{"t": 1795544763.5742147, "period": 51, "event": "measure", "chart_signals": ["cash_gain_7 beyond the lower limit"], "progress": []}
+{"t": 1795544771.1767128, "period": 52, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544777.678669, "period": 53, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544785.3717763, "period": 54, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544790.3310204, "period": 55, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544795.3476293, "period": 56, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544795.3483493, "period": 56, "event": "started", "id": "P-007", "kind": "pulse", "trigger": "scheduled"}
+{"t": 1795544800.9403787, "period": 57, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544822.3001983, "period": 58, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544822.3003955, "period": 49, "delivered": 58, "event": "redesign", "id": "R-P-002", "trigger": null, "cost": 0.02229429, "turns": 23}
+{"t": 1795544833.1187546, "period": 59, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544841.78602, "period": 60, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544841.786273, "period": 56, "delivered": 60, "event": "pulse", "id": "P-007", "trigger": "scheduled", "cost": 0.01204912, "turns": 11}
+{"t": 1795544841.7863817, "period": 60, "event": "diagnosis_queued", "after": "P-007"}
+{"t": 1795544854.474686, "period": 61, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544856.346792, "period": 62, "event": "measure", "chart_signals": ["slots_selling beyond the lower limit"], "progress": []}
+{"t": 1795544865.4633825, "period": 63, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544865.4641628, "period": 63, "event": "started", "id": "P-008", "kind": "pulse", "trigger": "scheduled"}
+{"t": 1795544870.9428382, "period": 64, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544884.220056, "period": 65, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544892.9156368, "period": 66, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544892.9159718, "period": 50, "delivered": 66, "event": "aims", "id": "AS-002", "trigger": null, "cost": 0.03792633000000001, "turns": 31}
+{"t": 1795544892.916057, "period": 66, "event": "design_change_queued", "after": "S-002"}
+{"t": 1795544905.88401, "period": 67, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544910.2473958, "period": 68, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544912.505907, "period": 69, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544923.2073798, "period": 70, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544923.2076216, "period": 63, "delivered": 70, "event": "pulse", "id": "P-008", "trigger": "scheduled", "cost": 0.014197000000000001, "turns": 13}
+{"t": 1795544923.207697, "period": 70, "event": "diagnosis_queued", "after": "P-008"}
+{"t": 1795544923.208254, "period": 70, "event": "started", "id": "S-003", "kind": "strategist", "trigger": "scheduled: 3 points since the last strategy"}
+{"t": 1795544923.2088218, "period": 70, "event": "started", "id": "P-009", "kind": "pulse", "trigger": "scheduled"}
+{"t": 1795544929.4057734, "period": 71, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544943.5205994, "period": 72, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544950.3536274, "period": 73, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544953.63368, "period": 74, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544956.601973, "period": 75, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544956.6021655, "period": 70, "delivered": 75, "event": "strategist", "id": "S-003", "trigger": "scheduled: 3 points since the last strategy", "cost": 0.009865079999999998, "turns": 11}
+{"t": 1795544956.6027856, "period": 75, "event": "started", "id": "AS-003", "kind": "aims", "trigger": null}
+{"t": 1795544972.704591, "period": 76, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544972.7048414, "period": 70, "delivered": 76, "event": "pulse", "id": "P-009", "trigger": "scheduled", "cost": 0.011752900000000002, "turns": 11}
+{"t": 1795544972.7049098, "period": 76, "event": "diagnosis_queued", "after": "P-009"}
+{"t": 1795544974.9701502, "period": 77, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544974.9709315, "period": 77, "event": "started", "id": "D-P-004", "kind": "diagnosis", "trigger": "pulse review"}
+{"t": 1795544974.9713974, "period": 77, "event": "started", "id": "P-010", "kind": "pulse", "trigger": "scheduled"}
+{"t": 1795544976.974092, "period": 78, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544995.6707075, "period": 80, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795544999.785748, "period": 81, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545014.3199327, "period": 82, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545014.3201504, "period": 77, "delivered": 82, "event": "diagnosis", "id": "D-P-004", "trigger": "pulse review", "cost": 0.008686840000000001, "turns": 8}
+{"t": 1795545014.3207684, "period": 82, "event": "started", "id": "R-P-004", "kind": "redesign", "trigger": null}
+{"t": 1795545014.3210022, "period": 77, "delivered": 82, "event": "pulse", "id": "P-010", "trigger": "scheduled", "cost": 0.01159167, "turns": 12}
+{"t": 1795545014.3210707, "period": 82, "event": "diagnosis_queued", "after": "P-010"}
+{"t": 1795545018.135213, "period": 83, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545025.7281554, "period": 84, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545025.728894, "period": 84, "event": "started", "id": "P-011", "kind": "pulse", "trigger": "scheduled"}
+{"t": 1795545027.256438, "period": 85, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545044.02258, "period": 86, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545044.022762, "period": 75, "delivered": 86, "event": "aims", "id": "AS-003", "trigger": null, "cost": 0.02189678, "turns": 17}
+{"t": 1795545044.022846, "period": 86, "event": "design_change_queued", "after": "S-003"}
+{"t": 1795545051.3518353, "period": 87, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545051.9839568, "period": 88, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545056.4392593, "period": 89, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545063.7988982, "period": 90, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545070.1094766, "period": 91, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545070.1131563, "period": 91, "event": "started", "id": "S-004", "kind": "strategist", "trigger": "scheduled: 3 points since the last strategy"}
+{"t": 1795545071.4003172, "period": 92, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545071.4011345, "period": 92, "event": "started", "id": "A-001", "kind": "audit", "trigger": "quarter 1"}
+{"t": 1795545085.4505963, "period": 93, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545085.450795, "period": 82, "delivered": 93, "event": "redesign", "id": "R-P-004", "trigger": null, "cost": 0.016907190000000002, "turns": 18}
+{"t": 1795545085.4524374, "period": 84, "delivered": 93, "event": "pulse", "id": "P-011", "trigger": "scheduled", "cost": 0.013844520000000003, "turns": 13}
+{"t": 1795545085.4525, "period": 93, "event": "diagnosis_queued", "after": "P-011"}
+{"t": 1795545090.0245986, "period": 94, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545093.394701, "period": 95, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545102.2274897, "period": 96, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545107.134108, "period": 97, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545107.8315985, "period": 98, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545107.8325164, "period": 98, "event": "started", "id": "P-012", "kind": "pulse", "trigger": "scheduled"}
+{"t": 1795545110.9519398, "period": 99, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545131.917071, "period": 101, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545131.9173877, "period": 91, "delivered": 101, "event": "strategist", "id": "S-004", "trigger": "scheduled: 3 points since the last strategy", "cost": 0.01178147, "turns": 11}
+{"t": 1795545131.9181836, "period": 101, "event": "started", "id": "AS-004", "kind": "aims", "trigger": null}
+{"t": 1795545145.803051, "period": 102, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545154.645691, "period": 103, "event": "measure", "chart_signals": ["cash_gain_7 beyond the lower limit"], "progress": []}
+{"t": 1795545154.6459737, "period": 98, "delivered": 103, "event": "pulse", "id": "P-012", "trigger": "scheduled", "cost": 0.012631990000000003, "turns": 14}
+{"t": 1795545154.6460526, "period": 103, "event": "diagnosis_queued", "after": "P-012"}
+{"t": 1795545156.1326206, "period": 104, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545160.3783712, "period": 105, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545160.3791041, "period": 105, "event": "started", "id": "P-013", "kind": "pulse", "trigger": "scheduled"}
+{"t": 1795545166.400695, "period": 106, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545178.8827522, "period": 107, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545184.651208, "period": 108, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545194.1433372, "period": 109, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545199.6786852, "period": 110, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545199.6789494, "period": 105, "delivered": 110, "event": "pulse", "id": "P-013", "trigger": "scheduled", "cost": 0.01136209, "turns": 12}
+{"t": 1795545199.6790113, "period": 110, "event": "diagnosis_queued", "after": "P-013"}
+{"t": 1795545204.28234, "period": 111, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545210.9318838, "period": 112, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545210.9321122, "period": 92, "delivered": 112, "event": "audit", "id": "A-001", "trigger": "quarter 1", "cost": 0.03219305, "turns": 24}
+{"t": 1795545210.9328933, "period": 112, "event": "started", "id": "D-A-001", "kind": "diagnosis", "trigger": "full audit"}
+{"t": 1795545210.9335725, "period": 112, "event": "started", "id": "P-014", "kind": "pulse", "trigger": "scheduled"}
+{"t": 1795545215.8290675, "period": 113, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545224.4068434, "period": 114, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545238.9879665, "period": 115, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545238.9882557, "period": 101, "delivered": 115, "event": "aims", "id": "AS-004", "trigger": null, "cost": 0.023941010000000002, "turns": 17}
+{"t": 1795545238.9884446, "period": 115, "event": "design_change_queued", "after": "S-004"}
+{"t": 1795545241.085297, "period": 116, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545248.8358502, "period": 117, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545254.0015905, "period": 118, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545254.0017767, "period": 112, "delivered": 118, "event": "diagnosis", "id": "D-A-001", "trigger": "full audit", "cost": 0.01288032, "turns": 14}
+{"t": 1795545254.0024676, "period": 118, "event": "started", "id": "R-A-001", "kind": "redesign", "trigger": null}
+{"t": 1795545255.6105092, "period": 119, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545255.6107526, "period": 112, "delivered": 119, "event": "pulse", "id": "P-014", "trigger": "scheduled", "cost": 0.01268576, "turns": 12}
+{"t": 1795545255.610832, "period": 119, "event": "diagnosis_queued", "after": "P-014"}
+{"t": 1795545255.6115124, "period": 119, "event": "started", "id": "S-005", "kind": "strategist", "trigger": "scheduled: 3 points since the last strategy"}
+{"t": 1795545255.6121907, "period": 119, "event": "started", "id": "P-015", "kind": "pulse", "trigger": "scheduled"}
+{"t": 1795545257.6115005, "period": 120, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545266.9616804, "period": 121, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545272.8004632, "period": 122, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545274.1496167, "period": 123, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545280.526222, "period": 124, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545284.6828797, "period": 125, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545285.3697162, "period": 126, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545286.136709, "period": 127, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545299.808927, "period": 129, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545308.102165, "period": 130, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545308.102442, "period": 119, "delivered": 130, "event": "strategist", "id": "S-005", "trigger": "scheduled: 3 points since the last strategy", "cost": 0.012199100000000001, "turns": 11}
+{"t": 1795545308.1031842, "period": 130, "event": "started", "id": "AS-005", "kind": "aims", "trigger": null}
+{"t": 1795545308.1034098, "period": 119, "delivered": 130, "event": "pulse", "id": "P-015", "trigger": "scheduled", "cost": 0.013320740000000001, "turns": 12}
+{"t": 1795545308.103485, "period": 130, "event": "diagnosis_queued", "after": "P-015"}
+{"t": 1795545320.8438838, "period": 131, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545328.3794932, "period": 132, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545329.0904458, "period": 133, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545329.09117, "period": 133, "event": "started", "id": "P-016", "kind": "pulse", "trigger": "scheduled"}
+{"t": 1795545336.3746765, "period": 134, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545336.3749566, "period": 118, "delivered": 134, "event": "redesign", "id": "R-A-001", "trigger": null, "cost": 0.022763540000000002, "turns": 23}
+{"t": 1795545344.0084476, "period": 135, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545346.2856576, "period": 136, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545354.0471761, "period": 137, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545362.267619, "period": 138, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545364.3954422, "period": 139, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545365.2005177, "period": 140, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545365.2007635, "period": 133, "delivered": 140, "event": "pulse", "id": "P-016", "trigger": "scheduled", "cost": 0.01182173, "turns": 12}
+{"t": 1795545365.200824, "period": 140, "event": "diagnosis_queued", "after": "P-016"}
+{"t": 1795545365.2014775, "period": 140, "event": "started", "id": "P-017", "kind": "pulse", "trigger": "scheduled"}
+{"t": 1795545376.0632753, "period": 141, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545377.8440025, "period": 142, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545389.9720097, "period": 144, "event": "measure", "chart_signals": ["cash_gain_7 beyond the lower limit"], "progress": []}
+{"t": 1795545389.9723735, "period": 130, "delivered": 144, "event": "aims", "id": "AS-005", "trigger": null, "cost": 0.02036191, "turns": 15}
+{"t": 1795545389.9725323, "period": 144, "event": "design_change_queued", "after": "S-005"}
+{"t": 1795545396.836621, "period": 145, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545403.3693042, "period": 146, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545410.2399328, "period": 147, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545410.240745, "period": 147, "event": "started", "id": "S-006", "kind": "strategist", "trigger": "scheduled: 3 points since the last strategy"}
+{"t": 1795545414.8070292, "period": 148, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545421.869809, "period": 149, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545421.8699796, "period": 140, "delivered": 149, "event": "pulse", "id": "P-017", "trigger": "scheduled", "cost": 0.01465458, "turns": 13}
+{"t": 1795545421.8700569, "period": 149, "event": "diagnosis_queued", "after": "P-017"}
+{"t": 1795545429.308153, "period": 150, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545430.0240748, "period": 151, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545437.3725088, "period": 152, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545442.750674, "period": 153, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545443.487665, "period": 154, "event": "measure", "chart_signals": [], "progress": ["below_own_line"]}
+{"t": 1795545443.488404, "period": 154, "event": "started", "id": "D-P-005", "kind": "diagnosis", "trigger": "pulse review"}
+{"t": 1795545443.488883, "period": 154, "event": "started", "id": "P-018", "kind": "pulse", "trigger": "scheduled"}
+{"t": 1795545444.3450243, "period": 155, "event": "measure", "chart_signals": [], "progress": ["below_own_line"]}
+{"t": 1795545450.8158154, "period": 156, "event": "measure", "chart_signals": [], "progress": ["below_own_line"]}
+{"t": 1795545458.5665965, "period": 157, "event": "measure", "chart_signals": [], "progress": ["below_own_line"]}
+{"t": 1795545458.5668344, "period": 147, "delivered": 157, "event": "strategist", "id": "S-006", "trigger": "scheduled: 3 points since the last strategy", "cost": 0.012161700000000001, "turns": 11}
+{"t": 1795545458.5675137, "period": 157, "event": "started", "id": "AS-006", "kind": "aims", "trigger": null}
+{"t": 1795545461.2341986, "period": 158, "event": "measure", "chart_signals": [], "progress": ["below_own_line"]}
+{"t": 1795545468.7791817, "period": 159, "event": "measure", "chart_signals": [], "progress": ["below_own_line"]}
+{"t": 1795545473.9512544, "period": 160, "event": "measure", "chart_signals": [], "progress": ["below_own_line"]}
+{"t": 1795545474.6535742, "period": 161, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545486.060801, "period": 162, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545486.0610087, "period": 154, "delivered": 162, "event": "pulse", "id": "P-018", "trigger": "scheduled", "cost": 0.01052682, "turns": 11}
+{"t": 1795545486.0610855, "period": 162, "event": "diagnosis_queued", "after": "P-018"}
+{"t": 1795545496.7485044, "period": 163, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545496.748709, "period": 154, "delivered": 163, "event": "diagnosis", "id": "D-P-005", "trigger": "pulse review", "cost": 0.0145287, "turns": 16}
+{"t": 1795545496.749277, "period": 163, "event": "started", "id": "R-P-005", "kind": "redesign", "trigger": null}
+{"t": 1795545503.5396461, "period": 164, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545507.2461815, "period": 165, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545513.5567508, "period": 166, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545515.902044, "period": 167, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545525.3998904, "period": 169, "event": "measure", "chart_signals": ["cash_gain_7 8 in a row below the centre"], "progress": []}
+{"t": 1795545525.40014, "period": 157, "delivered": 169, "event": "aims", "id": "AS-006", "trigger": null, "cost": 0.01785224, "turns": 15}
+{"t": 1795545525.4002242, "period": 169, "event": "design_change_queued", "after": "S-006"}
+{"t": 1795545525.4009194, "period": 169, "event": "started", "id": "S-007", "kind": "strategist", "trigger": "scheduled: 3 points since the last strategy"}
+{"t": 1795545525.4015243, "period": 169, "event": "started", "id": "P-019", "kind": "pulse", "trigger": "scheduled"}
+{"t": 1795545534.0328543, "period": 170, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545535.0436728, "period": 171, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545538.8876023, "period": 172, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545543.5605965, "period": 173, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545550.5557778, "period": 174, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545551.2902765, "period": 175, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545552.1093276, "period": 176, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545561.9790504, "period": 177, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545561.9792564, "period": 163, "delivered": 177, "event": "redesign", "id": "R-P-005", "trigger": null, "cost": 0.0168637, "turns": 16}
+{"t": 1795545561.980891, "period": 169, "delivered": 177, "event": "strategist", "id": "S-007", "trigger": "scheduled: 3 points since the last strategy", "cost": 0.01019938, "turns": 10}
+{"t": 1795545561.9815845, "period": 177, "event": "started", "id": "AS-007", "kind": "aims", "trigger": null}
+{"t": 1795545561.981737, "period": 169, "delivered": 177, "event": "pulse", "id": "P-019", "trigger": "scheduled", "cost": 0.012453470000000001, "turns": 14}
+{"t": 1795545561.9817998, "period": 177, "event": "diagnosis_queued", "after": "P-019"}
+{"t": 1795545568.315745, "period": 178, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545572.5451062, "period": 179, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545577.6478202, "period": 180, "event": "measure", "chart_signals": ["cash_gain_7 beyond the lower limit"], "progress": []}
+{"t": 1795545582.6749, "period": 181, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545590.353172, "period": 182, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545590.354123, "period": 182, "event": "started", "id": "P-020", "kind": "pulse", "trigger": "scheduled"}
+{"t": 1795545594.091184, "period": 183, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545594.0921628, "period": 183, "event": "started", "id": "A-002", "kind": "audit", "trigger": "quarter 2"}
+{"t": 1795545600.0553381, "period": 184, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545600.7679415, "period": 185, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545606.8079245, "period": 186, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545607.5593271, "period": 187, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545619.9336298, "period": 189, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545623.573398, "period": 190, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545627.2258158, "period": 191, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545627.2261198, "period": 182, "delivered": 191, "event": "pulse", "id": "P-020", "trigger": "scheduled", "cost": 0.01104948, "turns": 12}
+{"t": 1795545627.226223, "period": 191, "event": "diagnosis_queued", "after": "P-020"}
+{"t": 1795545633.1154115, "period": 192, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545634.450458, "period": 193, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545634.450682, "period": 177, "delivered": 193, "event": "aims", "id": "AS-007", "trigger": null, "cost": 0.02002046, "turns": 17}
+{"t": 1795545634.4507654, "period": 193, "event": "design_change_queued", "after": "S-007"}
+{"t": 1795545645.4438543, "period": 194, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545651.634246, "period": 195, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795545652.3656158, "period": 196, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545652.3664134, "period": 196, "event": "started", "id": "D-P-006", "kind": "diagnosis", "trigger": "pulse review"}
+{"t": 1795545652.3669138, "period": 196, "event": "started", "id": "S-008", "kind": "strategist", "trigger": "cash: 3 points in a row below the floor line; scheduled: 3 points since the last strategy"}
+{"t": 1795545652.367326, "period": 196, "event": "started", "id": "P-021", "kind": "pulse", "trigger": "scheduled"}
+{"t": 1795545658.6196663, "period": 197, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545660.559517, "period": 198, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545663.7293625, "period": 199, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545670.4317043, "period": 200, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545674.818722, "period": 201, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545681.9920938, "period": 202, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545682.8158693, "period": 203, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545683.5800478, "period": 204, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545690.1022418, "period": 205, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545690.845408, "period": 206, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545697.7843976, "period": 207, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545697.7846835, "period": 196, "delivered": 207, "event": "strategist", "id": "S-008", "trigger": "cash: 3 points in a row below the floor line; scheduled: 3 points since the last strategy", "cost": 0.01200814, "turns": 10}
+{"t": 1795545697.7854304, "period": 207, "event": "started", "id": "AS-008", "kind": "aims", "trigger": null}
+{"t": 1795545697.785578, "period": 196, "delivered": 207, "event": "pulse", "id": "P-021", "trigger": "scheduled", "cost": 0.012855459999999999, "turns": 13}
+{"t": 1795545697.7856407, "period": 207, "event": "diagnosis_queued", "after": "P-021"}
+{"t": 1795545708.9992306, "period": 208, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545714.8291826, "period": 209, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545714.8295112, "period": 196, "delivered": 209, "event": "diagnosis", "id": "D-P-006", "trigger": "pulse review", "cost": 0.01931335, "turns": 21}
+{"t": 1795545714.8302085, "period": 209, "event": "started", "id": "R-P-006", "kind": "redesign", "trigger": null}
+{"t": 1795545721.698556, "period": 210, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545721.6993916, "period": 210, "event": "started", "id": "P-022", "kind": "pulse", "trigger": "scheduled"}
+{"t": 1795545726.6944363, "period": 211, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545729.1469328, "period": 212, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545729.9802248, "period": 213, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545734.2078376, "period": 214, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545741.3014894, "period": 215, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545742.1938305, "period": 216, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545743.0911877, "period": 217, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545751.1209602, "period": 218, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545754.1856878, "period": 219, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545762.7825384, "period": 220, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545762.7829301, "period": 207, "delivered": 220, "event": "aims", "id": "AS-008", "trigger": null, "cost": 0.01891759, "turns": 17}
+{"t": 1795545762.7831805, "period": 220, "event": "design_change_queued", "after": "S-008"}
+{"t": 1795545764.1887186, "period": 221, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545768.770087, "period": 222, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545775.8140862, "period": 223, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545775.8144183, "period": 210, "delivered": 223, "event": "pulse", "id": "P-022", "trigger": "scheduled", "cost": 0.015131259999999999, "turns": 14}
+{"t": 1795545783.4184895, "period": 224, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545783.4191973, "period": 224, "event": "started", "id": "S-009", "kind": "strategist", "trigger": "cash: 3 points in a row below the floor line; scheduled: 3 points since the last strategy"}
+{"t": 1795545783.4198053, "period": 224, "event": "started", "id": "P-023", "kind": "pulse", "trigger": "scheduled"}
+{"t": 1795545784.2905889, "period": 225, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545786.3072715, "period": 226, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545786.3075788, "period": 183, "delivered": 226, "event": "audit", "id": "A-002", "trigger": "quarter 2", "cost": 0.07043109, "turns": 32}
+{"t": 1795545786.3076756, "period": 226, "event": "diagnosis_queued", "after": "A-002"}
+{"t": 1795545786.307794, "period": 209, "delivered": 226, "event": "redesign", "id": "R-P-006", "trigger": null, "cost": 0.02071292, "turns": 22}
+{"t": 1795545788.7785032, "period": 227, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545792.818335, "period": 228, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795545796.1966324, "period": 229, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
