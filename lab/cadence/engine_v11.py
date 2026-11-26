@@ -432,7 +432,10 @@ def post(cfg):
                         did = admit(sw, prop, v, j["id"], parts.get("reason", ""), period, unit)
                         changes.append(did or f"refuted {prop.stem}: {parts.get('reason', '')[:120]}")
                 elif "statement" in parts and v in ("supported", "refuted", "untestable"):
-                    stated.append((parts["statement"], parts.get("file", ""), v, parts.get("evidence", "")))
+                    fl = parts.get("file", "").strip()
+                    rel = fl[len(str(ws)) + 1:] if fl.startswith(str(ws) + "/") else fl
+                    if rel and not rel.startswith(SYSTEM_PATHS) and not rel.startswith("."):  # only the agent's own files are its notes
+                        stated.append((parts["statement"], rel, v, parts.get("evidence", "")))
             pol = sw / "checks" / "policies.md"
             if not pol.exists():
                 pol.write_text("# The working agent's own policies and beliefs, fact-checked against the ground truth (written by the system)\n\n"

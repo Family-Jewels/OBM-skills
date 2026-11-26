@@ -34,6 +34,7 @@ if jid.startswith("C-"):
     lines = [f"Proposal: {x.strip()} | Verdict: accepted | Reason: the numbers hold" for x in re.findall(r"(swarm/guidance/proposed/[^,.\\s]+\\.md)", p)]
     if "Files the working agent changed" in p:
         lines.append('- **Statement:** "benches are never worth filling" | File: notes.md | Verdict: refuted | Evidence: made rose in rounds 5-9')
+    lines.append('Statement: "made was 3 in round 4" | File: swarm/guidance/proposed/P-001-1.md | Verdict: supported | Evidence: round 4 made 4')
     path.write_text("\\n".join(lines) + "\\n")
 elif jid.startswith("P-") or jid.startswith("A-"):
     Path("swarm/guidance/proposed").mkdir(parents=True, exist_ok=True)
@@ -94,6 +95,7 @@ assert lags, "lag from event to delivery is measured"
 lib = sorted(p.name for p in (ws / "swarm" / "guidance").glob("G-*.md"))
 assert len(lib) >= 2 and "Fact check: C-" in (ws / "swarm" / "guidance" / lib[1]).read_text(), lib
 assert "refuted" in (ws / "swarm" / "checks" / "policies.md").read_text()
+assert "proposed" not in (ws / "swarm" / "checks" / "policies.md").read_text(), "claims inside proposals are not the agent's notes"
 assert any("Fact check of your note" in o and "refuted" in o for o in outs)
 assert "diagnosis" in kinds and "redesign" in kinds
 assert any(e.get("event") == "design_loaded" and e.get("after") for e in ev)
