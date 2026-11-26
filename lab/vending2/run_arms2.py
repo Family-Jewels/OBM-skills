@@ -12,7 +12,7 @@ import argparse, json, os, shutil, socket, subprocess, sys, tempfile, time, urll
 from pathlib import Path
 ROOT = Path('/home/claude/bench-src/vending-bench'); SIM = ROOT / 'tasks/vending-bench/environment/sim-server'
 HERE = Path('/home/claude/obm-lab/vending2'); PY = '/home/claude/vb-venv/bin/python'
-SKILLS = Path('/home/claude/obm-skills/skills')
+SKILLS = Path('/home/claude/obm-skills/skills'); CADENCE = HERE.parent / 'cadence'
 TOOLS = 'Read,Write,Edit,Glob,Grep,Agent,Skill'
 GOAL = ("The vending tools have reported SIMULATION OVER for the final simulated day, after the business was operated every day "
         "with the aim of the highest final bank balance. Judge 'met' only when a tool result in the transcript says SIMULATION OVER; "
@@ -22,6 +22,18 @@ OBM = ("\n\nRun this business as a one-agent OBM swarm using the installed obm-s
        "directory: keep the swarm's files in swarm/ there. Start with the obm-swarm-designer skill to set up the work system for this "
        "operation, then run it with the obm-swarm-orchestrator skill. Use sub-agents for the checker, auditor and diagnostician roles "
        "when the skills call for them. Keep operating until the simulation ends.")
+
+# v1.1: nothing task-specific here beyond the task's own briefing (the system prompt), its tools and the human's requirements.
+DESIGN_V11 = ("Use the obm-swarm-designer skill to design the work system for this task. The system prompt is the task's briefing; the human's "
+              "requirements are in swarm/requirements.md; what the system can read every period, and the formats you write, are in "
+              "swarm/system_interface.md. Write swarm/spec.md, swarm/system.json and the first guidance in swarm/guidance/. The working agent "
+              "will have full autonomy: everything you give it is information, advice or examples of what good looks like, never an order. "
+              "You cannot use the task's tools; design only.")
+RUN_V11 = ("\n\nYou are the working agent of a one-agent OBM swarm: use the obm-swarm-orchestrator skill. The designer's work system is in "
+           "swarm/ (read swarm/spec.md and swarm/guidance/index.md first). You have full autonomy: you decide what to do. At the end of every "
+           "period the system adds a short note to the tool result: the capacity you used, what is open, the guidance that fits, and "
+           "anything new from its reviews and fact checks. It is information and advice for you to use as you see fit. Keep going until "
+           "the task is over.")
 
 def clean_env():
     e = {k: v for k, v in os.environ.items() if not k.startswith(('VENDING_', 'VB_', 'GATE_'))
@@ -42,7 +54,7 @@ def claude(args, cfg, cwd, out_stream, timeout):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--arm', required=True, choices=['base', 'native', 'native_cadence', 'obm', 'obm_enf', 'obm_cadence', 'obm_v2', 'obm_v3']); ap.add_argument('--seed', type=int, default=1)
+    ap.add_argument('--arm', required=True, choices=['base', 'native', 'native_cadence', 'obm', 'obm_enf', 'obm_cadence', 'obm_v2', 'obm_v3', 'obm_v11']); ap.add_argument('--seed', type=int, default=1)
     ap.add_argument('--days', type=int, default=365); ap.add_argument('--budget', type=float, default=40)
     ap.add_argument('--timeout', type=int, default=7000); ap.add_argument('--output', type=Path, required=True)
     ap.add_argument('--model', default='claude-haiku-5-5'); ap.add_argument('--audit-every', type=int, default=50); ap.add_argument('--pulse-every', type=int, default=5)
@@ -75,6 +87,23 @@ def main():
         mcp = json.dumps({'mcpServers': {'vending': {'type': 'http', 'url': f'http://127.0.0.1:{port}/mcp'}}})
         common = ['--model', a.model, '--output-format', 'stream-json', '--verbose', '--tools', TOOLS, '--strict-mcp-config',
                   '--mcp-config', mcp, '--allowedTools', 'mcp__vending', TOOLS, '--system-prompt', prompt]
+        if a.arm == 'obm_v11':  # v1.1: the designer sets everything task-specific; the harness passes only the adapter and the requirements
+            vcfg = {'workspace': str(ws), 'log': str(out / 'cadence.jsonl'), 'adapter': 'adapters.vending:VendingState',
+                    'adapter_args': {'state_path': str(statedir / 'state.json'), 'horizon': a.days, 'clock_log': str(statedir / 'clock.jsonl'),
+                                     'storage_measure': True},
+                    'model': a.model, 'hook_event': 'PostToolUse', 'review_timeout_s': 1200,
+                    'budgets': {'pulse': 0.6, 'audit': 1.5, 'diagnosis': 1.0, 'redesign': 1.5, 'check': 0.6}}
+            (statedir / 'cadence.json').write_text(json.dumps(vcfg))
+            sys.path.insert(0, str(CADENCE)); from adapters.vending import VendingState
+            tool = VendingState(statedir / 'state.json').spec()['period_end_tool']
+            eng = f'python3 -I {CADENCE / "engine_v11.py"} {statedir / "cadence.json"}'
+            hook = {'hooks': {'Stop': [{'hooks': [{'type': 'command', 'timeout': 30,
+                    'command': f'python3 -I {HERE / "vb_stop_gate2.py"} {statedir / "state.json"} {out / "gate.jsonl"} {a.days} 40'}]}],
+                    'PreToolUse': [{'matcher': tool, 'hooks': [{'type': 'command', 'timeout': 30, 'command': eng + ' --pre'}]}],
+                    'PostToolUse': [{'matcher': tool, 'hooks': [{'type': 'command', 'timeout': 1600, 'command': eng}]}]}}
+            common += ['--settings', json.dumps(hook)]
+            (ws / 'swarm').mkdir(); shutil.copy(HERE / 'requirements.md', ws / 'swarm' / 'requirements.md')
+            subprocess.run(['python3', '-I', str(CADENCE / 'engine_v11.py'), str(statedir / 'cadence.json'), '--interface'], check=True)
         if a.arm in ('obm_enf', 'obm_cadence', 'native_cadence', 'obm_v2', 'obm_v3'):
             hook = {'hooks': {}} if a.arm == 'native_cadence' else {'hooks': {'Stop': [{'hooks': [{'type': 'command', 'timeout': 30,
                     'command': f'python3 -I {HERE / "vb_stop_gate2.py"} {statedir / "state.json"} {out / "gate.jsonl"} {a.days} 40'}]}]}}
@@ -102,7 +131,14 @@ def main():
                         'command': f'python3 -I /home/claude/obm-lab/cadence/adapters/vending_clock_hook.py {statedir / "state.json"} {statedir / "clock.jsonl"}'}]}]
             common += ['--settings', json.dumps(hook)]
         left = a.budget
-        if a.arm in ('obm_cadence', 'obm_v2', 'obm_v3'):
+        if a.arm == 'obm_v11':
+            p, r = claude(['-p', DESIGN_V11, '--permission-mode', 'acceptEdits', '--max-budget-usd', '3', '--model', a.model, '--output-format',
+                           'stream-json', '--verbose', '--tools', TOOLS, '--allowedTools', TOOLS, '--strict-mcp-config', '--system-prompt', prompt],
+                          cfg, ws, stream, 1200)
+            results.append(r); left -= r.get('total_cost_usd') or 0
+            p, r = claude(['-p', TASK + RUN_V11, '--permission-mode', 'acceptEdits', '--max-budget-usd', f'{left:.2f}', *common], cfg, ws, stream, a.timeout)
+            results.append(r)
+        elif a.arm in ('obm_cadence', 'obm_v2', 'obm_v3'):
             design = ("Use the obm-swarm-designer skill to design the work system for operating this business for the whole simulation. "
                       "The system prompt is the business briefing. Write it into swarm/ in the current directory: a driver tree from the final balance "
                       "down to the drivers the operator controls, the exemplar, and the cadence table. The system will write ground-truth measures to "
@@ -221,7 +257,10 @@ def main():
     q = lambda lo, hi: round(sum(d['revenue'] for d in sl if lo <= d['day'] <= hi), 2)
     rec = {**{k: v for k, v in score.items() if not isinstance(v, (dict, list))}, 'arm': a.arm, 'seed': a.seed, 'days': a.days,
            'api_cost_usd': round(sum(r.get('total_cost_usd') or 0 for r in results) + cadence_cost, 3), 'cadence_cost_usd': round(cadence_cost, 3),
-           'audits': sum(1 for e in cadence_events if e.get('event') == 'audit'), 'opportunities': sum(1 for e in cadence_events if e.get('event') == 'opportunity'), 'redesigns': sum(1 for e in cadence_events if e.get('event') == 'redesign'), 'pulses': sum(1 for e in cadence_events if e.get('event') == 'pulse'), 'diagnoses': sum(1 for e in cadence_events if e.get('event') == 'diagnosis'), 'turns': sum(r.get('num_turns') or 0 for r in results),
+           'audits': sum(1 for e in cadence_events if e.get('event') == 'audit'), 'opportunities': sum(1 for e in cadence_events if e.get('event') == 'opportunity'), 'redesigns': sum(1 for e in cadence_events if e.get('event') == 'redesign'), 'pulses': sum(1 for e in cadence_events if e.get('event') == 'pulse'), 'diagnoses': sum(1 for e in cadence_events if e.get('event') == 'diagnosis'), 'checks': sum(1 for e in cadence_events if e.get('event') == 'check'),
+           'execution_events': sum(1 for e in cadence_events if e.get('event') == 'execution_event'),
+           'guidance_entries': len(list((ws / 'swarm' / 'guidance').glob('G-*.md'))) if (ws / 'swarm' / 'guidance').exists() else 0,
+           'review_lag_mean': (lambda L: round(sum(L) / len(L), 1) if L else None)([e['lag'] for e in cadence_events if e.get('lag') is not None]), 'turns': sum(r.get('num_turns') or 0 for r in results),
            'runtime_seconds': round(elapsed, 1), 'error': error,
            'avg_stocked_slots': round(sum(len(d.get('per_slot', [])) for d in sl) / len(sl), 2) if sl else None,
            'revenue_by_quarter': [q(1, 91), q(92, 182), q(183, 273), q(274, 366)] if a.days >= 300 else None,

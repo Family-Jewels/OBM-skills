@@ -10,8 +10,10 @@ from pathlib import Path
 class VendingState:
     DAY_MINUTES = 480  # the working day, 09:00 to 17:00: the worker's capacity
 
-    def __init__(self, state_path, horizon=365, ceiling=None, ceiling_source=None, daily_fee=12.0, max_unpaid_days=10, clock_log=None):
+    def __init__(self, state_path, horizon=365, ceiling=None, ceiling_source=None, daily_fee=12.0, max_unpaid_days=10, clock_log=None,
+                 storage_measure=False):
         self.p = Path(state_path); self.horizon = horizon
+        self.storage_measure = storage_measure  # v1.1: units waiting in the storage room, so a design can see stock not yet loaded
         self.clock_log = Path(clock_log) if clock_log else None
         self.ceiling, self.ceiling_source = ceiling, ceiling_source
         self.reserve = daily_fee * max_unpaid_days  # below this the business is at risk of termination for non-payment
@@ -22,6 +24,7 @@ class VendingState:
             "unit": "day", "horizon": self.horizon,
             "cycle": 7,  # demand has a day-of-week pattern, so a point holds whole weeks
             "clock": "period",
+            "period_end_tool": "mcp__vending__wait_for_next_day",  # the tool that ends the working day
             "top": "cash",
             "goal": {"type": "maximize", "value": self.ceiling, "source": self.ceiling_source or "none given"},
             "measures": {
@@ -31,6 +34,7 @@ class VendingState:
                 "slots_selling": {"kind": "level", "better": "up"},
                 "revenue_per_slot": {"kind": "flow", "better": "up"},
                 "unit_cost_paid_30d": {"kind": "level", "better": "down"},  # euros per unit across purchase orders paid in the last 30 days
+                **({"units_in_storage": {"kind": "level", "better": "down"}} if self.storage_measure else {}),
             },
             "unit_name": "machine",
             "unit_measures": {  # per machine, for experiments on a slice with the other machines as control
@@ -77,13 +81,25 @@ class VendingState:
                 "measures": {"cash": round(bal, 2), "revenue": last.get("revenue", 0), "units": last.get("units", 0),
                              "slots_selling": len(last.get("per_slot", [])),
                              "revenue_per_slot": round(last.get("revenue", 0) / len(last["per_slot"]), 2) if last.get("per_slot") else 0, "revenue_last_7": rev(d - 6, d),
-                             "revenue_same_7_a_month_earlier": rev(d - 36, d - 30) if d > 36 else None, "unit_cost_paid_30d": cost30},
+                             "revenue_same_7_a_month_earlier": rev(d - 36, d - 30) if d > 36 else None, "unit_cost_paid_30d": cost30,
+                             **({"units_in_storage": sum((v.get("quantity") or 0) for v in store.values())} if self.storage_measure else {})},
                 "units": units,
                 "resources": {
                     "worker time (minutes a day)": {"used": self._minutes_used(s.get("day") or 0), "available": self.DAY_MINUTES},
                     "slots stocked at day end": {"used": sum(1 for v in mach.values() if (v.get("quantity") or 0) > 0), "available": len(mach) or None},
                     "capital": {"used": round(stock_value, 2), "available": round(stock_value + max(0.0, bal - self.reserve), 2)},
                 }}
+
+    def on_period_end(self):
+        """Called by the system just before the working day ends: note the simulator's clock, for the worker's time used."""
+        if not self.clock_log:
+            return
+        try:
+            s = json.loads(self.p.read_text())
+            with self.clock_log.open("a") as f:
+                f.write(json.dumps({"day": s.get("day"), "minute": s.get("minute")}) + "\n")
+        except Exception:
+            pass
 
     def snapshot(self):
         """Ground truth of what the operator controls, for fidelity checks: every machine slot and the storage room."""

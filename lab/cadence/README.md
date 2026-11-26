@@ -33,6 +33,43 @@ Write an adapter: a class whose `read()` returns `{"period": int, "over": bool, 
 | A software build (example) | A cycle, or a merged task | Tests passing, criteria met, spend, review share | PostToolUse on the board's status change, or a timer |
 | Research or writing (example) | A section or a work session | Claims sourced, sections done, open questions | A timer |
 
+## Version 1.1: a curated environment around a fully autonomous agent
+
+`engine_v11.py`, arm `obm_v11` in `lab/vending2/run_arms2.py`, skills in `skills/` on this branch (v1's skills, changed as
+below; v1 itself is unchanged on `skills-v1`). It tests the autonomy question from the other side: v2 to v4 added rules,
+controls and gates, and results fell. v1.1 keeps v1's loop and gives the agent full autonomy inside a curated
+environment. The requirements are in the "Operating Environment Requirements" doc (R1 to R12).
+
+- **The designer owns everything task-specific (R12).** Before the run the engine writes `swarm/system_interface.md` from
+  the adapter (`--interface`): the measures, resources and capacity it reports, and the formats. The designer reads it,
+  the task's briefing and the human's requirements (`swarm/requirements.md`), and writes `swarm/spec.md`,
+  `swarm/system.json` (charts, signals, opportunities, exemplar, cadence) and the first guidance. The engine and the
+  harness carry no charts, signals or exemplar of their own. Bad entries in `system.json` are dropped and logged.
+- **Guidance, never orders (R1).** `swarm/guidance/G-NNN.md`: what good looks like, why, when it applies (an opportunity
+  or always), its source and a revisit point. Nothing assigns, requires, forbids, blocks or caps an action.
+- **A hand-off every period (R2, R3, R8).** The engine runs as a PreToolUse hook on the period-ending tool (`--pre`: the
+  state as the agent ends its period) and as the PostToolUse hook. The note gives the capacity used in the period that
+  ended, the opportunities open at its end and now, the guidance that fits (at most five; text the first time, then a
+  path), and anything new. It is also kept in `swarm/handoff.md`.
+- **Reviews change the environment (R4, R7).** Pulses, audits and redesigns propose guidance in
+  `swarm/guidance/proposed/`. A fact check (the checker, `C-NNN`) tests each against `metrics_system.md` and the state
+  snapshots in `swarm/ground_truth/`, and refutes any that is not advice. Accepted entries enter the library; refuted ones
+  are kept with the reason.
+- **The agent's own policies are checked, not adopted (R5).** When files the agent wrote change (default every 5
+  periods), the fact check quotes its policies and beliefs and checks their facts. Results go to
+  `swarm/checks/policies.md` and to the agent's next note.
+- **Reviews on what the agent does (R6).** A pulse starts when a period ended with at least half its capacity unused and
+  an opportunity open, on repeated early ends, or on a statement the ground truth refutes, at most every 3 periods. The
+  5-period pulse and 50-period audit remain as a backstop. Each delivery logs its lag from the event.
+- **Behavior and cost as information (R9, R11).** Capacity used, opportunities open when each period ended, the agent's
+  context size and each role's cost go into `metrics_system.md` and `charts.md`. They never trigger a redesign.
+- **Any model in any role (R10).** `role_models` sets a model per role, and `runner` replaces the `claude -p` command
+  with any command template (`{prompt}`, `{model}`, `{budget}`, `{turns}`).
+
+Not built: a fresh working session each period (R8 asks that it be possible; the hand-off is written to allow it). The
+harness's Stop gate stays as in v1: it refuses to end the whole task before the task is over, and never stops a period
+from ending. Tests: `python3 -I lab/cadence/test_engine_v11.py` (a made-up task, roles stubbed).
+
 ## Version 2: the improvement half
 
 Set `"version": 2` in the config to use `engine_v2.py` (the plain, no-skills arm stays on v1). v1 is unchanged and kept on the branch `skills-v1`.

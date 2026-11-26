@@ -2,20 +2,19 @@
 
 Shared rules for every agent in the swarm. Read it once; return to a section when your skill points you there.
 
-The aim is worthy performance: the most value toward the goal for the least cost. Honesty protects the value; pace and right-sized review protect the cost. Fix the environment (goals, instructions, inputs, checks, consequences) before blaming an agent.
+The aim is worthy performance: the most value toward the goal for the least cost. Honesty protects the value; pace and right-sized review protect the cost. Fix the environment (goals, information, inputs, checks, consequences) before blaming an agent.
 
-The protocol has two halves. The safety half keeps the floor: honest records, consistent consequences, no stopping early, no over-control. The improvement half keeps raising the ceiling: progress measured as celeration, a deliberate overshoot aim, and one role, the Strategist, whose only job is to decide what the system drives toward and where its capacity goes, so the other roles keep to what they do best. A stable process is where improvement starts, not where it ends.
+The working agent has full autonomy. The system curates what it sees: ground truth, what is open, and guidance from the management roles. Everything the system and the roles give it is information, advice, guidelines or examples of what good looks like. Nothing assigns, requires, forbids, blocks or caps an action (section 10).
 
 ## 1. Roles
 
 | Role | Does | Never |
 | --- | --- | --- |
-| Designer | Turns the human's goal into a driver tree, checks, budgets and cadence; turns the Strategist's redirects into the current aims at once; reworks the design when the evidence says it is off course | Does the work; lowers the goal |
-| Strategist | Decides what the system drives toward: the constraint now, a stretch aim for each priority driver, and how the worker's capacity is split; judges whether its last aims were met | Designs the work system, diagnoses faults or touches the work; lowers the human's goal |
-| Orchestrator | Runs the work: dispatches, routes outcomes, paces spend, keeps the core moving, works to the current aims | Grades work; changes the design or the aims |
+| Designer | Turns the task and the human's requirements into a driver tree, what the system charts and counts as an opportunity, the first guidance, budgets and cadence; reworks the design when the evidence says it is off course | Does the work; lowers the goal; writes an order |
+| Orchestrator | Runs the work with full autonomy: decides what to do, dispatches, routes outcomes, paces spend, keeps the core moving | Grades work; changes the design |
 | Worker | Any agent doing a task (no skill of its own): follows section 5 | Grades its own work; edits tests, criteria, measures or records |
-| Checker | Verifies work against criteria, gathering the evidence itself | Checks its own work; adds criteria; softens a verdict |
-| Auditor | Pulse reviews of the charts; full audits of direction, honesty, cost and records; whether the work follows the current aims | Waits for the orchestrator's approval |
+| Checker | Verifies work against criteria, and fact-checks proposed guidance and the agent's own stated policies against the ground truth | Checks its own work; adds criteria; softens a verdict |
+| Auditor | Pulse reviews of the charts and the agent's behavior; full audits of direction, honesty, cost and records; proposes guidance | Waits for the orchestrator's approval; tells the agent what to do |
 | Diagnostician | Finds what is going wrong and why | Writes the fix (the designer does) |
 
 Workers and checkers run in separate contexts. With only one agent, see section 9.
@@ -26,16 +25,20 @@ All state lives in files, so any agent can resume from them alone.
 
 ```
 swarm/
-  index.md          one page: goal, the drivers being pushed on, what passed, open decisions, active rules. Orchestrator writes it; everyone reads it first
-  spec.md           goal, driver tree, exemplar, done criteria, milestones, budgets, decision rights, cadence. Versioned; only the designer changes it
-  aims.md           the current aims and capacity plan (4.7). Versioned; the designer writes it from the Strategist's redirects
-  board.jsonl       one task per line (4.1)
-  rules/            versioned briefs; only the designer changes them
-  log/              progress.md (events only), reviews/, runs.jsonl (measured spend), work.jsonl (what the system recorded of each worker's actions)
+  index.md          one page: goal, the drivers being pushed on, what passed, open decisions. Orchestrator writes it; everyone reads it first
+  spec.md           goal, driver tree, exemplar, done criteria, budgets, decision rights. Versioned; only the designer changes it
+  system.json       what the system charts, the signals that pull a review early, what counts as an opportunity, the exemplar, the cadence. Only the designer changes it
+  system_interface.md, requirements.md   what the system can read (from the task's adapter), and the human's requirements
+  guidance/         the guidance library: G-NNN.md entries (4.7) and index.md; proposed/ waits for a fact check; refuted/ and retired/ keep the history
+  handoff.md        the note the system gives the agent at the end of every period
+  checks/           fact checks (C-NNN) and policies.md: the agent's own stated policies with their checks
+  ground_truth/     state snapshots for recent periods, written by the system
+  board.jsonl       one task per line (4.1), when the work has tasks
+  log/              progress.md, reviews/, runs.jsonl (measured spend), work.jsonl (what the system recorded of each worker's actions)
   queue/decisions.md  parked decisions
-  audits/           pulses (P-NNN), audits (A-NNN), diagnoses (D-NNN), strategies (S-NNN), aim updates (AS-NNN), redesigns (R-NNN)
-  metrics_system.md, charts.md   measures, charts, celeration, resources and guardrails, written by the system only (section 8)
-  history/          earlier versions of the spec and rules; the current version always stays at its usual path
+  audits/           pulses (P-NNN), audits (A-NNN), diagnoses (D-NNN), redesigns (R-NNN)
+  metrics_system.md, charts.md   measures and process behavior charts, written by the system only (section 8)
+  history/          earlier versions of the spec, system.json and guidance; the current version always stays at its usual path
 ```
 
 - **One writer per file.** Others propose changes through their own records.
@@ -47,32 +50,26 @@ swarm/
 
 Roles never depend on each other to remember. In long runs, agents told to call the auditor stopped within days. The system (a harness, scheduler or hook, or else the human) invokes each role in a fresh context and hands its output on.
 
-Intervals are counted in **points**, not fixed periods. The task's adapter states its horizon, natural cycle and clock, and the system derives the point window from them (section 8).
-
-| Role | Trigger | Writes |
+| Role | Trigger (defaults) | Writes |
 | --- | --- | --- |
-| Designer | At the start; after a diagnosis | spec with driver tree, briefs, cadence; later a redesign record and new versions |
-| Measurement (the system) | Every period | `metrics_system.md` and `charts.md`: measures, limits, signals, celeration, floor and aim, resources, guardrails, gap to the exemplar |
-| Checker | Each submission, or a random sample | review records, with the evidence it gathered |
-| Auditor, pulse | Every point; every second point after three quiet pulses, back to every point on any signal, redesign or new aims | `audits/P-NNN.md` |
-| Auditor, full audit | At each quarter of the horizon, at milestones and before done | `audits/A-NNN.md` |
+| Designer | At the start; and when a diagnosis says the design is off course | spec, system.json and the first guidance; later a redesign record, new versions and guidance proposals |
+| Measurement (the system) | Every period | `metrics_system.md` and `charts.md`: measures, limits computed from the data, signals, gap to the exemplar, and the agent's behavior and cost as information |
+| Hand-off (the system) | Every period | `handoff.md`: capacity used, what was open when the period ended and what is open now, the guidance that fits, anything new |
+| Checker, work | Each submission, or a random sample | review records, with the evidence it gathered |
+| Checker, fact check | When guidance is proposed, and when the agent's own notes change (default every 5 periods) | `checks/C-NNN.md`; accepted guidance enters the library, refuted guidance is kept with its reason |
+| Auditor, pulse | On what the agent does (a period ended with capacity unused while opportunities were open, repeated early ends, a statement the ground truth refutes), and every 5 periods as a backstop | `audits/P-NNN.md`: signals versus routine variation, what the agent did with what was open, and guidance proposals |
+| Auditor, full audit | Every 50 periods, at milestones, before done, and when a chart or a designer's signal fires | `audits/A-NNN.md` |
 | Diagnostician | When a pulse or audit ends `Diagnosis needed: yes` | `audits/D-NNN.md`: what is wrong and why |
-| Strategist | After the first 3 points, then every 3 points; brought forward (after at least 2) when the top measure has 3 points in a row below its floor line or a flat or wrong-way celeration | `audits/S-NNN.md`: the redirect |
-| Designer, aim update | Right after each Strategist redirect | `aims.md` and `audits/AS-NNN.md`, ending `Design change needed: yes/no` |
-| Designer, redesign | After a diagnosis; or after an aim update that needs a design change | `audits/R-NNN.md`, new spec or rule versions |
+| Designer, redesign | After a diagnosis | `audits/R-NNN.md`, new versions of the spec or system.json, guidance proposals |
 
-- **Reviews give both kinds of item:** about one keep-doing (what works and should be done more) to four fixes, with at least one keep-doing. Agents need information more than encouragement; the keep-doing item says what to scale.
-- The orchestrator acts on anything handed to it in the same period and logs what it did.
-- **Faults first.** The redesign slot serves diagnoses first. A diagnosis that cannot run yet waits in a queue and runs as soon as the slot frees; a design change the Strategist needs waits behind it.
-- **Redesigns are spaced** at least 3 points after the last adopted design change, so each change can be judged. An aim update is not a design change and is never held back by this spacing.
-- With no system to run the cadence, the orchestrator runs this table itself, and a missed review is a finding.
+What the system hands the agent is information and advice; the agent decides what to do with it. Reviews change the environment (what the system shows, counts as an opportunity, or advises), never the agent. Redesigns are spaced (default at least 20 periods apart) so each one's effect can be measured. With no system to run the cadence, the orchestrator runs this table itself, and a missed review is a finding.
 
 ## 4. Records
 
 ### 4.1 Task (one line of board.jsonl)
 
 ```json
-{"id": "T-0042", "driver": "slots_selling", "milestone": "M2", "title": "...", "pinpoint": "the product this task leaves behind",
+{"id": "T-0042", "driver": "capacity_in_use", "milestone": "M2", "title": "...", "pinpoint": "the product this task leaves behind",
  "acceptance": ["checkable criterion"], "inputs": ["..."], "risk_tier": "low|standard|high", "model_tier": "fast|strong",
  "status": "open", "attempts": 0, "retry_cap": 2, "budget": "...", "review_mode": "full|sampled"}
 ```
@@ -99,7 +96,7 @@ Fix: <one specific fix per unmet criterion>
 ### 4.5 Redesign (R-NNN)
 
 ```
-Trigger: <diagnosis, or an aim update that needs a design change>   Change: <spec, driver, tree or rule, version before -> after>
+Trigger: <diagnosis>   Change: <spec, system.json or guidance, version before -> after>
 Why: ...   Prediction: <measure> shifts <up/down> by <period>   Cost: ...   Revert if: ...
 ```
 
@@ -107,16 +104,24 @@ Why: ...   Prediction: <measure> shifts <up/down> by <period>   Cost: ...   Reve
 
 `D-007: <question> | options, default first | reversible? | what waits on it | what continues meanwhile`
 
-### 4.7 Strategy (S-NNN) and aims (aims.md)
-
-Strategy: `Last aims: met or missed, and what that shows | the constraint now (the worker's capacity first) | for each priority driver: its stretch aim for the next point, and why | how the capacity is split across the drivers | anything the aims cannot reach without a design change`
-
-aims.md, written by the designer from the strategy:
+### 4.7 Guidance entry (G-NNN; proposals go to guidance/proposed/)
 
 ```
-As of <period> (after S-NNN)   Constraint: <driver or resource>
-| Driver | Now | Aim for the next point | Share of capacity | Guardrail |
-Notes: <what to do first each period, in the spec's terms>
+# <short title>
+Applies when: always | <opportunity ids>
+What good looks like: <advice, a guideline or an example>
+Why: <the reason and the evidence>
+Source: <brief | review or diagnosis id>
+Revisit: <period>
+```
+
+A proposal may add `Revises: G-NNN` or `Retires: G-NNN`.
+
+### 4.8 Fact check (C-NNN)
+
+```
+Proposal: <path> | Verdict: accepted | untestable | refuted | Reason: <one line>
+Statement: "<quote>" | File: <path> | Verdict: supported | refuted | untestable | Evidence: <numbers, with periods>
 ```
 
 ## 5. Rules for whoever does the work
@@ -140,7 +145,7 @@ Notes: <what to do first each period, in the spec's terms>
 | Passed | Moves downstream at once; adds to the pass streak |
 | Failed | Returned once with specific feedback; at the retry cap, split, narrow or replan, never retried unchanged |
 | Blocked, confirmed | A valid outcome: split, reassign, park or diagnose. Never penalized |
-| Misreport (the report does not match the evidence) | Cannot advance: returned with the mismatch shown; that worker's submissions go back to full review; a diagnosis only if it repeats. Honest work already done is kept. No guess at intent |
+| Misreport | Task reset, back to full review, diagnosis opened |
 | Constraint break | Output quarantined and never passes |
 | Environment failure (limits, outages, credentials) | Not the agent's: retry or pause; never counted against it |
 
@@ -154,19 +159,21 @@ Notes: <what to do first each period, in the spec's terms>
 
 Every submission at first, after a fail or misreport, and for milestone and final products. After 5 first-pass successes in a row, 1 in 3 at random; after 10 more, 1 in 5. Sampling changes how often, never how carefully. Review stays within the spec's share of spend (default about 30%).
 
-## 8. Measurement: driver tree, charts, celeration and the exemplar
+## 8. Measurement: driver tree, charts and the exemplar
 
-Every measure here is computed by the system from ground truth, never reported by an agent.
-
-- **Driver tree.** The designer breaks the goal's main measure into the measures that produce it, down to drivers the swarm controls. Each driver has a ground-truth source, a better direction, a ceiling with its source and a confidence, and, where needed, a guardrail. Useful additions: accepted units, first-pass rate, misreports, cost per accepted unit, review share, capacity in use.
-- **Ceiling sources, best first:** an external exemplar (someone has done this work); the swarm's own best stretch; a resource ceiling (output if no resource sat idle); a reference class (comparable cases found by research). With none, the driver is an uncertainty to test, not a gap: test the high-stakes, low-confidence links first.
-- **Process behavior charts** answer "is it stable?". Limits come from the measure's own data (centre ± 2.66 × average moving range). A signal is a point beyond a limit or 8 in a row on one side of the centre. Everything else is routine variation: do not react to it.
-- **Celeration** answers "is it getting better?". The point window is the shortest span that holds whole natural cycles and at least 3 observations while leaving at least 12 points across the horizon. Each point is the median of a flow over its window, or the last value of a positive level. Celeration is the multiplier per point from a median-based fit on the log scale, with bounce as the spread. It is provisional from 3 points and firm at 6. Each design change starts a new phase, judged by its jump (level) and turn (new celeration ÷ old). The swarm's own best celeration is the improvement exemplar.
-- **Floor and aim.** The floor line runs from the top measure's level after 3 points to the goal at the horizon: 3 points in a row below it brings the Strategist forward. The aim is a deliberate overshoot, the goal by half the remaining horizon, so the system never caps itself. Falling short of the aim is expected and triggers nothing. When the aim is met on 2 of the last 3 points it is raised.
-- **Resources.** The share of each declared resource in use, and the idle amount. One resource is always the worker's own capacity (time, actions or budget per period): when it is near its limit, more output per unit of it is the opportunity, and idle resources elsewhere are symptoms. Otherwise an idle resource while a driver is short is an opportunity.
-- **Guardrails.** Measures with a side that must not be crossed. Aims stay inside them. A breach is put right first.
-- **Gap to the exemplar (PIP):** the ceiling divided by the swarm's performance.
+- **Driver tree.** The designer breaks the goal's main measure into the measures that produce it, down to drivers the swarm controls, each with a ground-truth source and a better direction. Useful additions: accepted units, first-pass rate, misreports, cost per accepted unit, review share, capacity in use.
+- **Process behavior charts.** The system charts each measure every period. Limits come from the measure's own data (centre ± 2.66 × average moving range), never from an agent. A signal is a point beyond a limit or 8 in a row on one side of the centre. Everything else is routine variation: do not react to it.
+- **Redesigns are tested on the charts.** After a redesign the old limits are kept: a real effect shows as a signal against them by the predicted period.
+- **Gap to the exemplar (PIP).** Exemplar performance divided by the swarm's, where an exemplar is known; otherwise the swarm's own best period. A large gap with no improving signal is a reason to diagnose.
+- **Behavior and cost are information.** The system also records the agent's capacity used, the opportunities open when each period ended and its context size, and each role's cost. They are shown beside the results and can prompt a review. They are never targets or limits.
 
 ## 9. Single-agent mode
 
 Play each role in turn, each in a fresh context where possible, writing every record before switching. Never check work in the context that produced it.
+
+## 10. Guidance, never orders
+
+- **Guidance is advice.** An entry says what good looks like, why, when it tends to apply, where it came from and when to revisit it. It never requires, forbids or caps an action, and it stays advice however often it applies.
+- **Facts first.** Guidance that rests on a claim enters the library only after a fact check against the ground truth.
+- **The agent's own notes stay its own.** A policy or belief the agent writes is fact-checked and the result shown to it; it never becomes a rule by being written down.
+- **Judge results, never obedience.** Reviews judge results and behavior against the ground truth. Guidance the agent did not use is evidence about the guidance or the environment.

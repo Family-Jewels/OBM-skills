@@ -61,16 +61,15 @@ The skills stay complete without enforcement: on a platform with no hooks, every
 
 | Skill | Role |
 | --- | --- |
-| `obm-swarm-designer` | Owns the design: a driver tree from the goal's main measure down to the drivers the swarm controls, each with a ceiling and guardrail; resources; checks, budgets, cadence. Turns each Strategist redirect into the current aims at once; redesigns after a diagnosis; the only role that changes the tree, checks or rules; the goal itself is the human's |
-| `obm-swarm-orchestrator` | The manager: dispatches, routes on outcomes, paces spend, keeps the core goal moving, adopts redesigns, works to the current aims |
-| `obm-swarm-checker` | Quality: gathers its own evidence for each criterion. Where nothing can be run, checks provenance: who published a source, when it was really published (not the date the text claims), whether it is cited elsewhere, independent corroboration, and whether judgments rest on verifiable facts |
-| `obm-swarm-auditor` | The director: a pulse review of the system's charts every point, full audits at each quarter of the horizon (progress, experiments, direction, report-reality samples, probes, cost, the manager's decisions); about one keep-doing item to four fixes |
+| `obm-swarm-designer` | Owns the design and everything task-specific: from the task's briefing, the human's requirements and what the system can read, a driver tree, what the system charts and counts as an opportunity (`swarm/system.json`), the first guidance, budgets and cadence; redesigns after a diagnosis; the goal itself is the human's |
+| `obm-swarm-orchestrator` | The working agent, with full autonomy: decides what to do, dispatches, paces spend, keeps the core goal moving; uses what the system hands it as information and advice |
+| `obm-swarm-checker` | Quality: gathers its own evidence for each criterion. Fact-checks proposed guidance and the agent's own stated policies against the ground truth |
+| `obm-swarm-auditor` | The director: pulse reviews of the charts and the agent's behavior (on what the agent does, and on a slow schedule), full audits of direction, honesty, cost and records; proposes guidance, never orders; about one keep-doing item to four problems |
 | `obm-swarm-diagnostician` | Finds what is going wrong and why (pinpoint, what maintains it, cause in the environment). Writes no fix: the designer does |
-| `obm-swarm-strategist` | Decides what the system drives toward: the constraint now (the worker's capacity first), a stretch aim for each priority driver, how the capacity is split, and whether the last aims were met. The designer turns each redirect into `swarm/aims.md` at once |
 
 There is no producer skill. Workers follow the short rules for whoever does the work in the protocol, and the evidence about their work comes from the system's record and the checker's own checks, never from the worker's report about itself.
 
-The loop has two halves. **Safety:** designer builds the driver tree → system charts every measure with limits computed from the data → auditor separates signals from routine variation → diagnostician walks the tree to what moved and why → designer reworks the design, with a prediction → the charts show whether it worked. **Improvement:** the system measures celeration against a floor line and a deliberate overshoot aim, and resources in use, the worker's capacity first → the Strategist judges its last aims, finds the constraint, and sets stretch aims and a capacity split → the designer turns them into `swarm/aims.md` at once → the orchestrator works to them, and the auditor checks it does.
+The loop: designer builds the driver tree and says what to chart and what counts as an opportunity → every period the system charts the measures with limits computed from the data and hands the agent a short note (capacity used, what is open, the guidance that fits, anything new) → the auditor reviews when the agent leaves capacity unused with opportunities open, and on a slow schedule → reviews propose guidance, which enters the library only after a fact check → the diagnostician walks the tree to what moved and why → the designer changes the environment, with a prediction → the charts show whether it worked. Guidance is advice and examples of what good looks like; nothing assigns, requires, forbids, blocks or caps an action.
 
 All state lives in files, and every record has a fixed format ([`skills/protocol.md`](skills/protocol.md)), so any session, model or vendor can resume the work.
 
@@ -111,6 +110,13 @@ python analyze.py logs/tiny --out tiny
 ```
 
 ## Changelog: what the field tests changed
+
+**v1.1: a curated environment, 2026-11-26** (after v2 to v4, which added rules, controls and gates, all fell below v1; base v3 lost to v1 on four paired seeds). Built on v1; v3 is kept on the branch `skills-v3`. Details in [`lab/cadence/README.md`](lab/cadence/README.md).
+
+- The designer sets everything task-specific (charts, signals, opportunities, exemplar, cadence) in `swarm/system.json`; the engine and harness carry none.
+- Guidance replaces rules and pivots: advice and examples of what good looks like, fact-checked against the ground truth before it enters the library.
+- A short note every period: capacity used, what is open, the guidance that fits. Reviews also start on what the agent does, not only on the calendar.
+- The agent's own policies and beliefs are fact-checked and shown back to it, never adopted as rules. Behavior and cost are measured as information.
 
 **v3: the Strategist, 2026-11-19** (after v2 seed 1: €11,852 against v1's €15,006 on the same seed). v2 is kept on the branch `skills-v2`.
 
