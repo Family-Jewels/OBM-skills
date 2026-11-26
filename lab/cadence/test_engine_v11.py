@@ -62,7 +62,7 @@ iface = (ws / "swarm" / "system_interface.md").read_text()
 assert "agent time" in iface and "opportunities" in iface and "guardrail" not in iface.lower()
 (ws / "swarm" / "system.json").write_text(json.dumps({
     "charts": [{"name": "score", "better": "up"}, {"name": "made", "better": "up"}, {"name": "nonsense", "better": "up"}],
-    "opportunities": [{"id": "O1", "label": "benches free", "when": [{"resource": "benches", "unused_at_least": 1}]},
+    "opportunities": [{"id": "O1", "label": "benches free", "when": [{"resource": "Benches", "unused_at_least": 1}]},
                       {"id": "O2", "label": "bad", "when": [{"resource": "no such thing", "unused_at_least": 1}]}],
     "cadence": {"pulse_every": 50, "audit_every": 100, "min_periods_between_redesigns": 1, "check_every": 2, "event_min_gap": 2}}))
 (ws / "swarm" / "guidance" / "G-001.md").write_text("# Use the time you have\nApplies when: always\nWhat good looks like: a round that uses most of its time\nWhy: from the brief\nSource: brief\nRevisit: round 100\n")
@@ -81,7 +81,8 @@ for rnd in range(1, 21):
 ev = [json.loads(l) for l in (TMP / "cadence.jsonl").read_text().splitlines()]
 kinds = [e.get("event") for e in ev]
 d0 = next(e for e in ev if e.get("event") == "design_loaded")
-assert d0["charts"] == ["score", "made"] and d0["opportunities"] == ["O1"] and len(d0["problems"]) == 2, d0
+assert d0["charts"] == ["score", "made"] and d0["opportunities"] == ["O1"] and len(d0["problems"]) == 3, d0
+assert "'Benches' read as 'benches'" in d0["problems"], d0
 assert "you decide what to do" in outs[0].lower() and "G-001" in outs[0] and "a round that uses most of its time" in outs[0]
 assert "Guidance G-001" not in outs[5], "always-guidance is shown once, not every period"
 assert "Open now: O1 benches free (3)" in outs[1] and "you used 30% of your capacity" in outs[1]

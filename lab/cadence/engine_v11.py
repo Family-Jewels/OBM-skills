@@ -54,6 +54,17 @@ def adapter_of(cfg):
 
 # ---------- the design (written by the designer) ----------
 
+def resolve(name, names):
+    """A name as the designer wrote it, matched to one the adapter reports: exact, or the same ignoring case and any
+    bracketed note ("worker time" for "worker time (minutes a day)"). None when there is no single match."""
+    if not isinstance(name, str):
+        return None
+    if name in names:
+        return name
+    norm = lambda x: re.sub(r"\s*\([^)]*\)", "", x).strip().lower()
+    c = [n for n in names if norm(n) == norm(name)]
+    return c[0] if len(c) == 1 else None
+
 def load_design(sw, spec):
     """swarm/system.json, checked against what the adapter exposes. Returns (design, problems). Bad entries are dropped,
     never guessed; a missing file falls back to charting every declared measure with no signals or opportunities."""
@@ -67,7 +78,19 @@ def load_design(sw, spec):
             d = {}
     else:
         problems.append("swarm/system.json is missing; using the defaults")
-    meas = spec.get("measures", {}); res = set(spec.get("resources", []))
+    meas = spec.get("measures", {}); res = list(spec.get("resources", []))
+    def fix(obj, key, names):  # match a near-miss name to the reported one, and say so
+        r = resolve(obj.get(key), names)
+        if r and r != obj.get(key):
+            problems.append(f"'{obj.get(key)}' read as '{r}'"); obj[key] = r
+    for c in d.get("charts") or []:
+        if isinstance(c, dict): fix(c, "from" if "from" in c else "name", list(meas))
+    for s in d.get("signals") or []:
+        if isinstance(s, dict): fix(s, "measure", list(meas))
+    for o in d.get("opportunities") or []:
+        for c in (o.get("when") or []) if isinstance(o, dict) else []:
+            if isinstance(c, dict): fix(c, "resource" if "resource" in c else "measure", res if "resource" in c else list(meas))
+    if isinstance(d.get("exemplar"), dict): fix(d["exemplar"], "measure", list(meas))
     out = {"cadence": {**DEFAULT_CADENCE, **{k: v for k, v in (d.get("cadence") or {}).items() if k in DEFAULT_CADENCE and isinstance(v, (int, float))}}}
     ch = []
     for c in d.get("charts") or [{"name": m, "better": v.get("better", "up")} for m, v in meas.items()]:
@@ -144,7 +167,7 @@ def write_interface(cfg):
              "## Measures the system reads every " + unit, "", "| measure | kind | better |", "| --- | --- | --- |"]
     lines += [f"| {k} | {v.get('kind', '')} | {v.get('better', '')} |" for k, v in spec.get("measures", {}).items()]
     lines += ["", "## Resources (used and available, every " + unit + ")", ""]
-    lines += [f"- {x}" + ("  (the working agent's own capacity)" if x == spec.get("capacity") else "") + (f": {spec.get('resource_sources', {}).get(x)}" if spec.get('resource_sources', {}).get(x) else "")
+    lines += [f"- `{x}`" + ("  (the working agent's own capacity)" if x == spec.get("capacity") else "") + (f": {spec.get('resource_sources', {}).get(x)}" if spec.get('resource_sources', {}).get(x) else "")
               for x in spec.get("resources", [])]
     g = spec.get("goal") or {}
     if g:
@@ -157,7 +180,7 @@ def write_interface(cfg):
             {"measure": "<measure>", "op": ">", "value": 0}]}],
         "exemplar": {"measure": "<measure>", "points": {"0": 0, "<period>": 0}, "origin": 0, "source": "<where it comes from>"},
         "cadence": {k: v for k, v in DEFAULT_CADENCE.items()}}, indent=1), "```", "",
-        "Every condition in an opportunity's `when` must hold for it to show as open. Opportunities are information: the system "
+        "Use measure and resource names exactly as listed above. Every condition in an opportunity's `when` must hold for it to show as open. Opportunities are information: the system "
         "never ranks, assigns or requires them. Cadence keys you leave out keep the defaults shown.", "",
         "## A guidance entry (swarm/guidance/G-NNN.md; later ones go to swarm/guidance/proposed/)", "", "```markdown",
         "# <short title>", "Applies when: always | <opportunity ids, comma-separated>", "What good looks like: <advice, a guideline or an example>",
