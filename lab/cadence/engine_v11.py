@@ -46,7 +46,7 @@ BEHAVIOR = ("capacity_used_share", "opportunities_open_at_end", "agent_context_k
 
 def plain(s):
     """Markdown emphasis removed, so marker lines parse however a role formats them."""
-    return re.sub(r"[*_`]+", "", s)
+    return re.sub(r"\*+|`+|(?<![A-Za-z0-9])_+|_+(?![A-Za-z0-9])", "", s)
 
 def adapter_of(cfg):
     mod, cls = cfg["adapter"].split(":")
