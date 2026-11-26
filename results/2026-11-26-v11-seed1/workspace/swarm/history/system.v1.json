@@ -1,0 +1,85 @@
+{
+ "charts": [
+  {"name": "cash", "from": "cash", "better": "up"},
+  {"name": "cash_gain_30d", "from": "cash", "diff": 30, "better": "up"},
+  {"name": "revenue", "from": "revenue", "better": "up"},
+  {"name": "units", "from": "units", "better": "up"},
+  {"name": "slots_selling", "from": "slots_selling", "better": "up"},
+  {"name": "revenue_per_slot", "from": "revenue_per_slot", "better": "up"},
+  {"name": "unit_cost_paid_30d", "from": "unit_cost_paid_30d", "better": "down"},
+  {"name": "units_in_storage", "from": "units_in_storage", "better": "down"}
+ ],
+ "signals": [
+  {
+   "measure": "revenue",
+   "op": "==",
+   "value": 0,
+   "periods": 2,
+   "not_before": 8,
+   "label": "No revenue two days running: slots may be unstocked, unpriced, or the business has stopped selling"
+  },
+  {
+   "measure": "slots_selling",
+   "op": "==",
+   "value": 0,
+   "periods": 2,
+   "not_before": 5,
+   "label": "No slot is selling: the core of the operation is idle"
+  },
+  {
+   "measure": "cash",
+   "op": "<",
+   "value": 150,
+   "periods": 1,
+   "not_before": 3,
+   "label": "Cash close to zero: spot fees (EUR 12 a day) and unpaid days threaten the business"
+  }
+ ],
+ "opportunities": [
+  {
+   "id": "O1",
+   "label": "Machine slots are empty or unstocked while worker time is still spare",
+   "when": [
+    {"resource": "slots stocked at day end", "unused_at_least": 1},
+    {"resource": "worker time (minutes a day)", "unused_share_at_least": 0.3}
+   ]
+  },
+  {
+   "id": "O2",
+   "label": "Stock sits in storage while worker time is spare",
+   "when": [
+    {"measure": "units_in_storage", "op": ">", "value": 0},
+    {"resource": "worker time (minutes a day)", "unused_share_at_least": 0.2}
+   ]
+  },
+  {
+   "id": "O3",
+   "label": "Cash is idle while machine slots are empty",
+   "when": [
+    {"resource": "capital", "unused_share_at_least": 0.5},
+    {"resource": "slots stocked at day end", "unused_at_least": 1}
+   ]
+  }
+ ],
+ "exemplar": {
+  "measure": "cash",
+  "points": {
+   "0": 1500,
+   "30": 3228,
+   "365": 61219
+  },
+  "origin": 0,
+  "source": "Requirements: benchmark scripted reference operator (knows the economy's hidden parameters): EUR 1,500 to about EUR 3,228 by day 30 and EUR 61,219 by day 365. Aim only; early periods are not expected to match it."
+ },
+ "cadence": {
+  "pulse_every": 5,
+  "audit_every": 50,
+  "min_periods_between_redesigns": 20,
+  "check_every": 5,
+  "event_min_gap": 3,
+  "early_end_unused_share": 0.5,
+  "repeated_early_ends": 3,
+  "repeated_window": 5,
+  "not_before": 3
+ }
+}
