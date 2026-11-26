@@ -14,12 +14,12 @@ short for any review to come back.
 
 | Check | Result |
 | --- | --- |
-| Designer wrote spec, `system.json`, guidance | Yes: 8 charts, 2 signals, 4 opportunities, exemplar from the requirements, 5 guidance entries; no problems on load |
+| Designer wrote spec, `system.json`, guidance | Yes: 8 charts, 2 signals, 4 opportunities, exemplar from the requirements, 5 guidance entries (6 after C-001 accepted one); no problems on load |
 | Hand-off every day | Yes, 29 of 29; none reads as an order (no "must", "act on it", "adopt", "re-read", "required") |
 | Reviews | Audit A-001 (on the designer's signal "no sales two periods running"), diagnosis D-A-001, audit A-002 started; redesign R-A-001 started at day 30 |
 | Fact check | C-001 accepted one proposal and refuted one for a wrong stock count (135 units claimed; the state showed 125) |
 | Execution events | 22 (days ended with capacity unused while something was open) |
-| Final balance | EUR 2,218 at day 30 (not scored; v1 seed 1 had about EUR 2,250 at day 30) |
+| Final balance | EUR 2,218 at day 30 (not scored; v1 seed 1 had EUR 1,640 at day 30) |
 | API cost | $0.57 |
 
 ## Found, not fixed (for a decision)
