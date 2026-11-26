@@ -31,9 +31,10 @@ events (a day ended with time unused while something was open), almost one a day
 
 ## Guidance and fact checks
 
-- The designer wrote 5 entries from the brief. Reviews and redesigns proposed 26 more; the fact checks accepted 9 and
-  refuted 14. The library ended with 9 entries (`workspace/swarm/guidance/index.md`); refuted ones are kept with their
-  reason in `guidance/refuted/`.
+- The designer wrote 5 entries from the brief. Reviews and redesigns proposed 28 more. The fact checks ruled on 26:
+  11 accepted, 1 untestable, 14 refuted; 2 were still waiting at the end. Most accepted proposals revised existing entries
+  (G-001 three times, G-008 four times, G-003 once), so the library ended with 9 entries
+  (`workspace/swarm/guidance/index.md`). Refuted ones are kept with their reason in `guidance/refuted/`.
 - Refutations were specific, for example a claim that batches were "bought at recent higher prices" against the
   received prices in the state snapshot.
 - **The agent wrote no notes of its own**, so the check of its own policies (R5) had nothing to check. Its beliefs lived
