@@ -1,0 +1,9 @@
+# Use spare worker time to load the depot before buying
+Revises: G-004
+Applies when: O3
+What good looks like: On a day when stock is waiting in the depot and empty slots could take it, a strong period loads that stock before it places a purchase. Loading earns from the next sales; a purchase earns only after delivery and loading, and both draw on the same worker minutes. Minutes left after loading can go to a small price test on a slot that already holds stock. An example: on the day a delivery's stock first shows in the depot, loading several slots in one sitting uses minutes that would otherwise go unused, and the next purchase can then be sized against the loading the coming days allow.
+Why: Ground truth for days 150 to 179 (swarm/ground_truth/latest.md) shows worker time at 0% on 12 of 30 days (mean 0.24). Five deliveries landed in that stretch (PO-1034 to PO-1038, due days 155, 160, 165, 170 and 176). On the day after each, the depot read 114 to 172 units and worker time was 0%, on all five days. The loads came two days after each delivery at 67% to 76% of worker time (days 157, 162, 167, 172 and 178), and those were the stretch's best revenue days (EUR 27 to 132), against EUR 0 to 23 on the idle days. The same idle-day pattern appears in days 84 to 113 (swarm/audits/A-003.md; the 0% count was re-verified in swarm/checks/C-010.md). This replaces the refuted proposal swarm/guidance/refuted/A-003-spare-time-depot-before-buying.md, whose range of deliveries was wrong; the figures used here are from the ground truth.
+Source: audit A-004
+Revisit: day 210
+
+Fact check: C-011 refuted at day 253 (Revenue claims are false: days 158 (EUR 156.5) and 163 (EUR 187.9) out-earned the load days, and idle days earned up to EUR 38.1 (day 165), not 0 to 23. Advice test passed: it describes good behaviour without requiring, forbidding or capping an action.)

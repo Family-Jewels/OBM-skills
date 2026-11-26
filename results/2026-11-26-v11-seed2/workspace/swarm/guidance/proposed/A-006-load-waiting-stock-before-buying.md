@@ -1,0 +1,7 @@
+# Load stock waiting in the depot before spending minutes on a purchase or a test
+Revises: G-004
+Applies when: O2, O3
+What good looks like: On a day when stock is waiting in the depot and priced slots are empty, a strong period spends its worker minutes on loading that stock first. Loading earns from the next sales, while a purchase earns only after delivery and loading, and both draw on the same 480 minutes. Minutes left after loading can go to a price test or to the next supplier order. An example: a day that opens with 110 to 150 units in the depot and most priced slots empty is a day to fill as many slots as the minutes allow, and to place the next order after that.
+Why: Ground truth, swarm/metrics_system.md, days 284, 291, 296 and 304. On each of these days units_in_storage read 150, 110, 124 and 150, capacity_used_share was 0.0 and revenue was EUR 1.5, 0.0, 2.5 and 1.5. On the next day (285, 292, 297 and 305) the worker used 0.67, 0.67, 0.76 and 0.76 of its time and earned EUR 93.6, 135.6, 51.0 and 105.3. The four arrivals are PO-1059, PO-1060, PO-1061 and PO-1062 in the order table (swarm/ground_truth/day-0309.md); the storage read shows each one a day after its delivery day. On day 309 the machine state holds 36 priced slots, of which 3 have stock. G-004's advice to spend unused time on a restock fits a day with no stock waiting; on these days the same minutes earn more when they load the depot. Figures checked against the ground truth; no claim about the agent's reasoning.
+Source: audit A-006
+Revisit: day 340
