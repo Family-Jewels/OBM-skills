@@ -1,0 +1,58 @@
+{"t": 1795680447.2092483, "period": 2, "event": "design_loaded", "problems": [], "charts": ["cash", "cash_gain_5d", "revenue", "units", "slots_selling", "revenue_per_slot", "unit_cost_paid_30d", "units_in_storage"], "opportunities": ["O1", "O2", "O3", "O4"], "signals": 3}
+{"t": 1795680447.2118487, "period": 2, "event": "measure", "chart_signals": [], "capacity_used_share": 0.469, "open_at_end": 1, "context_k": 34.5}
+{"t": 1795680448.6203482, "period": 3, "event": "measure", "chart_signals": [], "capacity_used_share": 0.0, "open_at_end": 2, "context_k": 36.5}
+{"t": 1795680448.621967, "period": 3, "event": "execution_event", "what": ["day 2 ended with 100% of capacity unused and these open: Slots empty at day end: at least 30% of the 72 slots are unstocked; Worker time unused (at least 120 minutes) while some slots are not selling"]}
+{"t": 1795680448.623165, "period": 3, "event": "started", "id": "A-001", "kind": "audit", "model": "claude-haiku-5-5", "trigger": "no sales two periods running: stock, prices or placement need attention"}
+{"t": 1795680449.3532462, "period": 4, "event": "measure", "chart_signals": [], "capacity_used_share": 0.0, "open_at_end": 2, "context_k": 37.1}
+{"t": 1795680449.3550658, "period": 4, "event": "execution_event", "what": ["day 3 ended with 100% of capacity unused and these open: Slots empty at day end: at least 30% of the 72 slots are unstocked; Worker time unused (at least 120 minutes) while some slots are not selling"]}
+{"t": 1795680450.432128, "period": 5, "event": "measure", "chart_signals": [], "capacity_used_share": 0.0, "open_at_end": 2, "context_k": 37.1}
+{"t": 1795680450.43454, "period": 5, "event": "execution_event", "what": ["the period ended early in 3 of the last 3 days with opportunities open"]}
+{"t": 1795680451.877752, "period": 6, "event": "measure", "chart_signals": [], "capacity_used_share": 0.0, "open_at_end": 2, "context_k": 38.3}
+{"t": 1795680451.8791614, "period": 6, "event": "execution_event", "what": ["the period ended early in 4 of the last 4 days with opportunities open"]}
+{"t": 1795680455.066219, "period": 7, "event": "measure", "chart_signals": [], "capacity_used_share": 0.062, "open_at_end": 2, "context_k": 39.0}
+{"t": 1795680455.067571, "period": 7, "event": "execution_event", "what": ["the period ended early in 5 of the last 5 days with opportunities open"]}
+{"t": 1795680470.523235, "period": 8, "event": "measure", "chart_signals": [], "capacity_used_share": 0.844, "open_at_end": 3, "context_k": 45.8}
+{"t": 1795680470.524569, "period": 8, "event": "execution_event", "what": ["the period ended early in 4 of the last 5 days with opportunities open"]}
+{"t": 1795680483.2927053, "period": 9, "event": "measure", "chart_signals": [], "capacity_used_share": 0.875, "open_at_end": 2, "context_k": 51.6}
+{"t": 1795680483.293938, "period": 9, "event": "execution_event", "what": ["the period ended early in 3 of the last 5 days with opportunities open"]}
+{"t": 1795680510.5525331, "period": 10, "event": "measure", "chart_signals": ["unit_cost_paid_30d beyond the upper limit"], "capacity_used_share": 0.958, "open_at_end": 2, "context_k": 63.6}
+{"t": 1795680528.2619715, "period": 11, "event": "measure", "chart_signals": [], "capacity_used_share": 0.635, "open_at_end": 1, "context_k": 72.1}
+{"t": 1795680534.889833, "period": 12, "event": "measure", "chart_signals": [], "capacity_used_share": 0.292, "open_at_end": 3, "context_k": 74.2}
+{"t": 1795680534.8917036, "period": 12, "event": "execution_event", "what": ["day 11 ended with 71% of capacity unused and these open: Slots empty at day end: at least 30% of the 72 slots are unstocked; Worker time unused (at least 120 minutes) while some slots are not selling; Units sitting in the depot while worker time (at least 45 minutes) is unused"]}
+{"t": 1795680546.5994968, "period": 13, "event": "measure", "chart_signals": [], "capacity_used_share": 0.771, "open_at_end": 3, "context_k": 80.9}
+{"t": 1795680546.6021001, "period": 13, "event": "started", "id": "C-001", "kind": "check", "model": "claude-haiku-5-5", "trigger": null}
+{"t": 1795680556.741326, "period": 14, "event": "measure", "chart_signals": [], "capacity_used_share": 0.365, "open_at_end": 2, "context_k": 84.0}
+{"t": 1795680556.7427576, "period": 14, "event": "execution_event", "what": ["day 13 ended with 64% of capacity unused and these open: Slots empty at day end: at least 30% of the 72 slots are unstocked; Units sitting in the depot while worker time (at least 45 minutes) is unused"]}
+{"t": 1795680578.9468336, "period": 15, "event": "measure", "chart_signals": [], "capacity_used_share": 0.802, "open_at_end": 3, "context_k": 93.7}
+{"t": 1795680578.9477246, "period": 15, "event": "audit", "id": "A-001", "started": 3, "delivered": 15, "trigger": "no sales two periods running: stock, prices or placement need attention", "event_period": 3, "lag": 12, "cost": 0.029772760000000002, "turns": 27, "record": true}
+{"t": 1795680578.9485748, "period": 15, "event": "started", "id": "D-A-001", "kind": "diagnosis", "model": "claude-haiku-5-5", "trigger": null}
+{"t": 1795680578.9488518, "period": 15, "event": "check", "id": "C-001", "started": 13, "delivered": 15, "trigger": null, "event_period": null, "lag": null, "cost": 0.0121498, "turns": 13, "record": true}
+{"t": 1795680578.9516673, "period": 15, "event": "started", "id": "A-002", "kind": "audit", "model": "claude-haiku-5-5", "trigger": "cash below the opening balance for three periods; the business is spending faster than it earns"}
+{"t": 1795680590.8928654, "period": 16, "event": "measure", "chart_signals": [], "capacity_used_share": 0.5, "open_at_end": 2, "context_k": 99.0}
+{"t": 1795680590.8941534, "period": 16, "event": "execution_event", "what": ["the period ended early in 3 of the last 5 days with opportunities open"]}
+{"t": 1795680593.6426468, "period": 17, "event": "measure", "chart_signals": [], "capacity_used_share": 0.062, "open_at_end": 3, "context_k": 102.7}
+{"t": 1795680593.6442094, "period": 17, "event": "execution_event", "what": ["the period ended early in 3 of the last 5 days with opportunities open"]}
+{"t": 1795680596.0962412, "period": 18, "event": "measure", "chart_signals": [], "capacity_used_share": 0.052, "open_at_end": 3, "context_k": 104.7}
+{"t": 1795680596.0979106, "period": 18, "event": "execution_event", "what": ["the period ended early in 4 of the last 5 days with opportunities open"]}
+{"t": 1795680607.8091998, "period": 19, "event": "measure", "chart_signals": [], "capacity_used_share": 0.583, "open_at_end": 3, "context_k": 105.5}
+{"t": 1795680607.8104703, "period": 19, "event": "execution_event", "what": ["the period ended early in 3 of the last 5 days with opportunities open"]}
+{"t": 1795680625.5570335, "period": 21, "event": "measure", "chart_signals": [], "capacity_used_share": 0.062, "open_at_end": 1, "context_k": 113.4}
+{"t": 1795680625.558269, "period": 21, "event": "execution_event", "what": ["the period ended early in 4 of the last 5 days with opportunities open"]}
+{"t": 1795680636.0475295, "period": 22, "event": "measure", "chart_signals": [], "capacity_used_share": 0.177, "open_at_end": 3, "context_k": 119.3}
+{"t": 1795680636.0498407, "period": 22, "event": "execution_event", "what": ["the period ended early in 4 of the last 5 days with opportunities open"]}
+{"t": 1795680647.3642838, "period": 23, "event": "measure", "chart_signals": [], "capacity_used_share": 0.375, "open_at_end": 2, "context_k": 124.9}
+{"t": 1795680647.3657765, "period": 23, "event": "execution_event", "what": ["the period ended early in 4 of the last 5 days with opportunities open"]}
+{"t": 1795680649.632619, "period": 24, "event": "measure", "chart_signals": ["units_in_storage beyond the upper limit"], "capacity_used_share": 0.052, "open_at_end": 2, "context_k": 127.6}
+{"t": 1795680649.6344779, "period": 24, "event": "execution_event", "what": ["the period ended early in 4 of the last 5 days with opportunities open"]}
+{"t": 1795680664.4177587, "period": 26, "event": "measure", "chart_signals": [], "capacity_used_share": 0.0, "open_at_end": 1, "context_k": 132.7}
+{"t": 1795680664.4199307, "period": 26, "event": "execution_event", "what": ["the period ended early in 5 of the last 5 days with opportunities open"]}
+{"t": 1795680672.9754684, "period": 27, "event": "measure", "chart_signals": [], "capacity_used_share": 0.677, "open_at_end": 3, "context_k": 136.5}
+{"t": 1795680672.9767478, "period": 27, "event": "execution_event", "what": ["the period ended early in 4 of the last 5 days with opportunities open"]}
+{"t": 1795680688.0232854, "period": 28, "event": "measure", "chart_signals": [], "capacity_used_share": 0.938, "open_at_end": 3, "context_k": 145.2}
+{"t": 1795680688.0256906, "period": 28, "event": "execution_event", "what": ["the period ended early in 3 of the last 5 days with opportunities open"]}
+{"t": 1795680696.1019442, "period": 29, "event": "measure", "chart_signals": [], "capacity_used_share": 0.458, "open_at_end": 1, "context_k": 148.2}
+{"t": 1795680696.1035972, "period": 29, "event": "execution_event", "what": ["the period ended early in 3 of the last 5 days with opportunities open"]}
+{"t": 1795680700.4785016, "period": 30, "event": "measure", "chart_signals": [], "capacity_used_share": 0.021, "open_at_end": 3, "context_k": 151.7}
+{"t": 1795680700.4796686, "period": 30, "event": "diagnosis", "id": "D-A-001", "started": 15, "delivered": 30, "trigger": null, "event_period": null, "lag": null, "cost": 0.03218477, "turns": 28, "record": true}
+{"t": 1795680700.4803748, "period": 30, "event": "started", "id": "R-A-001", "kind": "redesign", "model": "claude-haiku-5-5", "trigger": null}
+{"t": 1795680700.4813924, "period": 30, "event": "execution_event", "what": ["the period ended early in 3 of the last 5 days with opportunities open"]}

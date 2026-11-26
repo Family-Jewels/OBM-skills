@@ -1,0 +1,62 @@
+{
+ "charts": [
+  {"name": "cash", "from": "cash", "better": "up"},
+  {"name": "cash_gain_5d", "from": "cash", "diff": 5, "better": "up"},
+  {"name": "revenue", "from": "revenue", "better": "up"},
+  {"name": "units", "from": "units", "better": "up"},
+  {"name": "slots_selling", "from": "slots_selling", "better": "up"},
+  {"name": "revenue_per_slot", "from": "revenue_per_slot", "better": "up"},
+  {"name": "unit_cost_paid_30d", "from": "unit_cost_paid_30d", "better": "down"},
+  {"name": "units_in_storage", "from": "units_in_storage", "better": "down"}
+ ],
+ "signals": [
+  {"measure": "revenue", "op": "==", "value": 0, "periods": 2, "not_before": 3,
+   "label": "no sales two periods running: stock, prices or placement need attention"},
+  {"measure": "slots_selling", "op": "==", "value": 0, "periods": 2, "not_before": 3,
+   "label": "no slot selling two periods running"},
+  {"measure": "cash", "op": "<", "value": 1500, "periods": 3, "not_before": 8,
+   "label": "cash below the opening balance for three periods; the business is spending faster than it earns"}
+ ],
+ "opportunities": [
+  {"id": "O1",
+   "label": "Slots empty at day end: at least 30% of the 72 slots are unstocked",
+   "when": [
+    {"resource": "slots stocked at day end", "unused_share_at_least": 0.3}
+   ]},
+  {"id": "O2",
+   "label": "Worker time unused (at least 120 minutes) while some slots are not selling",
+   "when": [
+    {"resource": "worker time (minutes a day)", "unused_at_least": 120},
+    {"measure": "slots_selling", "op": "<", "value": 72}
+   ]},
+  {"id": "O3",
+   "label": "Units sitting in the depot while worker time (at least 45 minutes) is unused",
+   "when": [
+    {"measure": "units_in_storage", "op": ">", "value": 0},
+    {"resource": "worker time (minutes a day)", "unused_at_least": 45}
+   ]},
+  {"id": "O4",
+   "label": "Revenue flat or falling while slots are selling",
+   "when": [
+    {"measure": "slots_selling", "op": ">", "value": 0},
+    {"measure": "revenue", "op": "<=", "value": 0}
+   ]}
+ ],
+ "exemplar": {
+  "measure": "cash",
+  "points": {"0": 1500, "30": 3228},
+  "origin": 0,
+  "source": "requirements.md: scripted reference operator that knows the hidden economy parameters; EUR 1,500 to about EUR 3,228 by day 30. Hindsight benchmark; aims rise once reached."
+ },
+ "cadence": {
+  "pulse_every": 5,
+  "audit_every": 30,
+  "min_periods_between_redesigns": 20,
+  "check_every": 5,
+  "event_min_gap": 3,
+  "early_end_unused_share": 0.5,
+  "repeated_early_ends": 3,
+  "repeated_window": 5,
+  "not_before": 3
+ }
+}
