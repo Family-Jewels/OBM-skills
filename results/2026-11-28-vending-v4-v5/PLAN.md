@@ -36,7 +36,9 @@ A usage limit **pauses** a run; it does not end it. The runner keeps the simulat
 1. It files whatever finished. The copy keeps the result, the cadence log, the step and action logs (compressed), the gate log and the workspace; the transcript stays behind.
 2. It logs any lost run as an environment failure, to be run again.
 3. It resumes a paused run once the reset time the CLI named has passed. Until then the batch waits: the limit is the account's, so any other run would be cut off at once.
-4. Otherwise it starts the next pending run, detached.
+4. Otherwise it starts the next pending run, detached, but only when the usage window refreshes, so each run starts with a whole window. The next reset is the one the CLI named at the last cutoff, or else an estimate of 5 hours after the last start or resume. The estimate errs late, which costs minutes, never a run. A run that ends early in its window leaves the rest of the window idle. (Added 2026-11-28 during seed 1, before any seed was filed. It changes when runs start, not what they do.)
+
+While the batch waits for a refresh, the loop exits and the session sets a one-time scheduled task for that time, because a sleeping loop dies when the container restarts.
 
 The session that runs the batch watches each run with a background wait, ticks again when the run ends, and commits and pushes each finished run at once, because the container is ephemeral. A scheduled task fires into the same session as a heartbeat. If the container was reset, it lays out the run machine again (`lab/vending2/setup_run_machine.sh`) and ticks; a run lost with its container is run again.
 

@@ -1,7 +1,8 @@
 #!/bin/bash
 # Drives the v4/v5 plan with no one watching: the smoke stage, then, only if every smoke check passes, the seed stage.
 # Each tick of seed_batch.py files what finished and starts the next run (one at a time); this loop waits for that run,
-# or for the reset time a usage-limit pause names, then ticks again. Every filed run is committed and pushed at once,
+# then ticks again. Each run starts only when the usage window refreshes: until then the loop exits, writing the time to
+# /home/claude/runs/next_start, and a scheduled task the session sets for that time starts it again. Every filed run is committed and pushed at once,
 # because the container is ephemeral. Starting it twice is harmless: the second copy exits.
 #   usage: setsid nohup lab/vending2/run_batch.sh >/dev/null 2>&1 &      log: /home/claude/runs/batch.log
 REPO=$(cd "$(dirname "$0")/../.." && pwd); cd "$REPO" || exit 1
@@ -35,9 +36,12 @@ stage() {  # run one stage of seed_batch to completion; its settings come in as 
       started|resumed|running)
         pid=$(python3 -I -c 'import json,sys; print(json.loads(sys.argv[1]).get("pid",""))' "$out")
         while alive "$pid"; do sleep 30; done ;;
-      waiting)
-        until=$(python3 -I -c 'import json,sys; print(int(json.loads(sys.argv[1])["resume_after"]))' "$out")
-        while [ "$(date +%s)" -lt "$until" ]; do sleep 60; done ;;
+      waiting)  # until the usage window refreshes. A sleeping loop dies with the container, so the loop exits and a
+                # scheduled task that the session sets for that time starts it again (starting it early is harmless)
+        when=$(python3 -I -c 'import json,sys; print(json.loads(sys.argv[1])["resume_after_utc"])' "$out")
+        echo "$when" > /home/claude/runs/next_start
+        say "waiting for the usage window to refresh at $when: the loop exits; a scheduled task starts it again then"
+        rm -f "$PIDF"; exit 0 ;;
       complete) return 0 ;;
       *) say "unexpected tick output; retrying in 5 minutes"; sleep 300 ;;
     esac

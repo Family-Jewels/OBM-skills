@@ -8,7 +8,9 @@ Each run is in one of these states:
   running   the lock names a live process
   pending   none of the above
 A paused run blocks the batch until the reset time the CLI named: the limit is the account's, so any other run would be cut
-off at once. A run that ended for another environment reason (the harness clock, a crash, a container that went away) is
+off at once. A new run also starts only when the usage window refreshes, so each run gets a whole window: window.json (next
+to the runs folder) holds the next reset, taken from the CLI's message when a run is cut off, else estimated as 5 hours
+after the last start or resume (an estimate errs late, which costs minutes, never a run). Past that time a run starts at once. A run that ended for another environment reason (the harness clock, a crash, a container that went away) is
 moved to <runs>/cutoffs/, logged in the batch's environment-failures.json, and run again from the start. A run the agent
 itself ended early is a result like any other and is filed: that is what the stop gate exists to prevent, not to hide.
 
@@ -16,7 +18,7 @@ usage: python3 -I seed_batch.py status | tick [--dry]
   tick: file whatever finished; then, if nothing is running or waiting, resume the first paused run or start the first
         pending one, detached from this shell. Prints one JSON line saying what it did and what to wait for.
 Environment overrides (tests): SEED_BATCH_RUNS, SEED_BATCH_OUT, SEED_BATCH_RUNNER, SEED_BATCH_ORDER ("arm:seed,..."),
-SEED_BATCH_DAYS, SEED_BATCH_NOW (epoch seconds).
+SEED_BATCH_DAYS, SEED_BATCH_NOW (epoch seconds), SEED_BATCH_WINDOW (the window file).
 """
 import datetime as dt, gzip, json, os, re, shutil, subprocess, sys, time
 from pathlib import Path
@@ -31,6 +33,8 @@ DAYS = int(os.environ.get('SEED_BATCH_DAYS', '365'))
 ORDER = ([(x.split(':')[0], int(x.split(':')[1])) for x in os.environ['SEED_BATCH_ORDER'].split(',')]
          if os.environ.get('SEED_BATCH_ORDER') else [(arm, s) for s in range(1, 6) for arm in ('obm_v4', 'obm_v5')])
 LOCK = RUNS / 'batch.lock'
+WINDOW_F = Path(os.environ.get('SEED_BATCH_WINDOW', str(RUNS.parent / 'window.json')))
+WINDOW_S, MARGIN = 5 * 3600, 120
 GZIP = ('steps.jsonl', 'actions.jsonl')
 KEEP = ('result.json', 'cadence.jsonl', 'steps.jsonl', 'actions.jsonl', 'gate.jsonl', 'resume.done.json', 'runner.log', 'workspace')
 
@@ -82,6 +86,20 @@ def reset_time(cutoff):
         except Exception:
             pass
     return t0 + 5 * 3600
+
+def utc(t):
+    return dt.datetime.fromtimestamp(t, dt.timezone.utc).strftime('%Y-%m-%d %H:%M UTC')
+
+def window():
+    try:
+        return json.loads(WINDOW_F.read_text())
+    except (OSError, ValueError):
+        return {}
+
+def set_window(next_reset, basis, dry=False):
+    if not dry:
+        WINDOW_F.parent.mkdir(parents=True, exist_ok=True)
+        WINDOW_F.write_text(json.dumps({'next_reset': next_reset, 'next_reset_utc': utc(next_reset), 'basis': basis, 'set_at': now()}))
 
 def state(arm, seed):
     n = name(arm, seed); d = RUNS / n
@@ -167,12 +185,19 @@ def tick(dry=False):
         st, info = state(arm, seed)
         if st == 'paused':
             if now() < info['resume_after']:
+                if window().get('next_reset') != info['resume_after']:
+                    set_window(info['resume_after'], 'the reset the CLI named when the run was cut off', dry)
                 return {**out, 'action': 'waiting', 'run': name(arm, seed), 'paused_at_day': info['day'],
-                        'resume_after': info['resume_after'],
-                        'resume_after_utc': dt.datetime.fromtimestamp(info['resume_after'], dt.timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}
+                        'resume_after': info['resume_after'], 'resume_after_utc': utc(info['resume_after'])}
+            set_window(now() + WINDOW_S + MARGIN, 'estimate: 5 hours after this resume', dry)
             return {**out, 'action': 'resumed', **launch(arm, seed, resume=True, dry=dry)}
     for arm, seed in ORDER:
         if state(arm, seed)[0] == 'pending':
+            nxt = window().get('next_reset')
+            if nxt and now() < nxt:  # the window this run would start in is already part spent
+                return {**out, 'action': 'waiting', 'run': name(arm, seed), 'why': 'a new run starts only when the usage window refreshes',
+                        'resume_after': nxt, 'resume_after_utc': utc(nxt)}
+            set_window(now() + WINDOW_S + MARGIN, 'estimate: 5 hours after this start', dry)
             return {**out, 'action': 'started', **launch(arm, seed, dry=dry)}
     return {**out, 'action': 'complete', 'runs': len(ORDER)}
 

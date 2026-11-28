@@ -52,20 +52,33 @@ def tick(at=None):
         time.sleep(0.2)
     return r
 
-r = tick(); assert r['action'] == 'started' and r['started'] == 'obm_v4-seed1-3d', r
-r = tick(); assert r['filed'][0]['run'] == 'obm_v4-seed1-3d' and r['started'] == 'obm_v5-seed1-3d', r        # alternates arms
+H = 3600; W = 5 * H + 120                      # a window, and the margin the driver adds
+t = cut_at - 6 * H
+r = tick(t); assert r['action'] == 'started' and r['started'] == 'obm_v4-seed1-3d', r
+r = tick(t + 60); assert r['filed'][0]['run'] == 'obm_v4-seed1-3d' and r['action'] == 'waiting', r   # next run waits for the refresh
+assert r['run'] == 'obm_v5-seed1-3d' and r['resume_after'] == t + W and 'refreshes' in r['why'], r
+assert json.loads((tmp / 'window.json').read_text())['next_reset'] == t + W
 assert (out / 'obm_v4-seed1-3d' / 'result.json').exists() and (out / 'obm_v4-seed1-3d' / 'workspace' / 'swarm' / 'spec.md').exists()
 assert not (out / 'obm_v4-seed1-3d' / 'stream.jsonl').exists()                                                   # the transcript stays behind
 import gzip
 assert gzip.open(out / 'obm_v4-seed1-3d' / 'steps.jsonl.gz').read() == b'{"i": 1}\n'                       # the step log, compressed
+r = tick(t + W + 60); assert r['action'] == 'started' and r['started'] == 'obm_v5-seed1-3d', r             # alternates arms, at the refresh
 r = tick(cut_at + 60)
 assert r['action'] == 'waiting' and r['run'] == 'obm_v5-seed1-3d' and r['resume_after_utc'] == '2026-11-29 01:22 UTC', r  # the account's limit blocks the batch
-r = tick(cut_at + 3 * 3600); assert r['action'] == 'resumed' and r['started'] == 'obm_v5-seed1-3d' and r['resume'], r
-r = tick(); assert r['filed'][0]['run'] == 'obm_v5-seed1-3d' and r['started'] == 'obm_v4-seed2-3d', r
-r = tick(); assert r['failures'][0]['run'] == 'obm_v4-seed2-3d' and r['started'] == 'obm_v4-seed2-3d', r      # a crash: logged, run again
-r = tick(); assert r['filed'][0]['run'] == 'obm_v4-seed2-3d' and r['started'] == 'obm_v5-seed2-3d', r
-r = tick(); assert r['failures'][0]['why'] == 'Wall-clock timeout' and r['started'] == 'obm_v5-seed2-3d', r    # the harness clock: run again
-r = tick(); assert r['filed'][0]['run'] == 'obm_v5-seed2-3d' and r['action'] == 'complete', r
+assert json.loads((tmp / 'window.json').read_text())['next_reset'] == r['resume_after']                     # the CLI's reset replaces the estimate
+t = cut_at + 3 * H
+r = tick(t); assert r['action'] == 'resumed' and r['started'] == 'obm_v5-seed1-3d' and r['resume'], r
+r = tick(t + 60); assert r['filed'][0]['run'] == 'obm_v5-seed1-3d' and r['action'] == 'waiting' and r['resume_after'] == t + W, r
+t += W + 60
+r = tick(t); assert r['started'] == 'obm_v4-seed2-3d', r
+r = tick(t + 60); assert r['failures'][0]['run'] == 'obm_v4-seed2-3d' and r['action'] == 'waiting', r      # a crash: logged; the rerun waits too
+t += W + 60
+r = tick(t); assert r['started'] == 'obm_v4-seed2-3d', r
+r = tick(t + W + 60); assert r['filed'][0]['run'] == 'obm_v4-seed2-3d' and r['started'] == 'obm_v5-seed2-3d', r  # a run past the refresh starts at once
+t += W + 60
+r = tick(t + W + 60); assert r['failures'][0]['why'] == 'Wall-clock timeout' and r['started'] == 'obm_v5-seed2-3d', r    # the harness clock: run again
+t += W + 60
+r = tick(t + W + 60); assert r['filed'][0]['run'] == 'obm_v5-seed2-3d' and r['action'] == 'complete', r
 fails = json.loads((out / 'environment-failures.json').read_text())
 assert [f['run'] for f in fails] == ['obm_v4-seed2-3d', 'obm_v5-seed2-3d'], fails
 st = [json.loads(l) for l in subprocess.run([sys.executable, '-I', str(HERE / 'seed_batch.py'), 'status'], env=env, capture_output=True,
