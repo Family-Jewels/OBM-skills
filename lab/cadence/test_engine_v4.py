@@ -50,6 +50,7 @@ def run(days, dry=None, actions=None, **extra):
 ev, st, mem, sw = run(182)
 pre = [e for e in ev if e["event"] == "preflight"][0]
 assert pre["problems"] == [] and pre["config"]["strategy_every"] == 3 and pre["config"]["risk_sweep_every"] == 1, pre
+assert pre["verification"] is True, pre   # the engine says whether it can judge changes
 assert st["strategist"][0] == 21 and all(b - a == 21 for a, b in zip(st["strategist"], st["strategist"][1:])), st["strategist"]
 assert all(a - s <= 1 for s, a in zip(st["strategist"], st["aims"])), (st["strategist"], st["aims"])  # aims follow at once
 assert len(st["pulse"]) >= 20, st["pulse"]                      # a routine risk sweep every point (irreversible task)
@@ -129,6 +130,16 @@ assert any(e["event"] == "prediction_restated" and e["id"] == "M-001" for e in e
 assert any(e["event"] == "change_verdict" and e["id"] == "M-001" for e in ev)
 ev, st, mem, sw = run(60, dry={"pulse": ask_d, "method": "M {id}\n\nPrediction: empty_slots down within 2 points\n"})
 assert any(e["event"] == "prediction_problem" and "does not chart" in (e.get("problem") or "") for e in ev)
+
+# Without the verifier the engine still runs, and says so at the start instead of silently judging nothing.
+_v = engine_v4.verify; engine_v4.verify = None
+try:
+    ev, st, mem, sw = run(20)
+    pre = [e for e in ev if e["event"] == "preflight"][0]
+    assert pre["verification"] is False and any("change verification is off" in p for p in pre["problems"]), pre
+    assert "change verification is off" in (sw / "escalations.md").read_text()
+finally:
+    engine_v4.verify = _v
 
 # Unit checks.
 assert ledger.parse_requests("x\n## Requests\n- to: Controls | key: A B | do it\n- nonsense\n") == [{"to": "controls", "key": "a-b", "text": "do it"}]

@@ -190,6 +190,9 @@ def score_run(run):
            "cost": r.get("api_cost_usd"), "review_cost": r.get("cadence_cost_usd"), "tool_calls": r.get("tool_calls"),
            "turns": r.get("turns"), "stocked_slots": r.get("avg_stocked_slots"), "stopped": r.get("termination_reason"),
            "error": r.get("error")}
+    for k in ("steps", "change_verdicts", "budget_usd", "steps_mode"):  # written by the runner from the system's own records
+        if k in r:
+            rec[k] = r[k]
     ev = load_cadence(run)
     metrics = load_metrics(run)
     rec["has_metrics"] = bool(metrics)
@@ -199,6 +202,11 @@ def score_run(run):
         return rec
     kinds = collections.Counter(e["event"] for e in ev)
     rec["events"] = dict(kinds)
+    sysv = [e for e in ev if e["event"] == "change_verdict"]  # engine v4 onward: the system's own verdicts
+    if sysv:
+        rec["system_verdicts"] = {"judged": len(sysv), "as_predicted": sum(str(e.get("verdict", "")).startswith("shift as predicted") for e in sysv),
+                                  "expected_by_chance": round(sum(e.get("chance") or 0 for e in sysv), 2),
+                                  "wrong_way": sum(str(e.get("verdict", "")).startswith("shift the wrong way") for e in sysv)}
     # latency of each review from start to hand-over, in simulated days
     started = {e["id"]: e["period"] for e in ev if e["event"] == "started" and e.get("id")}
     lat = collections.defaultdict(list); delivered = {}

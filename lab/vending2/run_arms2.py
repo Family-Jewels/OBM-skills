@@ -1,22 +1,33 @@
-"""Pilot: OBM skills vs Claude Code native (/plan + /goal) on Prosus Vending Bench.
+"""OBM skills vs Claude Code native (/plan + /goal) on Prosus Vending Bench.
 
 Every arm: the benchmark's briefing as system prompt, its 22 MCP business tools, and the same extra tools
-(Read, Write, Edit, Glob, Grep in a private workspace folder; Agent for sub-agents; Skill). Same model, budget, time limit.
-  base     : nothing more.
-  native   : a read-only planning session (--permission-mode plan), then the same session resumed with /goal.
-  obm      : the six OBM swarm skills installed; told to run the business as a one-agent OBM swarm.
-  obm_enf  : obm plus a Stop hook that reads the simulator's own state and refuses to stop before the last day.
-usage: python -I run_arms2.py --arm obm_enf --seed 1 --days 365 --budget 40 --timeout 7000 --output DIR [--steps observe|cue|off]
+(Read, Write, Edit, Glob, Grep in a private workspace folder; Agent for sub-agents; Skill). Same model and time limit.
+  base           : nothing more.
+  native         : a read-only planning session (--permission-mode plan), then the same session resumed with /goal.
+  native_cadence : native, with the system running the same reviews as the obm cadence arms, with plain prompts.
+  obm            : the OBM swarm skills installed; told to run the business as a one-agent OBM swarm.
+  obm_enf        : obm plus a Stop hook that reads the simulator's own state and refuses to stop before the last day.
+  obm_cadence    : the system runs the review cadence (engine v1); obm_v2, obm_v3 and obm_v4 run engines v2 to v4.
+  obm_v5         : engine v4 (with change verdicts), the operator on the obm-long-run skill instead of the orchestrator's,
+                   and the system's step cues on (--steps cue).
+usage: python -I run_arms2.py --arm obm_v5 --seed 1 --days 365 --output DIR [--budget USD] [--timeout S] [--steps observe|cue|off]
 
+--budget: no dollar cap unless given; the account's usage limits still apply, and a cutoff is tagged as an environment
+failure. The per-job caps stay: the designer's set-up ($2), native's planning session ($3) and each review (engine budgets).
 --steps (every arm): a hook records every tool call to <out>/steps.jsonl (../longrun/steps_hook.py), so the movement cycle
-can be analysed after the run; result.json gets its behaviour summary. 'observe' (default) records only; 'cue' also hands
-the agent the system's step cues and writes swarm/step_health.md, so it is an intervention and an arm of its own.
+can be analysed after the run; result.json gets its behaviour summary. 'observe' (the default, except for obm_v5) records
+only; 'cue' also hands the agent the system's step cues and writes swarm/step_health.md, so it is an intervention.
+Before anything starts, a preflight refuses to run if the lab copy lacks what the arm needs (see preflight()).
 """
 import argparse, json, os, shutil, socket, subprocess, sys, tempfile, time, urllib.request, uuid
 from pathlib import Path
 ROOT = Path('/home/claude/bench-src/vending-bench'); SIM = ROOT / 'tasks/vending-bench/environment/sim-server'
 HERE = Path('/home/claude/obm-lab/vending2'); PY = '/home/claude/vb-venv/bin/python'
 SKILLS = Path('/home/claude/obm-skills/skills')
+CFG_CLEAN = Path('/home/claude/obm-lab/cfg-clean')
+CADENCE_ARMS = ('obm_cadence', 'native_cadence', 'obm_v2', 'obm_v3', 'obm_v4', 'obm_v5')
+GATED_ARMS = ('obm_enf', 'obm_cadence', 'obm_v2', 'obm_v3', 'obm_v4', 'obm_v5')
+V4_ARMS = ('obm_v4', 'obm_v5')  # engine v4: two branches, the fact register, change verdicts
 TOOLS = 'Read,Write,Edit,Glob,Grep,Agent,Skill'
 GOAL = ("The vending tools have reported SIMULATION OVER for the final simulated day, after the business was operated every day "
         "with the aim of the highest final bank balance. Judge 'met' only when a tool result in the transcript says SIMULATION OVER; "
@@ -44,20 +55,65 @@ def claude(args, cfg, cwd, out_stream, timeout):
         except ValueError: pass
     return p, res
 
+def skills_for(arm):
+    """The skill folders an arm installs. obm_v5's operator uses obm-long-run, so the orchestrator's skill is left out:
+    both describe running the work, and installing both would leave the choice to the model."""
+    if not arm.startswith('obm'):
+        return []
+    sk = sorted(SKILLS.glob('obm-swarm-*'))
+    if arm == 'obm_v5':
+        sk = [s for s in sk if s.name != 'obm-swarm-orchestrator'] + [SKILLS / 'obm-long-run']
+    return sk
+
+def preflight(a):
+    """Everything the arm needs, checked before anything starts. A missing piece would otherwise fail silently: the engine
+    runs without change verdicts if it cannot import them, and a hook whose file is missing errors without stopping the run."""
+    lab, probs = HERE.parent, []
+    need = [CFG_CLEAN]
+    if a.steps != 'off':
+        need += [lab / 'longrun' / 'steps_hook.py', lab / 'longrun' / 'steps.py']
+    if a.arm in GATED_ARMS:
+        need.append(HERE / 'vb_stop_gate2.py')
+    if a.arm in CADENCE_ARMS:
+        need += [lab / 'cadence' / 'engine.py', lab / 'cadence' / 'adapters' / 'vending.py']
+    if a.arm in V4_ARMS:
+        need += [lab / 'cadence' / 'engine_v4.py', lab / 'cadence' / 'adapters' / 'action_hook.py', lab / 'longrun' / 'verify.py']
+    for s in skills_for(a.arm):
+        need.append(s / 'SKILL.md')
+    if a.arm.startswith('obm'):
+        need.append(SKILLS / 'obm-swarm-protocol' / 'SKILL.md')
+    probs += [f'missing: {p}' for p in need if not p.exists()]
+    if a.arm in V4_ARMS and not probs:
+        chk = subprocess.run(['python3', '-I', '-c', 'import sys; sys.path.insert(0, sys.argv[1]); import engine_v4; '
+                              'sys.exit(0 if engine_v4.verify is not None else 3)', str(lab / 'cadence')], capture_output=True, text=True)
+        if chk.returncode:
+            probs.append('engine v4 cannot load change verification (lab/longrun/verify.py): ' + (chk.stderr.strip()[-300:] or f'exit {chk.returncode}'))
+    return probs
+
+def cap(usd):
+    """The dollar cap flag, only when there is a cap."""
+    return [] if usd is None else ['--max-budget-usd', f'{max(0.0, usd):.2f}']
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--arm', required=True, choices=['base', 'native', 'native_cadence', 'obm', 'obm_enf', 'obm_cadence', 'obm_v2', 'obm_v3', 'obm_v4']); ap.add_argument('--seed', type=int, default=1)
-    ap.add_argument('--days', type=int, default=365); ap.add_argument('--budget', type=float, default=40)
-    ap.add_argument('--timeout', type=int, default=7000); ap.add_argument('--output', type=Path, required=True)
+    ap.add_argument('--arm', required=True, choices=['base', 'native', 'native_cadence', 'obm', 'obm_enf', 'obm_cadence', 'obm_v2', 'obm_v3', 'obm_v4', 'obm_v5']); ap.add_argument('--seed', type=int, default=1)
+    ap.add_argument('--days', type=int, default=365); ap.add_argument('--budget', type=float, default=None)
+    ap.add_argument('--timeout', type=int, default=21600); ap.add_argument('--output', type=Path, required=True)
     ap.add_argument('--model', default='claude-haiku-5-5'); ap.add_argument('--audit-every', type=int, default=50); ap.add_argument('--pulse-every', type=int, default=5)
-    ap.add_argument('--steps', choices=['off', 'observe', 'cue'], default='observe')
+    ap.add_argument('--steps', choices=['off', 'observe', 'cue'], default=None)
     a = ap.parse_args()
+    if a.steps is None:
+        a.steps = 'cue' if a.arm == 'obm_v5' else 'observe'
+    probs = preflight(a)
+    if probs:
+        print('preflight failed; nothing was started:\n  ' + '\n  '.join(probs), file=sys.stderr)
+        sys.exit(2)
     out = a.output / f'{a.arm}-seed{a.seed}-{a.days}d'; out.mkdir(parents=True, exist_ok=False)
     ws = out / 'workspace'; ws.mkdir()
-    cfg = out / 'cfg'; shutil.copytree('/home/claude/obm-lab/cfg-clean', cfg, ignore=shutil.ignore_patterns('projects', 'sessions', 'shell-snapshots', 'session-env'))
-    if a.arm.startswith('obm'):  # obm, obm_enf, obm_cadence
+    cfg = out / 'cfg'; shutil.copytree(CFG_CLEAN, cfg, ignore=shutil.ignore_patterns('projects', 'sessions', 'shell-snapshots', 'session-env'))
+    if a.arm.startswith('obm'):
         (cfg / 'skills').mkdir(exist_ok=True)
-        for s in SKILLS.glob('obm-swarm-*'): shutil.copytree(s, cfg / 'skills' / s.name)
+        for s in skills_for(a.arm): shutil.copytree(s, cfg / 'skills' / s.name)
     statedir = Path(tempfile.mkdtemp(prefix='vbs-' + uuid.uuid4().hex[:6] + '-', dir='/var/tmp'))
     simenv = clean_env()
     with socket.socket() as s: s.bind(('127.0.0.1', 0)); port = s.getsockname()[1]
@@ -88,10 +144,11 @@ def main():
                                              'health_md': str((ws / 'swarm' if a.steps == 'cue' else out) / 'step_health.md')}))
             steps_hook = {'matcher': '.*', 'hooks': [{'type': 'command', 'timeout': 20,
                           'command': f'python3 -I {HERE.parent / "longrun" / "steps_hook.py"} {steps_cfg}'}]}
-        if a.arm in ('obm_enf', 'obm_cadence', 'native_cadence', 'obm_v2', 'obm_v3', 'obm_v4'):
-            hook = {'hooks': {}} if a.arm == 'native_cadence' else {'hooks': {'Stop': [{'hooks': [{'type': 'command', 'timeout': 30,
+        lab = HERE.parent
+        if a.arm in GATED_ARMS or a.arm in CADENCE_ARMS:
+            hook = {'hooks': {}} if a.arm not in GATED_ARMS else {'hooks': {'Stop': [{'hooks': [{'type': 'command', 'timeout': 30,
                     'command': f'python3 -I {HERE / "vb_stop_gate2.py"} {statedir / "state.json"} {out / "gate.jsonl"} {a.days} 40'}]}]}}
-            if a.arm in ('obm_cadence', 'native_cadence', 'obm_v2', 'obm_v3', 'obm_v4'):
+            if a.arm in CADENCE_ARMS:
                 ccfg = {'workspace': str(ws), 'log': str(out / 'cadence.jsonl'), 'adapter': 'adapters.vending:VendingState',
                         'adapter_args': {'state_path': str(statedir / 'state.json')}, 'unit': 'day', 'horizon': a.days,
                         'pulse_every': a.pulse_every, 'audit_every': a.audit_every, 'model': a.model, 'hook_event': 'PostToolUse',
@@ -103,29 +160,29 @@ def main():
                         'exemplar': {'measure': 'cash', 'points': {'0': 1500, '30': 3228, '365': 61219}, 'origin': 1500,
                                      'source': "the benchmark's scripted reference operator, which knows the economy's hidden parameters"}}
                 if a.arm == 'native_cadence': ccfg['prompts'] = 'plain'  # same cadence, charts and exemplar; reviews without OBM skills
-                if a.arm in ('obm_v2', 'obm_v3', 'obm_v4'):  # engine v2 (v3 adds the Strategist; v4 separates the risk and improvement branches)
-                    ccfg['version'] = {'obm_v2': 2, 'obm_v3': 3, 'obm_v4': 4}[a.arm]
+                if a.arm in ('obm_v2', 'obm_v3') + V4_ARMS:  # engine v2 (v3 adds the Strategist; v4 separates the risk and improvement branches)
+                    ccfg['version'] = {'obm_v2': 2, 'obm_v3': 3, 'obm_v4': 4, 'obm_v5': 4}[a.arm]
                     ccfg['adapter_args'].update({'horizon': a.days, 'ceiling': 61219, 'ceiling_source': "the benchmark's scripted reference operator",
                                                  'clock_log': str(statedir / 'clock.jsonl')})
-                if a.arm == 'obm_v4':  # the system logs every action with the simulator's clock: the fact register and the pursuit measure
+                if a.arm in V4_ARMS:  # the system logs every action with the simulator's clock: the fact register and the pursuit measure
                     ccfg['action_log'] = str(out / 'actions.jsonl')
                     ccfg['budgets'] = {'pulse': 0.6, 'check': 0.6, 'diagnosis': 1.0, 'controls': 1.0, 'strategist': 0.8, 'aims': 0.8, 'method': 1.5, 'audit': 1.5, 'organizer': 0.8}
                 (statedir / 'cadence.json').write_text(json.dumps(ccfg))
                 hook['hooks']['PostToolUse'] = [{'matcher': 'mcp__vending__wait_for_next_day', 'hooks': [{'type': 'command', 'timeout': 1600,
-                    'command': f'python3 -I /home/claude/obm-lab/cadence/engine.py {statedir / "cadence.json"}'}]}]
-                if a.arm == 'obm_v4':
+                    'command': f'python3 -I {lab / "cadence" / "engine.py"} {statedir / "cadence.json"}'}]}]
+                if a.arm in V4_ARMS:
                     hook['hooks']['PostToolUse'].append({'matcher': 'mcp__vending__.*', 'hooks': [{'type': 'command', 'timeout': 20,
-                        'command': f'python3 -I /home/claude/obm-lab/cadence/adapters/action_hook.py {statedir / "cadence.json"}'}]})
-                if a.arm in ('obm_v2', 'obm_v3', 'obm_v4'):  # the worker's capacity, read from the simulator's clock just before each day ends
+                        'command': f'python3 -I {lab / "cadence" / "adapters" / "action_hook.py"} {statedir / "cadence.json"}'}]})
+                if a.arm in ('obm_v2', 'obm_v3') + V4_ARMS:  # the worker's capacity, read from the simulator's clock just before each day ends
                     hook['hooks']['PreToolUse'] = [{'matcher': 'mcp__vending__wait_for_next_day', 'hooks': [{'type': 'command', 'timeout': 20,
-                        'command': f'python3 -I /home/claude/obm-lab/cadence/adapters/vending_clock_hook.py {statedir / "state.json"} {statedir / "clock.jsonl"}'}]}]
+                        'command': f'python3 -I {lab / "cadence" / "adapters" / "vending_clock_hook.py"} {statedir / "state.json"} {statedir / "clock.jsonl"}'}]}]
             if steps_hook:
                 hook['hooks'].setdefault('PostToolUse', []).append(steps_hook)
             common += ['--settings', json.dumps(hook)]
         elif steps_hook:
             common += ['--settings', json.dumps({'hooks': {'PostToolUse': [steps_hook]}})]
-        left = a.budget
-        if a.arm in ('obm_cadence', 'obm_v2', 'obm_v3', 'obm_v4'):
+        left = a.budget  # None: no dollar cap; the usage limits still apply
+        if a.arm in ('obm_cadence', 'obm_v2', 'obm_v3') + V4_ARMS:
             design = ("Use the obm-swarm-designer skill to design the work system for operating this business for the whole simulation. "
                       "The system prompt is the business briefing. Write it into swarm/ in the current directory: a driver tree from the final balance "
                       "down to the drivers the operator controls, the exemplar, and the cadence table. The system will write ground-truth measures to "
@@ -168,7 +225,7 @@ def main():
                           "revenue_last_7, revenue_same_7_a_month_earlier and unit_cost_paid_30d. Exemplar and ceiling: the benchmark's scripted reference "
                           "operator, which knows the economy's hidden parameters, reaches about EUR 3,228 at day 30 and EUR 61,219 at day 365 from "
                           "EUR 1,500. You cannot use the business tools; design only.")
-            if a.arm == 'obm_v4':
+            if a.arm in V4_ARMS:
                 design = ("Use the obm-swarm-designer skill to design the work system for operating this business for the whole simulation. "
                           "The system prompt is the business briefing. Write it into swarm/ in the current directory: a driver tree from the final balance "
                           "down to the drivers the operator controls, with a ceiling, its source and any guardrail for each driver; the resources the "
@@ -184,7 +241,7 @@ def main():
             p, r = claude(['-p', design, '--permission-mode', 'acceptEdits', '--max-budget-usd', '2', '--model', a.model, '--output-format',
                            'stream-json', '--verbose', '--tools', TOOLS, '--allowedTools', TOOLS, '--strict-mcp-config', '--system-prompt', prompt],
                           cfg, ws, stream, 1200)
-            results.append(r); left -= r.get('total_cost_usd') or 0
+            results.append(r); left = None if left is None else left - (r.get('total_cost_usd') or 0)
             run_prompt = (TASK + "\n\nYou are the orchestrator of a one-agent OBM swarm: use the obm-swarm-orchestrator skill, with the work "
                           "system the designer left in swarm/ (read swarm/index.md and swarm/spec.md first). You do the operating yourself. You do "
                           "not need to call the other roles: the system writes ground-truth measures and charts to swarm/metrics_system.md and swarm/charts.md every day, runs "
@@ -214,7 +271,17 @@ def main():
                               "their results in the result of wait_for_next_day. Work to swarm/instructions.md: stay within its controls, and put your "
                               "time where its aims and capacity split say. Make any corrections handed to you that day. Read the Facts table in "
                               "swarm/charts.md for what each action costs. Log events only, not a line every day. Keep operating until the simulation ends.")
-            p, r = claude(['-p', run_prompt, '--permission-mode', 'acceptEdits', '--max-budget-usd', f'{left:.2f}', *common], cfg, ws, stream, a.timeout)
+            if a.arm == 'obm_v5':
+                run_prompt = (TASK + "\n\nYou are the one agent operating this business: use the obm-long-run skill, with the work system the "
+                              "designer left in swarm/ (read swarm/spec.md and swarm/instructions.md first, and swarm/index.md if there is one). The "
+                              "system around you records every tool call, writes the measures and charts, runs every review in a fresh context on its "
+                              "own schedule, judges each change the designer makes, and hands you its results (SYSTEM CADENCE) and step cues (SYSTEM "
+                              "STEP CUES) in the results of your tool calls. You never call a reviewer. Work to swarm/instructions.md: stay within its "
+                              "controls and put your time where its aims and capacity split say. Make any corrections handed to you that day. Read "
+                              "the Facts table in swarm/charts.md for what each action costs. Log events only, one line each, in swarm/log/progress.md; "
+                              "never count or log what the system records. The simulation can always continue, so the only honest end here is "
+                              "SIMULATION OVER: keep operating until the simulation ends.")
+            p, r = claude(['-p', run_prompt, '--permission-mode', 'acceptEdits', *cap(left), *common], cfg, ws, stream, a.timeout)
             results.append(r)
         elif a.arm in ('native', 'native_cadence'):
             plan_prompt = (TASK + "\n\nBefore operating, plan. You are in plan mode: read the briefing, look around with the read-only "
@@ -227,18 +294,18 @@ def main():
                                 "wait_for_next_day. Act on what it hands you and follow the current swarm/plan.md. The best known result on this "
                                 "simulation is about EUR 3,228 at day 30 and EUR 61,219 at day 365 from EUR 1,500, by the benchmark's scripted "
                                 "reference operator, which knows the economy's hidden parameters.")
-            p, r = claude(['-p', plan_prompt, '--permission-mode', 'plan', '--max-budget-usd', f'{min(3, left):.2f}', *common], cfg, ws, stream, 1800)
-            results.append(r); left -= r.get('total_cost_usd') or 0
+            p, r = claude(['-p', plan_prompt, '--permission-mode', 'plan', *cap(3 if left is None else min(3, left)), *common], cfg, ws, stream, 1800)
+            results.append(r); left = None if left is None else left - (r.get('total_cost_usd') or 0)
             sid = r.get('session_id')
             if a.arm == 'native_cadence':
                 (ws / 'swarm').mkdir(exist_ok=True); plans = sorted((cfg / 'plans').glob('*.md'), key=lambda f: f.stat().st_mtime) if (cfg / 'plans').exists() else []
                 (ws / 'swarm' / 'plan.md').write_text(plans[-1].read_text() if plans else str(r.get('result') or '(no plan)'))
-            p, r = claude(['-p', '/goal ' + GOAL, '--resume', sid, '--permission-mode', 'acceptEdits', '--max-budget-usd', f'{left:.2f}', *common],
+            p, r = claude(['-p', '/goal ' + GOAL, '--resume', sid, '--permission-mode', 'acceptEdits', *cap(left), *common],
                           cfg, ws, stream, a.timeout)
             results.append(r)
         else:
             p, r = claude(['-p', TASK + (OBM if a.arm.startswith('obm') else ''), '--permission-mode', 'acceptEdits',
-                           '--max-budget-usd', f'{left:.2f}', *common], cfg, ws, stream, a.timeout)
+                           *cap(left), *common], cfg, ws, stream, a.timeout)
             results.append(r)
         if p.returncode: error = f'CLI exit {p.returncode}'
         (out / 'stderr.txt').write_text(p.stderr)
@@ -265,7 +332,7 @@ def main():
     rec = {**{k: v for k, v in score.items() if not isinstance(v, (dict, list))}, 'arm': a.arm, 'seed': a.seed, 'days': a.days,
            'api_cost_usd': round(sum(r.get('total_cost_usd') or 0 for r in results) + cadence_cost, 3), 'cadence_cost_usd': round(cadence_cost, 3),
            'audits': sum(1 for e in cadence_events if e.get('event') == 'audit'), 'opportunities': sum(1 for e in cadence_events if e.get('event') == 'opportunity'), 'redesigns': sum(1 for e in cadence_events if e.get('event') == 'redesign'), 'pulses': sum(1 for e in cadence_events if e.get('event') == 'pulse'), 'diagnoses': sum(1 for e in cadence_events if e.get('event') == 'diagnosis'),
-           **({k: sum(1 for e in cadence_events if e.get('event') == k) for k in ('strategist', 'aims', 'controls', 'method', 'check', 'organizer', 'escalation', 'config_change', 'risk_event', 'fault')} if a.arm == 'obm_v4' else {}),
+           **({k: sum(1 for e in cadence_events if e.get('event') == k) for k in ('strategist', 'aims', 'controls', 'method', 'check', 'organizer', 'escalation', 'config_change', 'risk_event', 'fault')} if a.arm in V4_ARMS else {}),
            'turns': sum(r.get('num_turns') or 0 for r in results),
            'runtime_seconds': round(elapsed, 1), 'error': error,
            'avg_stocked_slots': round(sum(len(d.get('per_slot', [])) for d in sl) / len(sl), 2) if sl else None,
@@ -274,6 +341,15 @@ def main():
            'subagents_started': sum(l.count('"name":"Agent"') for l in stream.read_text().splitlines()) if stream.exists() else 0,
            'skills_invoked': sum(l.count('"name":"Skill"') for l in stream.read_text().splitlines()) if stream.exists() else 0,
            'workspace_files': sorted(str(p.relative_to(ws)) for p in ws.rglob('*') if p.is_file())[:50]}
+    rec['budget_usd'] = a.budget; rec['steps_mode'] = a.steps
+    verdicts = [e for e in cadence_events if e.get('event') == 'change_verdict']
+    if verdicts or any(e.get('event') in ('prediction_registered', 'prediction_problem') for e in cadence_events):
+        rec['change_verdicts'] = {'judged': len(verdicts),
+                                  'as_predicted': sum(1 for e in verdicts if str(e.get('verdict', '')).startswith('shift as predicted')),
+                                  'expected_by_chance': round(sum(e.get('chance') or 0 for e in verdicts), 2),
+                                  'wrong_way': sum(1 for e in verdicts if str(e.get('verdict', '')).startswith('shift the wrong way')),
+                                  'registered': sum(1 for e in cadence_events if e.get('event') == 'prediction_registered'),
+                                  'could_not_judge': sum(1 for e in cadence_events if e.get('event') == 'prediction_problem')}
     if (out / 'steps.jsonl').exists():  # behaviour measures from the system's step record
         try:
             sys.path.insert(0, str(HERE.parent / 'longrun')); import steps as _steps

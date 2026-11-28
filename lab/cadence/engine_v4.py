@@ -81,9 +81,11 @@ def main(cfg, cfg_path=None):
         probs = preflight(spec, reading)
         if not spec.get("profile"):
             probs.append("no task profile (work_shape, feedback_lag, reversible): defaults used (operation, lag of one point, irreversible)")
+        if verify is None:
+            probs.append("change verification is off (lab/longrun/verify.py could not be loaded): adopted changes will not be judged")
         prof, conf, bounds = profile.derive(spec, W)
         mem.update({"profile": prof, "config": conf, "bounds": bounds})
-        ev("preflight", problems=probs, window=win, profile=prof, config=conf)
+        ev("preflight", problems=probs, window=win, profile=prof, config=conf, verification=verify is not None)
         if probs:
             handoff.append("adapter preflight found: " + "; ".join(probs) + ". The system measures what it can.")
             escal.append(("preflight", "; ".join(probs)))

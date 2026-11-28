@@ -44,7 +44,7 @@ The cues are the ranking signals from the design discussion: freshness, de-dupli
  "window": 50, "log_bytes_per_window": 8000, "health_every": 25}
 ```
 
-- **Observation only.** `"cues": false` records every step without intervening. The vending runner (`../vending2/run_arms2.py --steps observe`, the default) does this for every arm and adds the summary to `result.json`. That makes the movement cycle comparable across arms, and the step record is kept with the results. `--steps cue` makes the cues an intervention, so run it as an arm of its own.
+- **Observation only.** `"cues": false` records every step without intervening. The vending runner (`../vending2/run_arms2.py --steps observe`, the default for every arm but `obm_v5`) does this and adds the summary to `result.json`. That makes the movement cycle comparable across arms, and the step record is kept with the results. `--steps cue` makes the cues an intervention: the `obm_v5` arm runs it, with the operator on `obm-long-run`.
 - **Keep the step log out of the agent's write paths.** The runner writes it to the run's output folder, outside the workspace. With `../harness/protect_paths.py`, add its path to the protected list.
 - **The hook never fails or blocks a tool call.** Parallel calls are serialised with a file lock.
 
@@ -68,8 +68,8 @@ It only reads. The folder layout is in the module's docstring: `decision.md`, `S
 
 ## Not built yet
 
-- **Resuming after a cutoff.** Fifteen long runs ended on a usage limit or timeout. All state is in files, but the runner does not resume from them. It needs the benchmark's own environment to build and test.
-- **The obm-long-run skill in a live arm.** The runner installs `obm-swarm-*` skills only, so existing arms are unchanged. A new arm should install `obm-long-run` with the step cues on and compare against `--steps observe` on the same seeds.
+- **Resuming after a cutoff.** Fifteen long runs ended on a usage limit or timeout. All state is in files, but the runner does not resume from them. It needs the benchmark's own environment to build and test. For now a cut-off run is rerun on the same seed ([plan](../../results/2026-11-28-vending-v4-v5/PLAN.md)).
+- **A harness that exercises the build gate.** Vending never asks the agent to build a skill, so `skill_gate.py` is tested here but not yet used in a run. The gate also trusts a `verification.json` the agent could write itself. A benchmark of skill-building needs the system to run the held-out cases, start the reviewer in a fresh context, and install a skill only when the gate passes.
 
 ## Tests
 

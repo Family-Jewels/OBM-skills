@@ -172,8 +172,12 @@ def update(state, rec, cfg=None):
 def summarize(steps, cfg=None):
     """Behaviour measures for a whole step log (post-run analysis, or the health panel)."""
     s = new_state()
+    cues = {"freshness": 0, "diversity": 0, "relevance": 0, "placement": 0, "economy": 0}
     for r in steps:
-        update(s, r, cfg)
+        for c in update(s, r, cfg):  # the same cues the hook would have handed over, by kind
+            k = ("freshness" if "has not changed" in c else "diversity" if "with the same input" in c else
+                 "relevance" if "no state-changing" in c else "placement" if "outside the workspace" in c else "economy")
+            cues[k] += 1
     n = max(1, s["n"])
     tools = {}
     for r in steps:
@@ -182,7 +186,7 @@ def summarize(steps, cfg=None):
             "unchanged_rereads": s["rereads"], "reread_share": round(s["rereads"] / n, 3), "failures": s["failures"],
             "repeat_failures": s["repeat_failures"], "retries_unchanged": s["retries_unchanged"],
             "longest_no_progress": s["max_since_progress"], "stray_writes": s["stray"], "own_log_bytes": s["own_log_bytes"],
-            "top_tools": sorted(tools.items(), key=lambda x: -x[1])[:8]}
+            "cues": cues, "top_tools": sorted(tools.items(), key=lambda x: -x[1])[:8]}
 
 def health_markdown(m):
     k = ", ".join(f"{a} {b}" for a, b in sorted(m["by_kind"].items(), key=lambda x: -x[1]))
@@ -193,6 +197,8 @@ def health_markdown(m):
             f"- Longest run of steps with no state change: {m['longest_no_progress']}.\n"
             f"- Writes outside the workspace: {', '.join(m['stray_writes']) or 'none'}.\n"
             f"- Bytes written to the agent's own logs: {m['own_log_bytes']}.\n"
+            f"- Cues the step record raised (handed to the agent only in cue mode): "
+            + ", ".join(f"{k} {v}" for k, v in m.get("cues", {}).items()) + ".\n"
             f"- Most-used tools: " + ", ".join(f"{t} {c}" for t, c in m["top_tools"]) + ".\n")
 
 def load(path):

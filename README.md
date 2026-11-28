@@ -69,7 +69,7 @@ The skills stay complete without enforcement: on a platform with no hooks, every
 | `obm-swarm-diagnostician` | Finds what is going wrong and why (pinpoint, what maintains it, cause in the environment). Writes no fix: the designer does |
 | `obm-swarm-strategist` | Decides what the system drives toward: the constraint now (the worker's capacity first), a stretch aim for each priority driver, how the capacity is split, and whether the last aims were met. The designer turns each redirect into `swarm/aims.md` at once |
 
-For **one agent on a long task**, `obm-long-run` takes the place of the role skills. It says what the system does so the agent doesn't, how to choose the next action, how to build a skill for itself through the build gate, and how to stop honestly.
+For **one agent on a long task**, `obm-long-run` is the worker's skill in place of the orchestrator's; the system still runs every reviewer with its role skill. It says what the system does so the agent doesn't, how to choose the next action, how to build a skill for itself through the build gate, and how to stop honestly. It is the operator's skill in the `obm_v5` arm ([plan](results/2026-11-28-vending-v4-v5/PLAN.md)).
 
 There is no producer skill. Workers follow the short rules for whoever does the work in the protocol, and the evidence about their work comes from the system's record and the checker's own checks, never from the worker's report about itself.
 
@@ -123,6 +123,7 @@ python analyze.py logs/tiny --out tiny
 - **Skills a run builds for itself go through a gate**: gap evidence, build or skip, held-out tests with and without the skill, and an independent review answered ([`skill_gate.py`](lab/longrun/skill_gate.py)).
 - **New skill `obm-long-run`** for one agent on a long task: rank the next action by fixed rules (repair, constraint, freshness, diversity, authority, cost), write one line per event, never count what the system counts, and use four honest ways to stop.
 - **Protocol:** one line per event at one path; never log or count what the system records; the machine-readable prediction line; change verdicts in the charts.
+- **Runner** ([`lab/vending2`](lab/vending2)): no dollar cap unless `--budget` is given (the usage limits still apply), and a 6-hour harness clock. A new `obm_v5` arm runs the operator on `obm-long-run` with step cues. A preflight refuses to start a run whose lab copy lacks the new code, and a dry-run test checks every arm's launch without a simulator or model. The [plan for v4 and v5](results/2026-11-28-vending-v4-v5/PLAN.md) sets the decision rules before the runs.
 
 **v3: the Strategist, 2026-11-19** (after v2 seed 1: €11,852 against v1's €15,006 on the same seed). v2 is kept on the branch `skills-v2`.
 

@@ -62,6 +62,7 @@ assert any("no state-changing" in c for cc in cues for c in cc)
 # ---------- summary and health panel ----------
 m = steps.summarize([steps.make_record(i, *c, CFG) for i, c in enumerate([rd, rd, bad, bad], 1)], CFG)
 assert m["unchanged_rereads"] == 1 and m["repeat_failures"] == 1 and "Step health" in steps.health_markdown(m)
+assert m["cues"]["freshness"] == 1 and m["cues"]["diversity"] == 1 and "Cues the step record raised" in steps.health_markdown(m)
 
 # ---------- the hook end to end ----------
 hcfg = tmp / "hook.json"
