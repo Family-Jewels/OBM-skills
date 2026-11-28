@@ -1,0 +1,362 @@
+{"t": 1795836758.8804822, "period": 2, "event": "preflight", "problems": [], "window": {"w": 7, "n": 13, "ok": true, "why": "7 periods per point: whole cycles of 7, at least 3 observations each, 13 points across the horizon of 91"}, "profile": {"shape": "operation", "lag_points": 1, "reversible": false}, "config": {"strategy_every": 3, "method_gap": 3, "control_gap": 1, "risk_sweep_every": 1, "checker": "sample_claims", "checker_every": 2, "full_audits": 4}, "verification": true}
+{"t": 1795836758.8816233, "period": 2, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795836761.0158246, "period": 3, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795836761.652874, "period": 4, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795836762.3403466, "period": 5, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795836767.9537134, "period": 6, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795836794.831038, "period": 8, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795836794.8315887, "period": 8, "event": "started", "id": "P-001", "kind": "pulse", "branch": "risk", "trigger": "routine sweep every 1 point(s)"}
+{"t": 1795836794.8321474, "period": 8, "event": "started", "id": "K-001", "kind": "check", "branch": "risk", "trigger": "claim sample"}
+{"t": 1795836795.7553163, "period": 9, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795836799.8258672, "period": 10, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795836819.8749864, "period": 12, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795836822.4104805, "period": 13, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795836823.0903072, "period": 14, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795836825.8014176, "period": 15, "event": "pulse", "id": "P-001", "branch": "risk", "started_period": 8, "cost": 0.009462229999999999, "turns": 17}
+{"t": 1795836825.80174, "period": 15, "event": "request_new", "id": "REQ-001", "to": "designer", "key": "level-chart-cash-missing", "asked": 1}
+{"t": 1795836825.802057, "period": 15, "event": "fault", "key": "capacity-split-drift", "by": "P-001"}
+{"t": 1795836825.8029265, "period": 15, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795836825.8035958, "period": 15, "event": "started", "id": "D-001", "kind": "diagnosis", "branch": "risk", "trigger": "P-001"}
+{"t": 1795836825.8040898, "period": 15, "event": "started", "id": "M-001", "kind": "method", "branch": "improvement", "trigger": null}
+{"t": 1795836839.1865487, "period": 16, "event": "check", "id": "K-001", "branch": "risk", "started_period": 8, "cost": 0.012155870000000001, "turns": 16}
+{"t": 1795836839.1868951, "period": 16, "event": "request_new", "id": "REQ-002", "to": "human", "key": "worker-log-missing", "asked": 1}
+{"t": 1795836839.1869087, "period": 16, "event": "request_new", "id": "REQ-003", "to": "human", "key": "facts-table-vs-steps", "asked": 1}
+{"t": 1795836839.1875324, "period": 16, "event": "escalation", "kind": "request", "text": "REQ-002 to human (worker-log-missing): addressed to the human. \"No worker log exists at swarm/log/progress.md or log/work.jsonl. Confirm the log path the worker writes to, or have the system write it, so K-001 can sample claims at the next claim sample.\""}
+{"t": 1795836839.1875434, "period": 16, "event": "escalation", "kind": "request", "text": "REQ-003 to human (facts-table-vs-steps): addressed to the human. \"Reconcile swarm/charts.md Facts counts with steps.jsonl: get_sales_report 1 vs 2, get_storage_inventory 2 vs 3, get_status 2 vs 3, get_machine_inventory 1 vs 2, wait_for_next_day 7 vs 8. Likely a snap\""}
+{"t": 1795836839.1883752, "period": 16, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795836853.0603664, "period": 17, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795836865.6044722, "period": 18, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795836887.6894639, "period": 19, "event": "diagnosis", "id": "D-001", "branch": "risk", "started_period": 15, "cost": 0.01173583, "turns": 16}
+{"t": 1795836887.6900089, "period": 19, "event": "request_new", "id": "REQ-004", "to": "strategist", "key": "constraint-stale-aims", "asked": 1}
+{"t": 1795836887.690023, "period": 19, "event": "request_new", "id": "REQ-005", "to": "designer", "key": "worker-time-measure-conflict", "asked": 1}
+{"t": 1795836887.6902804, "period": 19, "event": "method", "id": "M-001", "branch": "improvement", "started_period": 15, "cost": 0.016720800000000004, "turns": 18}
+{"t": 1795836887.6904016, "period": 19, "event": "request_new", "id": "REQ-007", "to": "human", "key": "level-chart-cash-missing-adapter", "asked": 1}
+{"t": 1795836887.6904097, "period": 19, "event": "request_new", "id": "REQ-008", "to": "human", "key": "worker-time-reconcile", "asked": 1}
+{"t": 1795836887.6908207, "period": 19, "event": "request_open", "id": "REQ-001", "by": "M-001"}
+{"t": 1795836887.6909974, "period": 19, "event": "adopted", "id": "M-001", "branch": "improvement"}
+{"t": 1795836887.6911414, "period": 19, "event": "prediction_registered", "id": "M-001", "problem": null}
+{"t": 1795836887.691266, "period": 19, "event": "escalation", "kind": "request", "text": "REQ-007 to human (level-chart-cash-missing-adapter): addressed to the human. \"Ask the system owner to add cash and unit_cost_paid_30d to the level-chart table in the adapter's measure list (REQ-001 deferred to this).\""}
+{"t": 1795836887.6912735, "period": 19, "event": "escalation", "kind": "request", "text": "REQ-008 to human (worker-time-reconcile): addressed to the human. \"Resources shows 6% of worker time in use (median 30 min/day) while the Facts table shows restock_machine at 61% of capacity; ask the system owner to reconcile the two so the capacity split can be judg\""}
+{"t": 1795836887.6919308, "period": 19, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795836887.6926053, "period": 19, "event": "started", "id": "C-001", "kind": "controls", "branch": "risk", "trigger": null}
+{"t": 1795836903.693203, "period": 20, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795836904.4128902, "period": 21, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795836904.413664, "period": 21, "event": "started", "id": "P-002", "kind": "pulse", "branch": "risk", "trigger": "routine sweep every 1 point(s)"}
+{"t": 1795836904.4141638, "period": 21, "event": "started", "id": "K-002", "kind": "check", "branch": "risk", "trigger": "claim sample"}
+{"t": 1795836904.4198177, "period": 21, "event": "started", "id": "S-001", "kind": "strategist", "branch": "improvement", "trigger": "first strategy, after the baseline"}
+{"t": 1795836908.4316254, "period": 22, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795836925.027539, "period": 23, "event": "controls", "id": "C-001", "branch": "risk", "started_period": 19, "cost": 0.0070853900000000004, "turns": 12}
+{"t": 1795836925.0283716, "period": 23, "event": "request_declined", "id": "REQ-006", "by": "C-001"}
+{"t": 1795836925.0284448, "period": 23, "event": "adopted", "id": "C-001", "branch": "risk"}
+{"t": 1795836925.0292997, "period": 23, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795836925.0298867, "period": 23, "event": "started", "id": "A-001", "kind": "audit", "branch": "audit", "trigger": "1 of 4"}
+{"t": 1795836925.0303903, "period": 23, "event": "started", "id": "O-001", "kind": "organizer", "branch": "organization", "trigger": "1 of 4"}
+{"t": 1795836940.834477, "period": 24, "event": "pulse", "id": "P-002", "branch": "risk", "started_period": 21, "cost": 0.01556811, "turns": 18}
+{"t": 1795836940.834812, "period": 24, "event": "request_reopened", "id": "REQ-006", "to": "controls", "key": "capacity-split-drift", "asked": 2}
+{"t": 1795836940.8352323, "period": 24, "event": "fault", "key": "capacity-split-drift", "by": "P-002"}
+{"t": 1795836940.8354797, "period": 24, "event": "organizer", "id": "O-001", "branch": "organization", "started_period": 23, "cost": 0.004097890000000001, "turns": 6}
+{"t": 1795836940.8356664, "period": 24, "event": "config_change", "key": "strategy_every", "old": 3, "new": 2, "by": "O-001"}
+{"t": 1795836940.8359365, "period": 24, "event": "escalation", "kind": "config change", "text": "O-001 set strategy_every from 3 to 2 (swarm/audits/O-001.md)"}
+{"t": 1795836940.8367484, "period": 24, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795836940.8374653, "period": 24, "event": "started", "id": "D-002", "kind": "diagnosis", "branch": "risk", "trigger": "P-002"}
+{"t": 1795836948.1715415, "period": 25, "event": "risk_event", "kind": "chart signal", "label": "cash_gain_7 beyond the lower limit"}
+{"t": 1795836948.1725328, "period": 25, "event": "measure", "chart_signals": ["cash_gain_7 beyond the lower limit"], "progress": []}
+{"t": 1795836948.1731665, "period": 25, "event": "started", "id": "P-003", "kind": "pulse", "branch": "risk", "trigger": "chart signal: cash_gain_7 beyond the lower limit"}
+{"t": 1795836953.6500099, "period": 26, "event": "strategist", "id": "S-001", "branch": "improvement", "started_period": 21, "cost": 0.01195384, "turns": 13}
+{"t": 1795836953.650514, "period": 26, "event": "request_new", "id": "REQ-009", "to": "designer", "key": "restock-after-depot-read", "asked": 1}
+{"t": 1795836953.651215, "period": 26, "event": "request_done", "id": "REQ-004", "by": "S-001"}
+{"t": 1795836953.6518502, "period": 26, "event": "started", "id": "AS-001", "kind": "aims", "branch": "improvement", "trigger": null}
+{"t": 1795836953.6529331, "period": 26, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795836954.3653853, "period": 27, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795836955.0773559, "period": 28, "event": "risk_event", "kind": "off plan", "label": "capacity on 'restocking' missed its planned share by more than 25 points over the last point"}
+{"t": 1795836955.0782015, "period": 28, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795836955.0788805, "period": 28, "event": "started", "id": "C-002", "kind": "controls", "branch": "risk", "trigger": null}
+{"t": 1795836957.3655486, "period": 29, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795836965.5414915, "period": 30, "event": "check", "id": "K-002", "branch": "risk", "started_period": 21, "cost": 0.027338429999999997, "turns": 36}
+{"t": 1795836965.541854, "period": 30, "event": "request_merged", "id": "REQ-002", "to": "human", "key": "worker-log-missing", "asked": 2}
+{"t": 1795836965.543019, "period": 30, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795837001.9987962, "period": 33, "event": "diagnosis", "id": "D-002", "branch": "risk", "started_period": 24, "cost": 0.01270897, "turns": 24}
+{"t": 1795837001.9991634, "period": 33, "event": "request_reopened", "id": "REQ-004", "to": "strategist", "key": "constraint-stale-aims", "asked": 2}
+{"t": 1795837001.9991772, "period": 33, "event": "request_new", "id": "REQ-010", "to": "designer", "key": "depot-stock-per-restock", "asked": 1}
+{"t": 1795837001.9991844, "period": 33, "event": "request_merged", "id": "REQ-006", "to": "controls", "key": "capacity-split-drift", "asked": 3}
+{"t": 1795837001.9993854, "period": 33, "event": "pulse", "id": "P-003", "branch": "risk", "started_period": 25, "cost": 0.01386766, "turns": 17}
+{"t": 1795837001.9996705, "period": 33, "event": "fault", "key": "capacity-split-drift", "by": "P-003"}
+{"t": 1795837001.9998848, "period": 33, "event": "aims", "id": "AS-001", "branch": "improvement", "started_period": 26, "cost": 0.009628690000000002, "turns": 10}
+{"t": 1795837001.9999807, "period": 33, "event": "request_merged", "id": "REQ-009", "to": "designer", "key": "restock-after-depot-read", "asked": 2}
+{"t": 1795837001.9999888, "period": 33, "event": "request_new", "id": "REQ-011", "to": "human", "key": "day-count-mismatch", "asked": 1}
+{"t": 1795837002.000075, "period": 33, "event": "controls", "id": "C-002", "branch": "risk", "started_period": 28, "cost": 0.01257557, "turns": 20}
+{"t": 1795837002.0002325, "period": 33, "event": "request_merged", "id": "REQ-008", "to": "human", "key": "worker-time-reconcile", "asked": 2}
+{"t": 1795837002.0007498, "period": 33, "event": "request_open", "id": "REQ-006", "by": "C-002"}
+{"t": 1795837002.00082, "period": 33, "event": "adopted", "id": "C-002", "branch": "risk"}
+{"t": 1795837002.001589, "period": 33, "event": "escalation", "kind": "request", "text": "REQ-006 to controls (capacity-split-drift): asked 4 times. \"Act on diagnosis D-002 (swarm/audits/D-002.md).\""}
+{"t": 1795837002.001601, "period": 33, "event": "escalation", "kind": "request", "text": "REQ-011 to human (day-count-mismatch): addressed to the human. \"The call says day 26 of 91, but metrics_system.md and charts.md show days 27 and 28. Confirm which day the charts are cut at, so the aim window is right.\""}
+{"t": 1795837002.0021427, "period": 33, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795837002.0027544, "period": 33, "event": "started", "id": "P-004", "kind": "pulse", "branch": "risk", "trigger": "off plan: capacity on 'restocking' missed its planned share by more than 25 points over the last point"}
+{"t": 1795837002.0032668, "period": 33, "event": "started", "id": "D-003", "kind": "diagnosis", "branch": "risk", "trigger": "P-003"}
+{"t": 1795837038.4321597, "period": 34, "event": "pulse", "id": "P-004", "branch": "risk", "started_period": 33, "cost": 0.00962197, "turns": 15}
+{"t": 1795837038.4326277, "period": 34, "event": "fault", "key": "capacity-split-drift", "by": "P-004"}
+{"t": 1795837038.4336674, "period": 34, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795837051.1318846, "period": 35, "event": "escalation", "kind": "request", "text": "REQ-001 to designer (level-chart-cash-missing): open 3 points. \"Add cash and unit_cost_paid_30d to the level chart table, or state why they are excluded.\""}
+{"t": 1795837051.1319044, "period": 35, "event": "escalation", "kind": "request", "text": "REQ-002 to human (worker-log-missing): open 3 points. \"K-002 also found no swarm/log/progress.md or log/work.jsonl at day 21. Confirm the path the worker writes its log to, or have the system write it, so the next claim sample can pick claims. Same ask as\""}
+{"t": 1795837051.131914, "period": 35, "event": "escalation", "kind": "request", "text": "REQ-003 to human (facts-table-vs-steps): open 3 points. \"Reconcile swarm/charts.md Facts counts with steps.jsonl: get_sales_report 1 vs 2, get_storage_inventory 2 vs 3, get_status 2 vs 3, get_machine_inventory 1 vs 2, wait_for_next_day 7 vs 8. Likely a snap\""}
+{"t": 1795837051.1319194, "period": 35, "event": "escalation", "kind": "request", "text": "REQ-004 to strategist (constraint-stale-aims): open 3 points. \"aims.md is still \"As of day 0\" at day 24. Restate the constraint and split with a depot-read and a purchase line.\""}
+{"t": 1795837051.1319232, "period": 35, "event": "escalation", "kind": "request", "text": "REQ-005 to designer (worker-time-measure-conflict): open 3 points. \"Facts give restock 61% of capacity at 45 min each (about 290 min a day), but Resources give a median of 30 min used. Reconcile the worker-time definition.\""}
+{"t": 1795837051.1319275, "period": 35, "event": "escalation", "kind": "request", "text": "REQ-006 to controls (capacity-split-drift): open 3 points. \"Act on diagnosis D-002 (swarm/audits/D-002.md).\""}
+{"t": 1795837051.1319308, "period": 35, "event": "escalation", "kind": "request", "text": "REQ-007 to human (level-chart-cash-missing-adapter): open 3 points. \"Ask the system owner to add cash and unit_cost_paid_30d to the level-chart table in the adapter's measure list (REQ-001 deferred to this).\""}
+{"t": 1795837051.1319342, "period": 35, "event": "escalation", "kind": "request", "text": "REQ-008 to human (worker-time-reconcile): open 3 points. \"C-002 is deferred on this reconciliation: REQ-006 can be judged only when Resources and the Facts table agree on worker time. Same ask as REQ-008 (open, asked 1x); reused the key so it escalates.\""}
+{"t": 1795837051.1326416, "period": 35, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795837051.1332364, "period": 35, "event": "started", "id": "P-005", "kind": "pulse", "branch": "risk", "trigger": "routine sweep every 1 point(s)"}
+{"t": 1795837051.1337452, "period": 35, "event": "started", "id": "C-003", "kind": "controls", "branch": "risk", "trigger": null}
+{"t": 1795837051.134194, "period": 35, "event": "started", "id": "K-003", "kind": "check", "branch": "risk", "trigger": "claim sample"}
+{"t": 1795837051.1345913, "period": 35, "event": "started", "id": "S-002", "kind": "strategist", "branch": "improvement", "trigger": "scheduled: 2 points since the last strategy"}
+{"t": 1795837051.1358957, "period": 35, "event": "started", "id": "M-002", "kind": "method", "branch": "improvement", "trigger": null}
+{"t": 1795837056.277318, "period": 36, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795837064.90086, "period": 37, "event": "diagnosis", "id": "D-003", "branch": "risk", "started_period": 33, "cost": 0.018965359999999997, "turns": 23}
+{"t": 1795837064.9012392, "period": 37, "event": "request_new", "id": "REQ-012", "to": "designer", "key": "brief-done-rewards-restock", "asked": 1}
+{"t": 1795837064.9012525, "period": 37, "event": "request_merged", "id": "REQ-008", "to": "human", "key": "worker-time-reconcile", "asked": 3}
+{"t": 1795837064.9012594, "period": 37, "event": "request_merged", "id": "REQ-010", "to": "designer", "key": "depot-stock-per-restock", "asked": 2}
+{"t": 1795837064.9015553, "period": 37, "event": "escalation", "kind": "request", "text": "REQ-008 to human (worker-time-reconcile): asked 3 times. \"Action clocks show restock filling the day; Resources shows median 25 minutes. Reconcile before judging the constraint.\""}
+{"t": 1795837064.9022698, "period": 37, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795837064.9033136, "period": 37, "event": "started", "id": "D-004", "kind": "diagnosis", "branch": "risk", "trigger": "P-004"}
+{"t": 1795837072.627676, "period": 38, "event": "pulse", "id": "P-005", "branch": "risk", "started_period": 35, "cost": 0.0068579, "turns": 10}
+{"t": 1795837072.6284373, "period": 38, "event": "fault", "key": "capacity-split-drift", "by": "P-005"}
+{"t": 1795837072.6296382, "period": 38, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795837085.7468112, "period": 39, "event": "check", "id": "K-003", "branch": "risk", "started_period": 35, "cost": 0.01527743, "turns": 17}
+{"t": 1795837085.7472937, "period": 39, "event": "request_merged", "id": "REQ-002", "to": "human", "key": "worker-log-missing", "asked": 3}
+{"t": 1795837085.7483299, "period": 39, "event": "escalation", "kind": "request", "text": "REQ-002 to human (worker-log-missing): asked 3 times. \"K-003 also found no swarm/log/progress.md or log/work.jsonl at day 35, and the step record has no reference to either. Confirm the path the worker writes its log to, or have the system write it, so th\""}
+{"t": 1795837085.74925, "period": 39, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795837092.9337986, "period": 40, "event": "controls", "id": "C-003", "branch": "risk", "started_period": 35, "cost": 0.010090229999999999, "turns": 12}
+{"t": 1795837092.934451, "period": 40, "event": "request_open", "id": "REQ-006", "by": "C-003"}
+{"t": 1795837092.9345193, "period": 40, "event": "adopted", "id": "C-003", "branch": "risk"}
+{"t": 1795837092.9353063, "period": 40, "event": "change_verdict", "id": "M-001", "verdict": "shift as predicted", "chance": null, "measure": "slots_selling"}
+{"t": 1795837092.9358518, "period": 40, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795837104.117716, "period": 41, "event": "strategist", "id": "S-002", "branch": "improvement", "started_period": 35, "cost": 0.012747350000000001, "turns": 12}
+{"t": 1795837104.1180205, "period": 41, "event": "request_merged", "id": "REQ-009", "to": "designer", "key": "restock-after-depot-read", "asked": 3}
+{"t": 1795837104.1185226, "period": 41, "event": "request_done", "id": "REQ-004", "by": "S-002"}
+{"t": 1795837104.119071, "period": 41, "event": "started", "id": "AS-002", "kind": "aims", "branch": "improvement", "trigger": null}
+{"t": 1795837104.1193204, "period": 41, "event": "escalation", "kind": "request", "text": "REQ-009 to designer (restock-after-depot-read): asked 3 times. \"Apply the depot-read and purchase lines from S-002 to instructions.md and aims.md now.\""}
+{"t": 1795837104.1199224, "period": 41, "event": "measure", "chart_signals": [], "progress": []}
+{"t": 1795837114.5147252, "period": 42, "event": "escalation", "kind": "request", "text": "REQ-009 to designer (restock-after-depot-read): open 3 points. \"Apply the depot-read and purchase lines from S-002 to instructions.md and aims.md now.\""}
+{"t": 1795837114.5154545, "period": 42, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837114.515986, "period": 42, "event": "started", "id": "P-006", "kind": "pulse", "branch": "risk", "trigger": "routine sweep every 1 point(s)"}
+{"t": 1795837114.5164306, "period": 42, "event": "started", "id": "C-004", "kind": "controls", "branch": "risk", "trigger": null}
+{"t": 1795837115.868858, "period": 43, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837125.0332322, "period": 44, "event": "diagnosis", "id": "D-004", "branch": "risk", "started_period": 37, "cost": 0.017182, "turns": 21}
+{"t": 1795837125.033618, "period": 44, "event": "request_merged", "id": "REQ-012", "to": "designer", "key": "brief-done-rewards-restock", "asked": 2}
+{"t": 1795837125.0336373, "period": 44, "event": "request_merged", "id": "REQ-010", "to": "designer", "key": "depot-stock-per-restock", "asked": 3}
+{"t": 1795837125.0336463, "period": 44, "event": "request_merged", "id": "REQ-008", "to": "human", "key": "worker-time-reconcile", "asked": 4}
+{"t": 1795837125.0340629, "period": 44, "event": "escalation", "kind": "request", "text": "REQ-010 to designer (depot-stock-per-restock): asked 3 times. \"Record depot quantity per product at each restock_machine so the C-001 trigger can be judged.\""}
+{"t": 1795837125.03497, "period": 44, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837125.0357695, "period": 44, "event": "started", "id": "D-005", "kind": "diagnosis", "branch": "risk", "trigger": "P-005"}
+{"t": 1795837131.3050396, "period": 45, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837143.7533534, "period": 46, "event": "method", "id": "M-002", "branch": "improvement", "started_period": 35, "cost": 0.021982639999999998, "turns": 28}
+{"t": 1795837143.7537534, "period": 46, "event": "request_new", "id": "REQ-013", "to": "human", "key": "depot-stock-per-restock", "asked": 1}
+{"t": 1795837143.7537673, "period": 46, "event": "request_merged", "id": "REQ-008", "to": "human", "key": "worker-time-reconcile", "asked": 5}
+{"t": 1795837143.7537742, "period": 46, "event": "request_merged", "id": "REQ-007", "to": "human", "key": "level-chart-cash-missing-adapter", "asked": 2}
+{"t": 1795837143.7543855, "period": 46, "event": "request_open", "id": "REQ-001", "by": "M-002"}
+{"t": 1795837143.754394, "period": 46, "event": "request_done", "id": "REQ-005", "by": "M-002"}
+{"t": 1795837143.754398, "period": 46, "event": "request_done", "id": "REQ-009", "by": "M-002"}
+{"t": 1795837143.7544012, "period": 46, "event": "request_open", "id": "REQ-010", "by": "M-002"}
+{"t": 1795837143.7545977, "period": 46, "event": "adopted", "id": "M-002", "branch": "improvement"}
+{"t": 1795837143.7547495, "period": 46, "event": "prediction_registered", "id": "M-002", "problem": null}
+{"t": 1795837143.755595, "period": 46, "event": "escalation", "kind": "request", "text": "REQ-013 to human (depot-stock-per-restock): addressed to the human. \"Record the depot quantity per product from each get_storage_inventory result, and the product each restock_machine call fills, in the ground-truth log (the adapter must capture the result content, not\""}
+{"t": 1795837143.756209, "period": 46, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837160.8628402, "period": 47, "event": "audit", "id": "A-001", "branch": "audit", "started_period": 23, "cost": 0.07572333, "turns": 28}
+{"t": 1795837160.8634615, "period": 47, "event": "request_new", "id": "REQ-014", "to": "designer", "key": "floor-target-day365", "asked": 1}
+{"t": 1795837160.8634827, "period": 47, "event": "request_new", "id": "REQ-015", "to": "designer", "key": "m001-unit-cost-up", "asked": 1}
+{"t": 1795837160.8634915, "period": 47, "event": "request_reopened", "id": "REQ-005", "to": "designer", "key": "worker-time-measure-conflict", "asked": 2}
+{"t": 1795837160.863498, "period": 47, "event": "request_merged", "id": "REQ-002", "to": "human", "key": "worker-log-missing", "asked": 4}
+{"t": 1795837160.8635042, "period": 47, "event": "request_merged", "id": "REQ-007", "to": "human", "key": "level-chart-cash-missing-adapter", "asked": 3}
+{"t": 1795837160.864235, "period": 47, "event": "fault", "key": "capacity-split-drift", "by": "A-001"}
+{"t": 1795837160.864611, "period": 47, "event": "aims", "id": "AS-002", "branch": "improvement", "started_period": 41, "cost": 0.01475259, "turns": 14}
+{"t": 1795837160.8647685, "period": 47, "event": "request_reopened", "id": "REQ-009", "to": "designer", "key": "restock-after-depot-read", "asked": 4}
+{"t": 1795837160.8649118, "period": 47, "event": "pulse", "id": "P-006", "branch": "risk", "started_period": 42, "cost": 0.01363164, "turns": 18}
+{"t": 1795837160.8650472, "period": 47, "event": "request_merged", "id": "REQ-006", "to": "controls", "key": "capacity-split-drift", "asked": 7}
+{"t": 1795837160.8650591, "period": 47, "event": "request_merged", "id": "REQ-001", "to": "designer", "key": "level-chart-cash-missing", "asked": 2}
+{"t": 1795837160.865192, "period": 47, "event": "fault", "key": "capacity-split-drift", "by": "P-006"}
+{"t": 1795837160.8654685, "period": 47, "event": "escalation", "kind": "request", "text": "REQ-007 to human (level-chart-cash-missing-adapter): asked 3 times. \"Still open, second ask: the top measure (cash) has no level-chart row, so its stability is not charted.\""}
+{"t": 1795837160.8669794, "period": 47, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837160.8677468, "period": 47, "event": "started", "id": "A-002", "kind": "audit", "branch": "audit", "trigger": "2 of 4"}
+{"t": 1795837160.8683016, "period": 47, "event": "started", "id": "O-002", "kind": "organizer", "branch": "organization", "trigger": "2 of 4"}
+{"t": 1795837171.1128983, "period": 48, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837179.0466096, "period": 49, "event": "controls", "id": "C-004", "branch": "risk", "started_period": 42, "cost": 0.01615652, "turns": 17}
+{"t": 1795837179.0472758, "period": 49, "event": "request_done", "id": "REQ-006", "by": "C-004"}
+{"t": 1795837179.0473413, "period": 49, "event": "adopted", "id": "C-004", "branch": "risk"}
+{"t": 1795837179.04744, "period": 49, "event": "organizer", "id": "O-002", "branch": "organization", "started_period": 47, "cost": 0.0042905600000000006, "turns": 7}
+{"t": 1795837179.0477612, "period": 49, "event": "escalation", "kind": "request", "text": "REQ-010 to designer (depot-stock-per-restock): open 3 points. \"Record depot quantity per product at each restock_machine so the C-001 trigger can be judged.\""}
+{"t": 1795837179.047771, "period": 49, "event": "escalation", "kind": "request", "text": "REQ-011 to human (day-count-mismatch): open 3 points. \"The call says day 26 of 91, but metrics_system.md and charts.md show days 27 and 28. Confirm which day the charts are cut at, so the aim window is right.\""}
+{"t": 1795837179.048325, "period": 49, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837179.0504897, "period": 49, "event": "started", "id": "P-007", "kind": "pulse", "branch": "risk", "trigger": "routine sweep every 1 point(s)"}
+{"t": 1795837179.0528326, "period": 49, "event": "started", "id": "K-004", "kind": "check", "branch": "risk", "trigger": "claim sample"}
+{"t": 1795837179.0535967, "period": 49, "event": "started", "id": "S-003", "kind": "strategist", "branch": "improvement", "trigger": "scheduled: 2 points since the last strategy"}
+{"t": 1795837185.441327, "period": 50, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837192.524632, "period": 51, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837198.7996378, "period": 52, "event": "diagnosis", "id": "D-005", "branch": "risk", "started_period": 44, "cost": 0.0223712, "turns": 28}
+{"t": 1795837198.7999947, "period": 52, "event": "request_merged", "id": "REQ-012", "to": "designer", "key": "brief-done-rewards-restock", "asked": 3}
+{"t": 1795837198.8003545, "period": 52, "event": "escalation", "kind": "request", "text": "REQ-012 to designer (brief-done-rewards-restock): asked 3 times. \"Rewrite operator.md's Done line and rule 12 as above (REQ-012, asked 2 times; same ask).\""}
+{"t": 1795837198.8010235, "period": 52, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837198.8015852, "period": 52, "event": "started", "id": "D-006", "kind": "diagnosis", "branch": "risk", "trigger": "P-006"}
+{"t": 1795837205.2533584, "period": 53, "event": "check", "id": "K-004", "branch": "risk", "started_period": 49, "cost": 0.01116365, "turns": 16}
+{"t": 1795837205.2537851, "period": 53, "event": "request_merged", "id": "REQ-002", "to": "human", "key": "worker-log-missing", "asked": 5}
+{"t": 1795837205.2553415, "period": 53, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837214.6659334, "period": 54, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837226.3188422, "period": 55, "event": "pulse", "id": "P-007", "branch": "risk", "started_period": 49, "cost": 0.017642940000000003, "turns": 19}
+{"t": 1795837226.3193414, "period": 55, "event": "fault", "key": "capacity-split-drift", "by": "P-007"}
+{"t": 1795837226.3202963, "period": 55, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837232.7065008, "period": 56, "event": "escalation", "kind": "request", "text": "REQ-012 to designer (brief-done-rewards-restock): open 3 points. \"Rewrite operator.md's Done line and rule 12 as above (REQ-012, asked 2 times; same ask).\""}
+{"t": 1795837232.707144, "period": 56, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837232.70769, "period": 56, "event": "started", "id": "P-008", "kind": "pulse", "branch": "risk", "trigger": "routine sweep every 1 point(s)"}
+{"t": 1795837232.7081444, "period": 56, "event": "started", "id": "C-005", "kind": "controls", "branch": "risk", "trigger": null}
+{"t": 1795837234.2080595, "period": 57, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837244.8712103, "period": 58, "event": "diagnosis", "id": "D-006", "branch": "risk", "started_period": 52, "cost": 0.011646269999999998, "turns": 12}
+{"t": 1795837244.871517, "period": 58, "event": "request_merged", "id": "REQ-012", "to": "designer", "key": "brief-done-rewards-restock", "asked": 4}
+{"t": 1795837244.8725798, "period": 58, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837244.8733466, "period": 58, "event": "started", "id": "D-007", "kind": "diagnosis", "branch": "risk", "trigger": "P-007"}
+{"t": 1795837250.0638945, "period": 59, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837257.9716413, "period": 60, "event": "strategist", "id": "S-003", "branch": "improvement", "started_period": 49, "cost": 0.01719391, "turns": 12}
+{"t": 1795837257.9720087, "period": 60, "event": "request_merged", "id": "REQ-014", "to": "designer", "key": "floor-target-day365", "asked": 2}
+{"t": 1795837257.9727063, "period": 60, "event": "started", "id": "AS-003", "kind": "aims", "branch": "improvement", "trigger": null}
+{"t": 1795837257.972828, "period": 60, "event": "pulse", "id": "P-008", "branch": "risk", "started_period": 56, "cost": 0.007441920000000001, "turns": 12}
+{"t": 1795837257.9729288, "period": 60, "event": "request_merged", "id": "REQ-006", "to": "controls", "key": "capacity-split-drift", "asked": 10}
+{"t": 1795837257.9732308, "period": 60, "event": "fault", "key": "capacity-split-drift", "by": "P-008"}
+{"t": 1795837257.9742737, "period": 60, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837265.9909184, "period": 61, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837272.5206301, "period": 62, "event": "controls", "id": "C-005", "branch": "risk", "started_period": 56, "cost": 0.00911845, "turns": 11}
+{"t": 1795837272.5209453, "period": 62, "event": "request_merged", "id": "REQ-012", "to": "designer", "key": "brief-done-rewards-restock", "asked": 5}
+{"t": 1795837272.5214956, "period": 62, "event": "request_done", "id": "REQ-006", "by": "C-005"}
+{"t": 1795837272.52157, "period": 62, "event": "adopted", "id": "C-005", "branch": "risk"}
+{"t": 1795837272.5223556, "period": 62, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837283.8554423, "period": 63, "event": "risk_event", "kind": "chart signal", "label": "cash_gain_7 beyond the lower limit"}
+{"t": 1795837283.8554716, "period": 63, "event": "risk_event", "kind": "chart signal", "label": "slots_selling 8 in a row below the centre"}
+{"t": 1795837283.855695, "period": 63, "event": "diagnosis", "id": "D-007", "branch": "risk", "started_period": 58, "cost": 0.00913943, "turns": 9}
+{"t": 1795837283.856332, "period": 63, "event": "request_merged", "id": "REQ-009", "to": "designer", "key": "restock-after-depot-read", "asked": 5}
+{"t": 1795837283.85635, "period": 63, "event": "request_reopened", "id": "REQ-006", "to": "controls", "key": "capacity-split-drift", "asked": 11}
+{"t": 1795837283.8568032, "period": 63, "event": "escalation", "kind": "request", "text": "REQ-013 to human (depot-stock-per-restock): open 3 points. \"Record the depot quantity per product from each get_storage_inventory result, and the product each restock_machine call fills, in the ground-truth log (the adapter must capture the result content, not\""}
+{"t": 1795837283.85682, "period": 63, "event": "escalation", "kind": "request", "text": "REQ-014 to designer (floor-target-day365): open 3 points. \"Top-measure floor and aim lines are drawn to 61,219 (day-365 exemplar), but the goal is day 91 with a spec ceiling near 5,500. Reconcile them.\""}
+{"t": 1795837283.8568387, "period": 63, "event": "escalation", "kind": "request", "text": "REQ-015 to designer (m001-unit-cost-up): open 3 points. \"M-001 predicted slots_selling up \"within 3 points\" with no unit. Since day 19 slots are flat (no signal) and unit_cost_paid_30d rose 0.930 to 0.954 with one order since. Restate the window in days, th\""}
+{"t": 1795837283.8579834, "period": 63, "event": "measure", "chart_signals": ["cash_gain_7 beyond the lower limit", "slots_selling 8 in a row below the centre"], "progress": ["below_floor"]}
+{"t": 1795837283.8588054, "period": 63, "event": "started", "id": "P-009", "kind": "pulse", "branch": "risk", "trigger": "chart signal: cash_gain_7 beyond the lower limit; chart signal: slots_selling 8 in a row below the centre"}
+{"t": 1795837283.8595922, "period": 63, "event": "started", "id": "D-008", "kind": "diagnosis", "branch": "risk", "trigger": "P-008"}
+{"t": 1795837283.8628109, "period": 63, "event": "started", "id": "C-006", "kind": "controls", "branch": "risk", "trigger": null}
+{"t": 1795837283.8633435, "period": 63, "event": "started", "id": "K-005", "kind": "check", "branch": "risk", "trigger": "claim sample"}
+{"t": 1795837284.9098024, "period": 64, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837290.594318, "period": 65, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837296.2356594, "period": 66, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837306.3131468, "period": 67, "event": "risk_event", "kind": "chart signal", "label": "cash_gain_7 8 in a row below the centre"}
+{"t": 1795837306.3137329, "period": 67, "event": "change_verdict", "id": "M-002", "verdict": "shift the wrong way", "chance": 0.333, "measure": "slots_selling"}
+{"t": 1795837306.3137631, "period": 67, "event": "request_new", "id": "REQ-016", "to": "designer", "key": "verdict-m-002", "asked": 1}
+{"t": 1795837306.3145652, "period": 67, "event": "measure", "chart_signals": ["cash_gain_7 8 in a row below the centre"], "progress": ["below_floor"]}
+{"t": 1795837311.9515443, "period": 68, "event": "pulse", "id": "P-009", "branch": "risk", "started_period": 63, "cost": 0.01028625, "turns": 14}
+{"t": 1795837311.9518976, "period": 68, "event": "request_merged", "id": "REQ-006", "to": "controls", "key": "capacity-split-drift", "asked": 13}
+{"t": 1795837311.9522438, "period": 68, "event": "fault", "key": "capacity-split-drift", "by": "P-009"}
+{"t": 1795837311.9535317, "period": 68, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837311.9541495, "period": 68, "event": "started", "id": "P-010", "kind": "pulse", "branch": "risk", "trigger": "chart signal: cash_gain_7 8 in a row below the centre"}
+{"t": 1795837327.6472857, "period": 69, "event": "aims", "id": "AS-003", "branch": "improvement", "started_period": 60, "cost": 0.01602427, "turns": 13}
+{"t": 1795837327.6476042, "period": 69, "event": "request_merged", "id": "REQ-006", "to": "controls", "key": "capacity-split-drift", "asked": 14}
+{"t": 1795837327.6478355, "period": 69, "event": "diagnosis", "id": "D-008", "branch": "risk", "started_period": 63, "cost": 0.01048413, "turns": 11}
+{"t": 1795837327.6479695, "period": 69, "event": "request_merged", "id": "REQ-006", "to": "controls", "key": "capacity-split-drift", "asked": 15}
+{"t": 1795837327.6479785, "period": 69, "event": "request_merged", "id": "REQ-009", "to": "designer", "key": "restock-after-depot-read", "asked": 6}
+{"t": 1795837327.6479836, "period": 69, "event": "request_merged", "id": "REQ-012", "to": "designer", "key": "brief-done-rewards-restock", "asked": 6}
+{"t": 1795837327.647988, "period": 69, "event": "request_merged", "id": "REQ-013", "to": "human", "key": "depot-stock-per-restock", "asked": 2}
+{"t": 1795837327.648121, "period": 69, "event": "controls", "id": "C-006", "branch": "risk", "started_period": 63, "cost": 0.00902935, "turns": 12}
+{"t": 1795837327.648207, "period": 69, "event": "request_merged", "id": "REQ-009", "to": "designer", "key": "restock-after-depot-read", "asked": 7}
+{"t": 1795837327.6486511, "period": 69, "event": "request_done", "id": "REQ-006", "by": "C-006"}
+{"t": 1795837327.6487122, "period": 69, "event": "adopted", "id": "C-006", "branch": "risk"}
+{"t": 1795837327.6487818, "period": 69, "event": "check", "id": "K-005", "branch": "risk", "started_period": 63, "cost": 0.01325546, "turns": 19}
+{"t": 1795837327.6488707, "period": 69, "event": "request_merged", "id": "REQ-002", "to": "human", "key": "worker-log-missing", "asked": 6}
+{"t": 1795837327.6500282, "period": 69, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837327.650599, "period": 69, "event": "started", "id": "D-009", "kind": "diagnosis", "branch": "risk", "trigger": "P-009"}
+{"t": 1795837327.6510355, "period": 69, "event": "started", "id": "M-003", "kind": "method", "branch": "improvement", "trigger": null}
+{"t": 1795837334.848137, "period": 70, "event": "risk_event", "kind": "off plan", "label": "capacity on 'restocking' missed its planned share by more than 25 points over the last point"}
+{"t": 1795837334.8482869, "period": 70, "event": "pulse", "id": "P-010", "branch": "risk", "started_period": 68, "cost": 0.00831816, "turns": 11}
+{"t": 1795837334.848584, "period": 70, "event": "request_reopened", "id": "REQ-006", "to": "controls", "key": "capacity-split-drift", "asked": 17}
+{"t": 1795837334.848889, "period": 70, "event": "fault", "key": "capacity-split-drift", "by": "P-010"}
+{"t": 1795837334.849911, "period": 70, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837334.8505087, "period": 70, "event": "started", "id": "P-011", "kind": "pulse", "branch": "risk", "trigger": "off plan: capacity on 'restocking' missed its planned share by more than 25 points over the last point"}
+{"t": 1795837334.8509552, "period": 70, "event": "started", "id": "C-007", "kind": "controls", "branch": "risk", "trigger": null}
+{"t": 1795837334.851323, "period": 70, "event": "started", "id": "S-004", "kind": "strategist", "branch": "improvement", "trigger": "scheduled: 2 points since the last strategy"}
+{"t": 1795837337.0347476, "period": 71, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837352.741313, "period": 72, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837364.7943656, "period": 73, "event": "diagnosis", "id": "D-009", "branch": "risk", "started_period": 69, "cost": 0.01049258, "turns": 11}
+{"t": 1795837364.7946851, "period": 73, "event": "request_new", "id": "REQ-017", "to": "designer", "key": "split-gap-in-instructions", "asked": 1}
+{"t": 1795837364.7949238, "period": 73, "event": "pulse", "id": "P-011", "branch": "risk", "started_period": 70, "cost": 0.011751600000000001, "turns": 15}
+{"t": 1795837364.7950203, "period": 73, "event": "request_merged", "id": "REQ-013", "to": "human", "key": "depot-stock-per-restock", "asked": 3}
+{"t": 1795837364.7953093, "period": 73, "event": "fault", "key": "capacity-split-drift", "by": "P-011"}
+{"t": 1795837364.7956347, "period": 73, "event": "escalation", "kind": "request", "text": "REQ-013 to human (depot-stock-per-restock): asked 3 times. \"The per-product depot read result is not measured, so the restock gate cannot be verified from ground truth; this is open as REQ-013.\""}
+{"t": 1795837364.7963645, "period": 73, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837364.7969692, "period": 73, "event": "started", "id": "D-010", "kind": "diagnosis", "branch": "risk", "trigger": "P-011"}
+{"t": 1795837371.3911169, "period": 74, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837379.7675824, "period": 75, "event": "strategist", "id": "S-004", "branch": "improvement", "started_period": 70, "cost": 0.01262037, "turns": 11}
+{"t": 1795837379.76873, "period": 75, "event": "started", "id": "AS-004", "kind": "aims", "branch": "improvement", "trigger": null}
+{"t": 1795837379.771517, "period": 75, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837388.004733, "period": 76, "event": "controls", "id": "C-007", "branch": "risk", "started_period": 70, "cost": 0.015059290000000001, "turns": 22}
+{"t": 1795837388.005218, "period": 76, "event": "request_merged", "id": "REQ-009", "to": "designer", "key": "restock-after-depot-read", "asked": 8}
+{"t": 1795837388.0060043, "period": 76, "event": "request_declined", "id": "REQ-006", "by": "C-007"}
+{"t": 1795837388.006152, "period": 76, "event": "adopted", "id": "C-007", "branch": "risk"}
+{"t": 1795837388.0071967, "period": 76, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837391.9209778, "period": 77, "event": "risk_event", "kind": "off plan", "label": "capacity on 'sourcing' missed its planned share by more than 25 points over the last point"}
+{"t": 1795837391.9211378, "period": 77, "event": "audit", "id": "A-002", "branch": "audit", "started_period": 47, "cost": 0.13798637, "turns": 40}
+{"t": 1795837391.9216263, "period": 77, "event": "request_merged", "id": "REQ-014", "to": "designer", "key": "floor-target-day365", "asked": 3}
+{"t": 1795837391.9216375, "period": 77, "event": "request_merged", "id": "REQ-012", "to": "designer", "key": "brief-done-rewards-restock", "asked": 7}
+{"t": 1795837391.9216433, "period": 77, "event": "request_merged", "id": "REQ-015", "to": "designer", "key": "m001-unit-cost-up", "asked": 2}
+{"t": 1795837391.9216478, "period": 77, "event": "request_new", "id": "REQ-018", "to": "strategist", "key": "constraint-not-worker-time", "asked": 1}
+{"t": 1795837391.9216514, "period": 77, "event": "request_reopened", "id": "REQ-006", "to": "controls", "key": "capacity-split-drift", "asked": 19}
+{"t": 1795837391.9216552, "period": 77, "event": "request_new", "id": "REQ-019", "to": "human", "key": "pursuit-denominator", "asked": 1}
+{"t": 1795837391.9216626, "period": 77, "event": "request_new", "id": "REQ-020", "to": "human", "key": "verdict-chance-rate", "asked": 1}
+{"t": 1795837391.921667, "period": 77, "event": "request_merged", "id": "REQ-002", "to": "human", "key": "worker-log-missing", "asked": 7}
+{"t": 1795837391.9216704, "period": 77, "event": "request_merged", "id": "REQ-013", "to": "human", "key": "depot-stock-per-restock", "asked": 4}
+{"t": 1795837391.9222147, "period": 77, "event": "fault", "key": "capacity-split-drift", "by": "A-002"}
+{"t": 1795837391.922562, "period": 77, "event": "escalation", "kind": "request", "text": "REQ-014 to designer (floor-target-day365): asked 3 times. \"Still open (REQ-014) and now at the central issue: state the day-91 target in spec.md so charts.md recomputes the floor and aim lines (EUR 61,219 is the day-365 exemplar). Do not start a new chart pha\""}
+{"t": 1795837391.9225707, "period": 77, "event": "escalation", "kind": "request", "text": "REQ-019 to human (pursuit-denominator): addressed to the human. \"New: Pursuit's actual shares sum to 100% of logged minutes; spec.md defines share as minutes divided by 480. Recompute Pursuit on the spec's base (restocking 73% reads as about 40% on that base).\""}
+{"t": 1795837391.9225748, "period": 77, "event": "escalation", "kind": "request", "text": "REQ-020 to human (verdict-chance-rate): addressed to the human. \"New: the M-001 change verdict has no chance rate and I could not reproduce a shift in slots_selling. State the chance rate or withhold the verdict.\""}
+{"t": 1795837391.9234731, "period": 77, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837391.9242334, "period": 77, "event": "started", "id": "P-012", "kind": "pulse", "branch": "risk", "trigger": "off plan: capacity on 'sourcing' missed its planned share by more than 25 points over the last point"}
+{"t": 1795837391.9247234, "period": 77, "event": "started", "id": "C-008", "kind": "controls", "branch": "risk", "trigger": null}
+{"t": 1795837391.9251394, "period": 77, "event": "started", "id": "K-006", "kind": "check", "branch": "risk", "trigger": "claim sample"}
+{"t": 1795837391.9254336, "period": 77, "event": "started", "id": "A-003", "kind": "audit", "branch": "audit", "trigger": "3 of 4"}
+{"t": 1795837391.9265442, "period": 77, "event": "started", "id": "O-003", "kind": "organizer", "branch": "organization", "trigger": "3 of 4"}
+{"t": 1795837393.46024, "period": 78, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837400.309719, "period": 79, "event": "diagnosis", "id": "D-010", "branch": "risk", "started_period": 73, "cost": 0.0095096, "turns": 10}
+{"t": 1795837400.310139, "period": 79, "event": "request_merged", "id": "REQ-006", "to": "controls", "key": "capacity-split-drift", "asked": 20}
+{"t": 1795837400.3101535, "period": 79, "event": "request_merged", "id": "REQ-013", "to": "human", "key": "depot-stock-per-restock", "asked": 5}
+{"t": 1795837400.3101609, "period": 79, "event": "request_new", "id": "REQ-021", "to": "designer", "key": "sourcing-quote-outcome", "asked": 1}
+{"t": 1795837400.3114376, "period": 79, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837400.3123705, "period": 79, "event": "started", "id": "D-011", "kind": "diagnosis", "branch": "risk", "trigger": "A-002"}
+{"t": 1795837412.7835834, "period": 80, "event": "organizer", "id": "O-003", "branch": "organization", "started_period": 77, "cost": 0.00557252, "turns": 8}
+{"t": 1795837412.7839983, "period": 80, "event": "config_change", "key": "checker", "old": "sample_claims", "new": "off", "by": "O-003"}
+{"t": 1795837412.7849631, "period": 80, "event": "escalation", "kind": "config change", "text": "O-003 set checker from sample_claims to off (swarm/audits/O-003.md)"}
+{"t": 1795837412.7873447, "period": 80, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837423.3576665, "period": 81, "event": "aims", "id": "AS-004", "branch": "improvement", "started_period": 75, "cost": 0.01082997, "turns": 11}
+{"t": 1795837423.3581278, "period": 81, "event": "check", "id": "K-006", "branch": "risk", "started_period": 77, "cost": 0.01081666, "turns": 15}
+{"t": 1795837423.3582861, "period": 81, "event": "request_merged", "id": "REQ-002", "to": "human", "key": "worker-log-missing", "asked": 8}
+{"t": 1795837423.359547, "period": 81, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837431.284979, "period": 82, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837436.4852762, "period": 83, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837440.9931645, "period": 84, "event": "escalation", "kind": "request", "text": "REQ-016 to designer (verdict-m-002): open 3 points. \"M-002 predicted slots_selling up within 3 points from day 46; the system's verdict over days 47-67: shift the wrong way (the same test fires 33% of the time where nothing changed). Keep it, revise it \""}
+{"t": 1795837440.9937584, "period": 84, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837440.994345, "period": 84, "event": "started", "id": "S-005", "kind": "strategist", "branch": "improvement", "trigger": "scheduled: 2 points since the last strategy"}
+{"t": 1795837444.847677, "period": 85, "event": "pulse", "id": "P-012", "branch": "risk", "started_period": 77, "cost": 0.016165409999999998, "turns": 23}
+{"t": 1795837444.8483434, "period": 85, "event": "request_merged", "id": "REQ-010", "to": "designer", "key": "depot-stock-per-restock", "asked": 4}
+{"t": 1795837444.8489835, "period": 85, "event": "fault", "key": "capacity-split-drift", "by": "P-012"}
+{"t": 1795837444.8503823, "period": 85, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837460.7220476, "period": 86, "event": "controls", "id": "C-008", "branch": "risk", "started_period": 77, "cost": 0.014740109999999999, "turns": 17}
+{"t": 1795837460.7224255, "period": 86, "event": "request_merged", "id": "REQ-013", "to": "human", "key": "depot-stock-per-restock", "asked": 6}
+{"t": 1795837460.722439, "period": 86, "event": "request_merged", "id": "REQ-009", "to": "designer", "key": "restock-after-depot-read", "asked": 9}
+{"t": 1795837460.7229786, "period": 86, "event": "request_done", "id": "REQ-006", "by": "C-008"}
+{"t": 1795837460.723038, "period": 86, "event": "adopted", "id": "C-008", "branch": "risk"}
+{"t": 1795837460.7238793, "period": 86, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837465.353964, "period": 87, "event": "diagnosis", "id": "D-011", "branch": "risk", "started_period": 79, "cost": 0.02084275, "turns": 22}
+{"t": 1795837465.354374, "period": 87, "event": "request_merged", "id": "REQ-012", "to": "designer", "key": "brief-done-rewards-restock", "asked": 8}
+{"t": 1795837465.354388, "period": 87, "event": "request_reopened", "id": "REQ-006", "to": "controls", "key": "capacity-split-drift", "asked": 22}
+{"t": 1795837465.3543947, "period": 87, "event": "request_merged", "id": "REQ-018", "to": "strategist", "key": "constraint-not-worker-time", "asked": 2}
+{"t": 1795837465.3543987, "period": 87, "event": "request_merged", "id": "REQ-019", "to": "human", "key": "pursuit-denominator", "asked": 2}
+{"t": 1795837465.3544023, "period": 87, "event": "request_merged", "id": "REQ-021", "to": "designer", "key": "sourcing-quote-outcome", "asked": 2}
+{"t": 1795837465.3553047, "period": 87, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837465.3559017, "period": 87, "event": "started", "id": "D-012", "kind": "diagnosis", "branch": "risk", "trigger": "P-012"}
+{"t": 1795837473.6012359, "period": 88, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837477.888575, "period": 89, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837480.5676582, "period": 90, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837482.725632, "period": 91, "event": "escalation", "kind": "request", "text": "REQ-017 to designer (split-gap-in-instructions): open 3 points. \"Show the latest Pursuit gap and this period's depot read in instructions.md, so the worker's own input carries the drift it is measured on.\""}
+{"t": 1795837482.7263114, "period": 91, "event": "measure", "chart_signals": [], "progress": ["below_floor"]}
+{"t": 1795837482.726986, "period": 91, "event": "started", "id": "P-013", "kind": "pulse", "branch": "risk", "trigger": "routine sweep every 1 point(s)"}
+{"t": 1795837482.7275352, "period": 91, "event": "started", "id": "C-009", "kind": "controls", "branch": "risk", "trigger": null}
