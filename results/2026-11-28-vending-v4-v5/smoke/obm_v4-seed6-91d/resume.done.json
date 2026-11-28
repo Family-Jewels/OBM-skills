@@ -1,0 +1,39 @@
+{
+ "args": {
+  "arm": "obm_v4",
+  "seed": 6,
+  "days": 91,
+  "budget": null,
+  "timeout": 21600,
+  "output": "/home/claude/runs/smoke2",
+  "model": "claude-haiku-5-5",
+  "audit_every": 50,
+  "pulse_every": 5,
+  "steps": "observe"
+ },
+ "statedir": "/var/tmp/vbs-296286-90nja4tc",
+ "cfg": "/home/claude/runs/smoke2/obm_v4-seed6-91d/cfg",
+ "phase": "run",
+ "session_id": "cd8cc952-d166-4d8e-8f50-017ae932f972",
+ "results": [
+  {
+   "total_cost_usd": 0.01226967,
+   "num_turns": 8,
+   "session_id": "d09c7cff-9ed7-4927-bf78-705caca9dbe3"
+  },
+  {
+   "total_cost_usd": 0,
+   "num_turns": 1,
+   "session_id": "cd8cc952-d166-4d8e-8f50-017ae932f972"
+  }
+ ],
+ "cutoffs": [
+  {
+   "day": 1,
+   "time": 1795837875.5234723,
+   "phase": "run",
+   "message": "You've hit your 5-hour limit \u00b7 resets 4:40am (UTC)"
+  }
+ ],
+ "elapsed": 82.65426700000012
+}
