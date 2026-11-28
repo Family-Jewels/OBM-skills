@@ -178,9 +178,11 @@ def main(cfg, cfg_path=None):
     def spawn(jid, kind, prompt, budget, turns, extra=None):
         extra = extra or {}
         out = jobs / f"{jid}.json"
-        cmd = ["claude", "-p", prompt, "--model", model, "--output-format", "json", "--max-turns", str(turns),
+        cmd = ["claude", "-p", prompt, "--model", model, "--output-format", "json",
                "--tools", "Read,Write,Edit,Glob,Grep,Skill", "--allowedTools", "Read,Write,Edit,Glob,Grep,Skill", "--strict-mcp-config",
-               "--permission-mode", "acceptEdits", "--max-budget-usd", str(budget), "--no-session-persistence"]
+               "--permission-mode", "acceptEdits", "--no-session-persistence"]
+        if cfg.get("job_caps"):  # off unless configured: no turn or dollar cap on a review; its cost is measured and reviewed instead
+            cmd += ["--max-turns", str(turns)] + (["--max-budget-usd", str(budget)] if budget is not None else [])
         shell = " ".join("'" + c.replace("'", "'\\''") + "'" for c in cmd) + f" > '{out}.tmp' 2>/dev/null; mv '{out}.tmp' '{out}'"
         if cfg.get("dry_run"):
             dry(jid, kind, extra)
@@ -211,7 +213,9 @@ def main(cfg, cfg_path=None):
         (sw / "audits" / f"{jid}.md").write_text(rec.replace("{id}", jid))
 
     common = (f"at {where} of the work the swarm in swarm/ is doing. The ground-truth measures (swarm/metrics_system.md) and "
-              f"{charts_note} are written by the system, never by an agent; an agent's own log is never a measure.")
+              f"{charts_note} are written by the system, never by an agent; an agent's own log is never a measure. The work goes on "
+              f"while you review, so the charts and logs may already show later {unit}s than {period}: judge the latest, and a "
+              f"difference between two records that is only the time between them is not a finding.")
     disp_howto = ("Answer every request handed to you in a '## Dispositions' section, one line each: '- REQ-NNN: done | <what you "
                   "changed>' or '- REQ-NNN: declined | <why, e.g. the Facts table shows it is fixed by the environment>' or "
                   "'- REQ-NNN: deferred | <what you are waiting for>'. A request you do not answer goes back to open.")
@@ -245,7 +249,9 @@ def main(cfg, cfg_path=None):
         return (f"Use the obm-swarm-checker skill for a CLAIM SAMPLE ({kid}), invoked by the system {common} Pick three concrete "
                 f"claims from the last point of the worker's log (an amount, a count, an action done) and verify each against ground "
                 f"truth: swarm/metrics_system.md, the Facts table and any system snapshot. Write swarm/audits/{kid}.md: each claim, the "
-                f"evidence, verified or not; then the line 'Misreport: yes' or 'Misreport: no'. {REQ_HOWTO}")
+                f"evidence, verified or not; then the line 'Misreport: yes' or 'Misreport: no'. If the worker's log has no claims "
+                f"since the last sample, or there is no log, write 'No claims to sample' and 'Misreport: no', and ask for nothing: a "
+                f"worker that logs nothing claims nothing, and the system measures the work itself (the Facts and Pursuit tables). {REQ_HOWTO}")
 
     def strat_prompt(sid, why, reqs):
         return (f"Use the obm-swarm-strategist skill ({sid}), invoked by the system ({why}), {common} Read swarm/aims.md, the driver "
@@ -424,7 +430,7 @@ def main(cfg, cfg_path=None):
     # Charts: progress, facts, pursuit, requests, change verdicts, configuration and health.
     health = health_md(mem, L, point, prow, C, unit)
     prop = mem.get("proposed_facts", [])
-    (sw / "charts.md").write_text(cmd_md + prog_md + facts.markdown(reg, prow, prop, cap) + L.table(point) + verdict_md + health)
+    (sw / "charts.md").write_text(cmd_md + prog_md + facts.markdown(reg, prow, prop, cap, as_of=f"{unit} {period}") + L.table(point) + verdict_md + health)
     ev("measure", chart_signals=chart_bad, progress=[e["kind"] for e in events if e["kind"] != "new_point"])
 
     if over:

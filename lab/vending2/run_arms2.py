@@ -12,8 +12,11 @@ Every arm: the benchmark's briefing as system prompt, its 22 MCP business tools,
                    and the system's step cues on (--steps cue).
 usage: python -I run_arms2.py --arm obm_v5 --seed 1 --days 365 --output DIR [--budget USD] [--timeout S] [--steps observe|cue|off]
 
---budget: no dollar cap unless given; the account's usage limits still apply, and a cutoff is tagged as an environment
-failure. The per-job caps stay: the designer's set-up ($2), native's planning session ($3) and each review (engine budgets).
+--budget: no dollar cap unless given, on any session: the operator, the designer's set-up, native's planning session, and
+(engine v4) every review, which also has no turn cap. The account's usage limits still apply, and a cutoff is tagged as
+an environment failure. What remains are guards, not caps: the harness clock (--timeout, for a hung run), the engine's
+review timeout (it stops waiting for a review that never returns) and the stop gate's 40-attempt honest exit.
+Nested agents get a whitelisted environment (clean_env): network, CA and model access only.
 --steps (every arm): a hook records every tool call to <out>/steps.jsonl (../longrun/steps_hook.py), so the movement cycle
 can be analysed after the run; result.json gets its behaviour summary. 'observe' (the default, except for obm_v5) records
 only; 'cue' also hands the agent the system's step cues and writes swarm/step_health.md, so it is an intervention.
@@ -38,10 +41,17 @@ OBM = ("\n\nRun this business as a one-agent OBM swarm using the installed obm-s
        "operation, then run it with the obm-swarm-orchestrator skill. Use sub-agents for the checker, auditor and diagnostician roles "
        "when the skills call for them. Keep operating until the simulation ends.")
 
+KEEP_ENV = ('PATH', 'HOME', 'LANG', 'LC_ALL', 'TERM', 'TMPDIR', 'USER', 'SHELL',
+            'HTTPS_PROXY', 'https_proxy', 'NO_PROXY', 'no_proxy',  # the network proxy and its CA bundle
+            'SSL_CERT_FILE', 'SSL_CERT_DIR', 'NODE_EXTRA_CA_CERTS', 'REQUESTS_CA_BUNDLE', 'CURL_CA_BUNDLE', 'PIP_CERT',
+            'ANTHROPIC_BASE_URL', 'ANTHROPIC_API_KEY', 'ANTHROPIC_AUTH_TOKEN', 'CLAUDE_CODE_OAUTH_TOKEN',  # model access
+            'CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST', 'CLAUDE_CODE_USE_BEDROCK', 'CLAUDE_CODE_USE_VERTEX')
+
 def clean_env():
-    e = {k: v for k, v in os.environ.items() if not k.startswith(('VENDING_', 'VB_', 'GATE_'))
-         and k not in ('CLAUDE_CODE_SYNC_SKILLS', 'CLAUDE_CODE_SYNC_PLUGINS', 'CLAUDE_CODE_ENABLE_CFC')}
-    return e
+    """A whitelist, not a blacklist: only what a run needs to reach the model and the network. Anything else (a hosting
+    session's ids, messaging channel or extra directories, the runner's own variables) could tie a benchmark agent to
+    the session that launched it, or let it see files outside its workspace."""
+    return {k: os.environ[k] for k in KEEP_ENV if k in os.environ}
 
 def claude(args, cfg, cwd, out_stream, timeout):
     env = clean_env(); env['CLAUDE_CONFIG_DIR'] = str(cfg)
@@ -96,36 +106,55 @@ def cap(usd):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--arm', required=True, choices=['base', 'native', 'native_cadence', 'obm', 'obm_enf', 'obm_cadence', 'obm_v2', 'obm_v3', 'obm_v4', 'obm_v5']); ap.add_argument('--seed', type=int, default=1)
+    ap.add_argument('--arm', choices=['base', 'native', 'native_cadence', 'obm', 'obm_enf', 'obm_cadence', 'obm_v2', 'obm_v3', 'obm_v4', 'obm_v5']); ap.add_argument('--seed', type=int, default=1)
     ap.add_argument('--days', type=int, default=365); ap.add_argument('--budget', type=float, default=None)
-    ap.add_argument('--timeout', type=int, default=21600); ap.add_argument('--output', type=Path, required=True)
+    ap.add_argument('--timeout', type=int, default=21600); ap.add_argument('--output', type=Path)
     ap.add_argument('--model', default='claude-haiku-5-5'); ap.add_argument('--audit-every', type=int, default=50); ap.add_argument('--pulse-every', type=int, default=5)
     ap.add_argument('--steps', choices=['off', 'observe', 'cue'], default=None)
+    ap.add_argument('--resume', type=Path, default=None, help="a run folder paused by a usage limit (it holds resume.json)")
     a = ap.parse_args()
+    saved = None
+    if a.resume:  # continue a run the usage limit paused: same arm, seed, folders, simulator state and operator session
+        saved = json.loads((a.resume / 'resume.json').read_text())
+        for k, v in saved['args'].items():
+            setattr(a, k, v)
+    elif not a.arm or not a.output:
+        ap.error('--arm and --output are required (or --resume RUN_FOLDER)')
     if a.steps is None:
         a.steps = 'cue' if a.arm == 'obm_v5' else 'observe'
     probs = preflight(a)
     if probs:
         print('preflight failed; nothing was started:\n  ' + '\n  '.join(probs), file=sys.stderr)
         sys.exit(2)
-    out = a.output / f'{a.arm}-seed{a.seed}-{a.days}d'; out.mkdir(parents=True, exist_ok=False)
-    ws = out / 'workspace'; ws.mkdir()
-    cfg = out / 'cfg'; shutil.copytree(CFG_CLEAN, cfg, ignore=shutil.ignore_patterns('projects', 'sessions', 'shell-snapshots', 'session-env'))
-    if a.arm.startswith('obm'):
-        (cfg / 'skills').mkdir(exist_ok=True)
-        for s in skills_for(a.arm): shutil.copytree(s, cfg / 'skills' / s.name)
-    statedir = Path(tempfile.mkdtemp(prefix='vbs-' + uuid.uuid4().hex[:6] + '-', dir='/var/tmp'))
+    if saved:
+        out = a.resume; ws = out / 'workspace'; cfg = Path(saved['cfg']); statedir = Path(saved['statedir'])
+        missing = [str(p) for p in (ws, cfg, statedir / 'state.json', out / 'instruction.md') if not p.exists()]
+        if missing:
+            print('cannot resume; missing: ' + ', '.join(missing), file=sys.stderr); sys.exit(2)
+    else:
+        out = a.output / f'{a.arm}-seed{a.seed}-{a.days}d'; out.mkdir(parents=True, exist_ok=False)
+        ws = out / 'workspace'; ws.mkdir()
+        cfg = out / 'cfg'; shutil.copytree(CFG_CLEAN, cfg, ignore=shutil.ignore_patterns('projects', 'sessions', 'shell-snapshots', 'session-env'))
+        if a.arm.startswith('obm'):
+            (cfg / 'skills').mkdir(exist_ok=True)
+            for s in skills_for(a.arm): shutil.copytree(s, cfg / 'skills' / s.name)
+        statedir = Path(tempfile.mkdtemp(prefix='vbs-' + uuid.uuid4().hex[:6] + '-', dir='/var/tmp'))
     simenv = clean_env()
     with socket.socket() as s: s.bind(('127.0.0.1', 0)); port = s.getsockname()[1]
     simenv.update(VENDING_SEED=str(a.seed), VENDING_SIM_DAYS=str(a.days), VENDING_STATE_PATH=str(statedir / 'state.json'),
-                  VENDING_RESUME='0', VENDING_PORT=str(port), VENDING_HOST='127.0.0.1')
-    prompt = subprocess.run([PY, '-I', '-c', 'import sys;sys.path[:0]=[sys.argv[1],sys.argv[2]];from vending import config;'
-                             'import sync_config;config.reload();print(sync_config.render(),end="")', str(SIM), str(ROOT / 'scripts')],
-                            env=simenv, capture_output=True, text=True, check=True).stdout
-    (out / 'instruction.md').write_text(prompt)
-    log = (out / 'server.log').open('w')
+                  VENDING_RESUME='1' if saved else '0', VENDING_PORT=str(port), VENDING_HOST='127.0.0.1')
+    if saved:
+        prompt = (out / 'instruction.md').read_text()
+    else:
+        prompt = subprocess.run([PY, '-I', '-c', 'import sys;sys.path[:0]=[sys.argv[1],sys.argv[2]];from vending import config;'
+                                 'import sync_config;config.reload();print(sync_config.render(),end="")', str(SIM), str(ROOT / 'scripts')],
+                                env=simenv, capture_output=True, text=True, check=True).stdout
+        (out / 'instruction.md').write_text(prompt)
+    log = (out / 'server.log').open('a' if saved else 'w')
     server = subprocess.Popen([PY, str(SIM / 'server.py')], env=simenv, stdout=log, stderr=subprocess.STDOUT, cwd=str(SIM))
-    t0 = time.monotonic(); results, error = [], None
+    t0 = time.monotonic(); error = None
+    results = list(saved['results']) if saved else []
+    phase, last_sid = 'start', None  # which session was running, for a resume
     stream = out / 'stream.jsonl'
     try:
         for _ in range(200):
@@ -166,7 +195,10 @@ def main():
                                                  'clock_log': str(statedir / 'clock.jsonl')})
                 if a.arm in V4_ARMS:  # the system logs every action with the simulator's clock: the fact register and the pursuit measure
                     ccfg['action_log'] = str(out / 'actions.jsonl')
-                    ccfg['budgets'] = {'pulse': 0.6, 'check': 0.6, 'diagnosis': 1.0, 'controls': 1.0, 'strategist': 0.8, 'aims': 0.8, 'method': 1.5, 'audit': 1.5, 'organizer': 0.8}
+                    ccfg['budgets'] = {}; ccfg['job_caps'] = False  # no dollar or turn cap on any review: the system governs its own cost
+                    # the top measure as a level, and what stock costs: both asked for by the reviewers in the first smoke run
+                    ccfg['charts']['measures'] = ccfg['charts']['measures'] + [{'name': 'cash', 'better': 'up'},
+                                                                             {'name': 'unit_cost_paid_30d', 'better': 'down'}]
                 (statedir / 'cadence.json').write_text(json.dumps(ccfg))
                 hook['hooks']['PostToolUse'] = [{'matcher': 'mcp__vending__wait_for_next_day', 'hooks': [{'type': 'command', 'timeout': 1600,
                     'command': f'python3 -I {lab / "cadence" / "engine.py"} {statedir / "cadence.json"}'}]}]
@@ -182,7 +214,17 @@ def main():
         elif steps_hook:
             common += ['--settings', json.dumps({'hooks': {'PostToolUse': [steps_hook]}})]
         left = a.budget  # None: no dollar cap; the usage limits still apply
-        if a.arm in ('obm_cadence', 'obm_v2', 'obm_v3') + V4_ARMS:
+        if saved and saved.get('phase') == 'run' and saved.get('session_id'):
+            day = (json.loads((statedir / 'state.json').read_text()) or {}).get('day')
+            cont = (f"The run was paused by the account's usage limit and has now resumed exactly where it stopped (simulated day "
+                    f"{day}). Nothing changed while it was paused. Continue operating until the simulation ends.")
+            if a.arm in ('native', 'native_cadence'):
+                cont = '/goal ' + GOAL
+            phase, last_sid = 'run', saved['session_id']
+            p, r = claude(['-p', cont, '--resume', saved['session_id'], '--permission-mode', 'acceptEdits', *cap(left), *common],
+                          cfg, ws, stream, a.timeout)
+            results.append(r); last_sid = r.get('session_id') or last_sid
+        elif a.arm in ('obm_cadence', 'obm_v2', 'obm_v3') + V4_ARMS:
             design = ("Use the obm-swarm-designer skill to design the work system for operating this business for the whole simulation. "
                       "The system prompt is the business briefing. Write it into swarm/ in the current directory: a driver tree from the final balance "
                       "down to the drivers the operator controls, the exemplar, and the cadence table. The system will write ground-truth measures to "
@@ -238,7 +280,8 @@ def main():
                           "measures are: cash, revenue, units, slots_selling, revenue_per_slot, revenue_last_7, revenue_same_7_a_month_earlier and "
                           "unit_cost_paid_30d. Exemplar and ceiling: the benchmark's scripted reference operator, which knows the economy's hidden "
                           "parameters, reaches about EUR 3,228 at day 30 and EUR 61,219 at day 365 from EUR 1,500. You cannot use the business tools; design only.")
-            p, r = claude(['-p', design, '--permission-mode', 'acceptEdits', '--max-budget-usd', '2', '--model', a.model, '--output-format',
+            phase = 'design'
+            p, r = claude(['-p', design, '--permission-mode', 'acceptEdits', *cap(left), '--model', a.model, '--output-format',
                            'stream-json', '--verbose', '--tools', TOOLS, '--allowedTools', TOOLS, '--strict-mcp-config', '--system-prompt', prompt],
                           cfg, ws, stream, 1200)
             results.append(r); left = None if left is None else left - (r.get('total_cost_usd') or 0)
@@ -281,8 +324,9 @@ def main():
                               "the Facts table in swarm/charts.md for what each action costs. Log events only, one line each, in swarm/log/progress.md; "
                               "never count or log what the system records. The simulation can always continue, so the only honest end here is "
                               "SIMULATION OVER: keep operating until the simulation ends.")
+            phase = 'run'
             p, r = claude(['-p', run_prompt, '--permission-mode', 'acceptEdits', *cap(left), *common], cfg, ws, stream, a.timeout)
-            results.append(r)
+            results.append(r); last_sid = r.get('session_id')
         elif a.arm in ('native', 'native_cadence'):
             plan_prompt = (TASK + "\n\nBefore operating, plan. You are in plan mode: read the briefing, look around with the read-only "
                            "tools you have, and write a plan for running the whole simulation well. Do not operate yet.")
@@ -294,19 +338,22 @@ def main():
                                 "wait_for_next_day. Act on what it hands you and follow the current swarm/plan.md. The best known result on this "
                                 "simulation is about EUR 3,228 at day 30 and EUR 61,219 at day 365 from EUR 1,500, by the benchmark's scripted "
                                 "reference operator, which knows the economy's hidden parameters.")
-            p, r = claude(['-p', plan_prompt, '--permission-mode', 'plan', *cap(3 if left is None else min(3, left)), *common], cfg, ws, stream, 1800)
+            phase = 'plan'
+            p, r = claude(['-p', plan_prompt, '--permission-mode', 'plan', *cap(left), *common], cfg, ws, stream, 1800)
             results.append(r); left = None if left is None else left - (r.get('total_cost_usd') or 0)
             sid = r.get('session_id')
             if a.arm == 'native_cadence':
                 (ws / 'swarm').mkdir(exist_ok=True); plans = sorted((cfg / 'plans').glob('*.md'), key=lambda f: f.stat().st_mtime) if (cfg / 'plans').exists() else []
                 (ws / 'swarm' / 'plan.md').write_text(plans[-1].read_text() if plans else str(r.get('result') or '(no plan)'))
+            phase, last_sid = 'run', sid
             p, r = claude(['-p', '/goal ' + GOAL, '--resume', sid, '--permission-mode', 'acceptEdits', *cap(left), *common],
                           cfg, ws, stream, a.timeout)
-            results.append(r)
+            results.append(r); last_sid = r.get('session_id') or sid
         else:
+            phase = 'run'
             p, r = claude(['-p', TASK + (OBM if a.arm.startswith('obm') else ''), '--permission-mode', 'acceptEdits',
                            *cap(left), *common], cfg, ws, stream, a.timeout)
-            results.append(r)
+            results.append(r); last_sid = r.get('session_id')
         if p.returncode: error = f'CLI exit {p.returncode}'
         (out / 'stderr.txt').write_text(p.stderr)
         last = str(results[-1].get('result', '')).lower()
@@ -314,17 +361,38 @@ def main():
     except subprocess.TimeoutExpired: error = 'Wall-clock timeout'
     except Exception as e: error = repr(e)
     finally:
-        elapsed = time.monotonic() - t0
-        try:
-            req = urllib.request.Request(f'http://127.0.0.1:{port}/verifier/finalize', method='POST')
-            with urllib.request.urlopen(req, timeout=30) as r: art = json.load(r)
-            (out / 'trajectory.json').write_text(json.dumps(art['state'])); score = art['score']
-        except Exception as e:
-            score = {'reward': 0., 'completed': False}; error = error or f'finalize failed: {e}'
+        elapsed = time.monotonic() - t0 + (saved.get('elapsed', 0) if saved else 0)
+        paused = bool(error and error.startswith('environment: usage limit'))
+        if paused:  # keep everything needed to continue; nothing is scored
+            server.terminate()
+            try: server.wait(timeout=10)
+            except subprocess.TimeoutExpired: server.kill()
+            log.close()
+            try: day = json.loads((statedir / 'state.json').read_text()).get('day')
+            except Exception: day = None
+            keep = lambda r: {k: r.get(k) for k in ('total_cost_usd', 'num_turns', 'session_id')}
+            msg = str(results[-1].get('result', ''))[:300] if results else ''  # names the reset time, e.g. 'resets 7:20pm (America/Chicago)'
+            cut = (saved.get('cutoffs', []) if saved else []) + [{'day': day, 'time': time.time(), 'phase': phase, 'message': msg}]
+            (out / 'resume.json').write_text(json.dumps({
+                'args': {k: (str(v) if isinstance(v, Path) else v) for k, v in vars(a).items() if k not in ('resume',)},
+                'statedir': str(statedir), 'cfg': str(cfg), 'phase': phase, 'session_id': last_sid,
+                'results': [keep(r) for r in results], 'cutoffs': cut, 'elapsed': elapsed}, indent=1))
+            print(json.dumps({'status': 'paused by the usage limit', 'day': day, 'resume_with': f'--resume {out}'}))
+    if paused:
+        return
+    try:  # the run is over (or failed for a reason that is not the usage limit): score it and clean up
+        req = urllib.request.Request(f'http://127.0.0.1:{port}/verifier/finalize', method='POST')
+        with urllib.request.urlopen(req, timeout=30) as r: art = json.load(r)
+        (out / 'trajectory.json').write_text(json.dumps(art['state'])); score = art['score']
+    except Exception as e:
+        score = {'reward': 0., 'completed': False}; error = error or f'finalize failed: {e}'
+    finally:
         server.terminate()
         try: server.wait(timeout=10)
         except subprocess.TimeoutExpired: server.kill()
         log.close(); shutil.rmtree(statedir, ignore_errors=True); shutil.rmtree(cfg, ignore_errors=True)
+        if saved and (out / 'resume.json').exists():
+            (out / 'resume.json').rename(out / 'resume.done.json')
     cadence_events = [json.loads(l) for l in (out / 'cadence.jsonl').read_text().splitlines()] if (out / 'cadence.jsonl').exists() else []
     cadence_cost = sum(e.get('cost') or 0 for e in cadence_events)
     sl = json.loads((out / 'trajectory.json').read_text()).get('sales_log', []) if (out / 'trajectory.json').exists() else []
@@ -342,6 +410,8 @@ def main():
            'skills_invoked': sum(l.count('"name":"Skill"') for l in stream.read_text().splitlines()) if stream.exists() else 0,
            'workspace_files': sorted(str(p.relative_to(ws)) for p in ws.rglob('*') if p.is_file())[:50]}
     rec['budget_usd'] = a.budget; rec['steps_mode'] = a.steps
+    if saved:  # paused by the usage limit and resumed: where it stopped, and each session's own cost
+        rec['cutoffs'] = saved.get('cutoffs', []); rec['resumes'] = len(rec['cutoffs'])
     verdicts = [e for e in cadence_events if e.get('event') == 'change_verdict']
     if verdicts or any(e.get('event') in ('prediction_registered', 'prediction_problem') for e in cadence_events):
         rec['change_verdicts'] = {'judged': len(verdicts),

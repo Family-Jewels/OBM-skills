@@ -99,11 +99,13 @@ def parse_proposed(text):
             out.append({"fact": parts[0][:200], "source": src[:200]})
     return out
 
-def markdown(reg, prow, proposed, cap_unit):
-    md = (f"\n## Facts measured by the system (from the harness's log of every action; cost in {cap_unit})\n\n"
-          "Read these instead of asking: they are measured, not assumed.\n\n")
+def markdown(reg, prow, proposed, cap_unit, as_of=None):
+    md = (f"\n## Facts measured by the system (from the harness's log of every action; cost in {cap_unit}"
+          + (f"; as of {as_of}, so the step log may already hold later calls" if as_of else "") + ")\n\n"
+          "Read these instead of asking: they are measured, not assumed. The last column is each action's share of the time that "
+          "was spent, not of the time available; how much of the working day is in use is under Resources.\n\n")
     if reg:
-        md += "| action | calls | median cost | share of capacity, last point |\n| --- | --- | --- | --- |\n"
+        md += "| action | calls | median cost | share of the time spent, last point |\n| --- | --- | --- | --- |\n"
         for r in reg[:15]:
             md += f"| {r['tool']} | {r['calls']} | {round(r['median'], 2)} | {r['recent_share']:.0%} |\n"
     else:

@@ -1,6 +1,8 @@
 # OBM skills vs Claude Code's native /plan and /goal, on Prosus Vending Bench
 
-Every arm gets the benchmark's briefing, its 22 business tools and the same extra tools: a private workspace folder (Read, Write, Edit, Glob, Grep), sub-agents (Agent) and skills (Skill). Same model (Haiku 5.5) and seed. **There is no dollar cap unless `--budget` is given**; the account's usage limits still apply, and a cutoff is tagged as an environment failure, never as an agent stop. Per-job caps stay: the designer's set-up ($2), native's planning session ($3) and each review the engine runs (its budgets).
+Every arm gets the benchmark's briefing, its 22 business tools and the same extra tools: a private workspace folder (Read, Write, Edit, Glob, Grep), sub-agents (Agent) and skills (Skill). Same model (Haiku 5.5) and seed. **No session has a dollar cap unless `--budget` is given**: not the operator, the designer's set-up, native's planning session, or (engine v4) any review, which has no turn cap either. The system governs its own cost: it measures every review's cost and the auditor and Organizer judge it. The account's usage limits still apply, and a cutoff is tagged as an environment failure, never as an agent stop. What remains are guards, not caps: the harness clock (for a hung run), the engine's review timeout (it stops waiting for a review that never returns) and the stop gate's 40-attempt honest exit.
+
+**Nested agents get a whitelisted environment** (`clean_env`): the network proxy, CA files and model access, and nothing else. A run launched from inside a hosted session would otherwise inherit that session's ids, messaging channel and extra directories, and could see files outside its workspace.
 
 | Arm | Adds |
 | --- | --- |
@@ -18,7 +20,7 @@ Every arm gets the benchmark's briefing, its 22 business tools and the same extr
 
 | Flag | Default | What it does |
 | --- | --- | --- |
-| `--budget USD` | none | A dollar cap on the operator's sessions. Without it, only the usage limits and the per-job caps bound spend |
+| `--budget USD` | none | A dollar cap on the run's sessions. Without it, only the usage limits bound spend |
 | `--timeout S` | 21600 | The harness's wall clock, for a hung run. A year at v3's pace takes about 7,000 s |
 | `--steps observe\|cue\|off` | `cue` for `obm_v5`, else `observe` | Every arm's tool calls are recorded to `<out>/steps.jsonl` by [`../longrun/steps_hook.py`](../longrun/steps_hook.py), and `result.json` gets the behaviour summary. `cue` also hands the agent the step cues, so it is an intervention |
 

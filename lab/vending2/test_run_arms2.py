@@ -85,9 +85,9 @@ assert [p.returncode for p in cs[0]['steps_out']] == [0, 0] and [json.loads(p.st
 assert res['budget_usd'] is None and res['steps_mode'] == 'observe' and res['steps']['steps'] == 2 and res['steps']['unchanged_rereads'] == 1
 assert cs[0]['timeout'] == 21600
 
-# native: the planning session keeps its $3 job cap; /goal runs with none
+# native: no cap on the planning session or on /goal
 cs, res = launch('native')
-assert len(cs) == 2 and flags(cs[0])[flags(cs[0]).index('--max-budget-usd') + 1] == '3.00' and 'plan' in flags(cs[0])
+assert len(cs) == 2 and '--max-budget-usd' not in flags(cs[0]) and 'plan' in flags(cs[0])
 assert '--max-budget-usd' not in flags(cs[1]) and '--resume' in flags(cs[1])
 
 # native_cadence: the system's reviews with plain prompts, no stop gate
@@ -100,16 +100,17 @@ assert [h['matcher'] for h in st['PostToolUse']] == ['mcp__vending__wait_for_nex
 cs, res = launch('obm_enf')
 assert set(cs[0]['skills']) == ROLES | {ORCH} and LONG not in cs[0]['skills'] and 'Stop' in cs[0]['settings']['hooks']
 
-# obm_v4: design ($2 job cap), then the operator with no cap; engine v4 with the fact register; steps observed
+# obm_v4: design, then the operator, neither capped; engine v4 with the fact register and no review caps; steps observed
 cs, res = launch('obm_v4')
 d, run = cs
-assert flags(d)[flags(d).index('--max-budget-usd') + 1] == '2' and '--settings' not in flags(d)
+assert '--max-budget-usd' not in flags(d) and '--settings' not in flags(d)
 assert '--max-budget-usd' not in flags(run) and 'obm-swarm-orchestrator' in flags(run)[1]
 h = run['settings']['hooks']
 assert 'Stop' in h and [x['matcher'] for x in h['PostToolUse']] == ['mcp__vending__wait_for_next_day', 'mcp__vending__.*', '.*']
 assert h['PreToolUse'][0]['matcher'] == 'mcp__vending__wait_for_next_day'
 assert run['cadence']['version'] == 4 and run['cadence']['action_log'].endswith('actions.jsonl')
-assert {m['name'] for m in run['cadence']['charts']['measures']} >= {'slots_selling', 'revenue', 'cash_gain_7'}
+assert run['cadence']['job_caps'] is False and run['cadence']['budgets'] == {}
+assert {m['name'] for m in run['cadence']['charts']['measures']} >= {'slots_selling', 'revenue', 'cash_gain_7', 'cash', 'unit_cost_paid_30d'}
 assert set(run['skills']) == ROLES | {ORCH} and [json.loads(p.stdout) for p in run['steps_out']] == [{}, {}]
 for x in h['PostToolUse'] + h['PreToolUse'] + h['Stop']:     # every hook command points at a file that exists
     script = next(t for t in x['hooks'][0]['command'].split() if t.endswith('.py'))
@@ -126,7 +127,50 @@ assert outs[0] == {} and 'has not changed' in outs[1]['hookSpecificOutput']['add
 
 # a dollar cap only when asked for: what the designer spent comes off it
 cs, res = launch('obm_v4', '--budget', '40')
+assert flags(cs[0])[flags(cs[0]).index('--max-budget-usd') + 1] == '40.00'
 assert flags(cs[1])[flags(cs[1]).index('--max-budget-usd') + 1] == '39.75' and res['budget_usd'] == 40.0
+
+# a usage-limit cutoff pauses the run (nothing scored, state kept); --resume continues the operator's own session
+limit_once = {'hit': False}
+def claude_with_limit(args, cfg, cwd, out_stream, timeout):
+    p, r = fake_claude(args, cfg, cwd, out_stream, timeout)
+    st = calls[-1].get('settings', {}).get('hooks', {}).get('Stop')
+    if st and '--resume' not in args and not limit_once['hit']:  # the operator's first session: the simulator has reached day 120
+        state = Path(next(t for t in st[0]['hooks'][0]['command'].split() if t.endswith('state.json')))
+        state.write_text(json.dumps({'day': 120}))
+        limit_once['hit'] = True
+        return p, {**r, 'session_id': 'S-op', 'result': "You've hit your 5-hour limit · resets 7:20pm"}
+    return p, r
+R.claude = claude_with_limit
+calls.clear()
+sys.argv = ['run_arms2.py', '--arm', 'obm_v5', '--seed', '6', '--days', '91', '--output', str(tmp / 'runs-pause')]
+with contextlib.redirect_stdout(io.StringIO()):
+    R.main()
+out = tmp / 'runs-pause' / 'obm_v5-seed6-91d'
+rs = json.loads((out / 'resume.json').read_text())
+assert not (out / 'result.json').exists() and rs['phase'] == 'run' and rs['session_id'] == 'S-op' and rs['cutoffs'][0]['day'] == 120
+assert Path(rs['statedir'], 'state.json').exists() and Path(rs['cfg']).exists() and rs['args']['arm'] == 'obm_v5'
+calls.clear()
+sys.argv = ['run_arms2.py', '--resume', str(out)]
+with contextlib.redirect_stdout(io.StringIO()):
+    R.main()
+assert len(calls) == 1 and flags(calls[0])[flags(calls[0]).index('--resume') + 1] == 'S-op', flags(calls[0])[:6]
+assert 'resumed exactly where it stopped (simulated day 120)' in flags(calls[0])[1]
+assert '--settings' in flags(calls[0]) and 'Stop' in calls[0]['settings']['hooks']   # the same hooks as before the pause
+res = json.loads((out / 'result.json').read_text())
+assert res['resumes'] == 1 and res['cutoffs'][0]['day'] == 120 and res['error'] is None and res['arm'] == 'obm_v5'
+assert (out / 'resume.done.json').exists() and not (out / 'resume.json').exists() and not Path(rs['statedir']).exists()
+R.claude = fake_claude
+
+# the nested agents' environment is a whitelist: the network and model access pass, nothing that names a hosting session
+import os
+saved = dict(os.environ)
+os.environ.update({'HTTPS_PROXY': 'http://127.0.0.1:1', 'ANTHROPIC_BASE_URL': 'https://api.example', 'CLAUDE_CODE_SESSION_ID': 'x',
+                   'CLAUDE_CODE_MESSAGING_TOKEN': 'x', 'CLAUDE_ADDITIONAL_DIRECTORIES': '/home/user/OBM-skills', 'VENDING_SEED': '9'})
+e = R.clean_env()
+assert e['HTTPS_PROXY'] and e['ANTHROPIC_BASE_URL'] and not {'CLAUDE_CODE_SESSION_ID', 'CLAUDE_CODE_MESSAGING_TOKEN',
+                                                              'CLAUDE_ADDITIONAL_DIRECTORIES', 'VENDING_SEED'} & set(e)
+os.environ.clear(); os.environ.update(saved)
 
 # the preflight refuses to start when the lab copy lacks what the arm needs, before anything is created
 broken = tmp / 'lab-without-longrun'; shutil.copytree(HERE.parent, broken, ignore=shutil.ignore_patterns('longrun', '__pycache__'))

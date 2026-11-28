@@ -4,7 +4,7 @@ Written before any run, as the five-seed test was. Results go in this folder's R
 
 ## The arms
 
-Both arms use Haiku 5.5 with the stop gate. There is no dollar cap, but the account's usage limits apply. The harness clock is 6 hours.
+Both arms use Haiku 5.5 with the stop gate. No session or review has a dollar or turn cap: the system governs its own cost, and the account's usage limits apply. The harness clock (6 hours) and the engine's review timeout remain, as guards against a hung process.
 
 | Arm | Engine | The operator's skill | Step record |
 | --- | --- | --- | --- |
