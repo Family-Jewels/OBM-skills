@@ -27,7 +27,18 @@ The two arms differ only in the operator's skill and the step cues. So v5 agains
 
 ## Cutoffs
 
-A run cut off by a usage limit is an environment failure. It is not scored: it is rerun on the same seed in the next window (resume is not built yet). If more than 3 of the 10 seed runs are cut off, the batch pauses so we can decide between building resume, using a shorter horizon or billing through the API.
+A usage limit **pauses** a run; it does not end it. The runner keeps the simulator's state, the operator's session and every record, and scores nothing. `--resume` restarts the simulator from its saved state and continues the operator's own session, with its context, from the day it stopped. So a cutoff costs time, not the run, and `result.json` records each pause (`cutoffs`, `resumes`). Any other environment failure (the harness clock, a crash, a container that went away) is logged in `environment-failures.json` and the run starts again from the beginning. If cutoffs keep hitting the same runs, the batch stops so we can decide what to change.
+
+## How the batch runs
+
+`lab/vending2/seed_batch.py tick` does one step each time it is called:
+
+1. It files whatever finished. The copy keeps the result, the cadence log, the step and action logs (compressed), the gate log and the workspace; the transcript stays behind.
+2. It logs any lost run as an environment failure, to be run again.
+3. It resumes a paused run once the reset time the CLI named has passed. Until then the batch waits: the limit is the account's, so any other run would be cut off at once.
+4. Otherwise it starts the next pending run, detached.
+
+The session that runs the batch watches each run with a background wait, ticks again when the run ends, and commits and pushes each finished run at once, because the container is ephemeral. A scheduled task fires into the same session as a heartbeat. If the container was reset, it lays out the run machine again (`lab/vending2/setup_run_machine.sh`) and ticks; a run lost with its container is run again.
 
 ## Decision rules
 
