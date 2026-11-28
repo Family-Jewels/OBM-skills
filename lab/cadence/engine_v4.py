@@ -23,6 +23,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import charts, progress, facts, profile
 from ledger import Ledger, parse_requests
 from engine_v2 import load_spec, preflight
+try:  # change verification by the system (lab/longrun/verify.py); the engine runs without it
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "longrun"))
+    import verify
+    if not all(hasattr(verify, f) for f in ("register", "update", "markdown", "parse")):
+        verify = None  # some other module by that name
+except Exception:
+    verify = None
 
 ROLE_OF = {"pulse": "risk monitor", "check": "checker", "diagnosis": "diagnostician", "controls": "controls owner",
            "strategist": "Strategist", "aims": "designer (aim update)", "method": "designer (method change)",
@@ -147,6 +154,11 @@ def main(cfg, cfg_path=None):
         mem["imp_prev"] = imp_kinds
 
     L = Ledger(mem)
+    charted = [m["name"] for m in cfg.get("charts", {}).get("measures", [])]
+    series_of = lambda name: mem.get("charts", {}).get("series", {}).get(name, [])
+    def sys_request(key, text):
+        for req, how in L.file("system", [{"to": "designer", "key": key, "text": text[:400]}], point, period):
+            ev("request_" + how, id=req["id"], to=req["to"], key=req["key"], asked=req["asked"])
     budgets = cfg.get("budgets", {}); model = cfg.get("model", "claude-haiku-5-5")
     jobs = log_p.with_suffix(".jobs"); jobs.mkdir(exist_ok=True)
     where = f"{unit} {period} of {horizon}"
@@ -180,6 +192,9 @@ def main(cfg, cfg_path=None):
         """Tests and replay: write the record a role would write, from cfg['dry'] templates (no model call)."""
         d = cfg.get("dry", {})
         rec = d.get(kind, "")
+        if isinstance(rec, list):  # one record per job of this kind, in order (the last repeats)
+            i = mem.setdefault("dry_i", {}).get(kind, 0); mem["dry_i"][kind] = i + 1
+            rec = rec[min(i, len(rec) - 1)]
         if kind == "aims":
             (sw / "aims.md").write_text(d.get("aims_md", f"# Aims ({jid})\n\n## Capacity split\n- 100% all: x\n"))
         if kind == "controls":
@@ -252,8 +267,10 @@ def main(cfg, cfg_path=None):
         return (f"Use the obm-swarm-designer skill in METHOD CHANGE mode ({mid}), invoked by the system {common} These requests are "
                 f"yours, all at once:\n{reqs}\nMake the smallest change to how the work is done (swarm/spec.md, swarm/rules/) that answers "
                 f"them; a new measure the system cannot take goes in your Requests to the human. Do not touch swarm/controls.md (the risk "
-                f"branch's) or lower the goal. State a prediction: which measure shifts, which way, by which {unit}. Copy changed files "
-                f"to swarm/history/ first. Write swarm/audits/{mid}.md. {disp_howto} {REQ_HOWTO}")
+                f"branch's) or lower the goal. End the record with one line exactly 'Prediction: <measure> <up|down> within <N> points', "
+                f"naming one measure the system charts ({', '.join(charted) or 'see swarm/charts.md'}): the system judges it from the "
+                f"charts by the protocol's signal rule, counted from the {unit} your change is adopted, and hands a miss back to you. "
+                f"Copy changed files to swarm/history/ first. Write swarm/audits/{mid}.md. {disp_howto} {REQ_HOWTO}")
 
     def audit_prompt(aid, q, n):
         return (f"Use the obm-swarm-auditor skill for a FULL AUDIT, invoked by the system at {q} of {n} of the horizon, {common} You are "
@@ -294,8 +311,17 @@ def main(cfg, cfg_path=None):
         for fct in facts.parse_proposed(rec):
             mem.setdefault("proposed_facts", []).append({**fct, "from": j["id"]})
         if j.get("reqs"):
-            for rid, st in L.answer(j["id"], rec, point):
+            answered = L.answer(j["id"], rec, point)
+            for rid, st in answered:
                 ev("request_" + st, id=rid, by=j["id"])
+            if verify is not None and j["kind"] == "method":  # a restated prediction for an earlier change
+                for r in L.reqs:
+                    if r["id"] in {a for a, s in answered if s == "done"} and r["key"].startswith("prediction-"):
+                        old = next((p for p in mem.get("predictions", []) if p.get("problem") and p["id"].lower() == r["key"][11:]), None)
+                        pr, prob = verify.parse(rec, charted)
+                        if old and pr:
+                            old.pop("problem"); old.update(pr); old["detectable"] = verify.detectable(series_of(pr["measure"]), old["adopted"])
+                            ev("prediction_restated", id=old["id"], by=j["id"])
         k = j["kind"]
         if k == "pulse" or k == "audit" or k == "check":
             fault = re.search(r"^\s*Fault\s*:\s*yes\b(.*)$", rec, re.M | re.I)
@@ -337,6 +363,11 @@ def main(cfg, cfg_path=None):
                 mem.setdefault("changes", []).append({"branch": "improvement", "id": j["id"], "period": period})
                 ev("adopted", id=j["id"], branch="improvement")
                 handoff.append(f"the designer changed how the work is done ({j['id']}, swarm/audits/{j['id']}.md). Re-read swarm/spec.md and swarm/rules/.")
+                if verify is not None:
+                    prob = verify.register(mem, j["id"], rec, charted, period, series_of)
+                    ev("prediction_problem" if prob else "prediction_registered", id=j["id"], problem=prob)
+                    if prob:
+                        sys_request(f"prediction-{j['id'].lower()}", f"{j['id']} was adopted, but the system cannot judge it: {prob}")
         elif k == "organizer":
             m = re.search(r"^\s*Config change\s*:\s*([\w_]+)\s*=\s*(\S+)", rec, re.M | re.I)
             if m:
@@ -376,10 +407,22 @@ def main(cfg, cfg_path=None):
         for kind, txt in escal:
             ev("escalation", kind=kind, text=txt[:300])
 
-    # Charts: progress, facts, pursuit, requests, configuration and health.
+    # Verdicts on adopted changes, judged by the system; a miss goes back to the designer as a request to answer.
+    verdict_md = ""
+    if verify is not None:
+        for p in verify.update(mem, period, W, series_of):
+            ev("change_verdict", id=p["id"], verdict=p["verdict"], chance=p.get("chance"), measure=p["measure"])
+            if p["verdict"].startswith(("no shift", "shift the wrong way")):
+                sys_request(f"verdict-{p['id'].lower()}",
+                            f"{p['id']} predicted {p['measure']} {p['dir']} within {p['n']} {p['unit']}s from {unit} {p['adopted']}; "
+                            f"the system's verdict over {unit}s {p['window'][0]}-{p['window'][1]}: {p['verdict']} (the same test fires "
+                            + (f"{p['chance']:.0%}" if p.get("chance") is not None else "an unknown share")
+                            + " of the time where nothing changed). Keep it, revise it or revert it, and say why.")
+        verdict_md = verify.markdown(mem, unit)
+    # Charts: progress, facts, pursuit, requests, change verdicts, configuration and health.
     health = health_md(mem, L, point, prow, C, unit)
     prop = mem.get("proposed_facts", [])
-    (sw / "charts.md").write_text(cmd_md + prog_md + facts.markdown(reg, prow, prop, cap) + L.table(point) + health)
+    (sw / "charts.md").write_text(cmd_md + prog_md + facts.markdown(reg, prow, prop, cap) + L.table(point) + verdict_md + health)
     ev("measure", chart_signals=chart_bad, progress=[e["kind"] for e in events if e["kind"] != "new_point"])
 
     if over:
@@ -470,4 +513,11 @@ def health_md(mem, L, point, prow, C, unit):
           f"- Review cost so far: ${sum(cost.values()):.2f} (" + ", ".join(f"{k} ${v:.2f}" for k, v in cost.items()) + ").",
           "- Configuration (setting = value, bounds): " + "; ".join(f"{k} = {v} {mem['bounds'][k]}" for k, v in C.items()) + ".",
           f"- Changes adopted: " + (", ".join(f"{c['id']} ({c['branch']}, {unit} {c['period']})" for c in mem.get("changes", [])[-8:]) or "none") + "."]
+    preds = mem.get("predictions", [])
+    if preds:
+        judged = [p for p in preds if p.get("verdict")]
+        hits = sum(1 for p in judged if p["verdict"].startswith("shift as predicted"))
+        exp = sum(p.get("chance") or 0 for p in judged)
+        md.append(f"- Change verdicts: {len(judged)} judged, {hits} shifted as predicted against {exp:.1f} expected by chance; "
+                  f"{sum(1 for p in preds if p.get('problem'))} could not be judged as written.")
     return "\n".join(md) + "\n"

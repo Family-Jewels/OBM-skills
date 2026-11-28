@@ -41,21 +41,23 @@ swarm/
   escalations.md    written by the system: what needs the human (old or repeated requests, configuration changes)
   board.jsonl       one task per line (4.1)
   rules/            versioned briefs; only the designer changes them
-  log/              progress.md (events only), reviews/, runs.jsonl (measured spend), work.jsonl (what the system recorded of each worker's actions)
+  log/              progress.md (events only, one line each), reviews/, runs.jsonl (measured spend), work.jsonl and steps.jsonl (what the system recorded of each action and each tool call)
   queue/decisions.md  parked decisions
   audits/           risk pulses (P-NNN), claim samples (K-NNN), diagnoses (D-NNN), control changes (C-NNN), strategies (S-NNN), aim updates (AS-NNN), method changes (M-NNN), full audits (A-NNN), organization reviews (O-NNN)
-  metrics_system.md, charts.md   measures, charts, celeration, resources and guardrails, written by the system only (section 8)
+  metrics_system.md, charts.md   measures, charts, celeration, resources, guardrails and change verdicts, written by the system only (section 8)
+  step_health.md    behaviour measures from the step record (re-reads, repeated failures, steps with no state change), written by the system
   history/          earlier versions of the spec and rules; the current version always stays at its usual path
 ```
 
 - **One writer per file.** Others propose changes through their own records.
 - **Ground truth beats reports.** Measures and evidence come from the system or from a check someone else ran, never from the agent being measured.
 - **Keep it lean.** Write what the next agent needs and cannot see in the artifact.
+- **One line per event, at one path.** `log/progress.md`, under 300 characters a line. Never restate a measure, count or action the system records. In year-long runs, logs that did grew two to three times longer by the last quarter, and self-counted figures drifted from the system's.
 - **Parallel workers** each get an isolated workspace, merged only after their task passes.
 
 ## 3. Cadence: the system calls the roles
 
-Roles never depend on each other to remember. In long runs, agents told to call the auditor stopped within days. The system (a harness, scheduler or hook, or else the human) invokes each role in a fresh context and hands its output on. Everything mechanical is done by the system, not by an agent: routing, merging repeated requests, triggers, and measuring what the work actually did.
+Roles never depend on each other to remember. In long runs, agents told to call the auditor stopped within days. The system (a harness, scheduler or hook, or else the human) invokes each role in a fresh context and hands its output on. Everything mechanical is done by the system, not by an agent: routing, merging repeated requests, triggers, measuring what the work actually did, recording every step, and judging whether an adopted change did what it predicted. In 22 recorded runs, no agent started a reviewer on its own.
 
 Intervals are counted in **points**, not fixed periods (section 8). The task's adapter states a **profile** (the shape of the work, how long a change takes to show, whether mistakes can be undone), and the system derives the settings below from it. Each setting has bounds, and the organizer may move one within them per review.
 
@@ -114,8 +116,11 @@ Fix: <one specific fix per unmet criterion>
 
 ```
 Trigger: <the requests answered>   Change: <spec, driver, tree, rule or control, version before -> after>
-Why: ...   Prediction: <measure> shifts <up/down> by <period>   Cost: ...   Revert if: ...
+Why: ...   Cost: ...   Revert if: ...
+Prediction: <measure> <up|down> within <N> points
 ```
+
+End a method change with that last line exactly, naming a measure the system charts. The system judges it (section 8), counting from the period the change is adopted. A prediction it cannot judge, with no line or a measure it does not chart, goes back to the designer as a request. A measure the charts lack goes to the human as a request for instrumentation, never to an agent to count.
 
 ### 4.6 Decision request (parked; work continues)
 
@@ -167,6 +172,7 @@ The system logs every action the worker takes, with the task's clock, and publis
 - If the criteria are unclear, use the most reasonable reading and say so in the submission note. Block only when no reasonable reading exists.
 - A clear block (impossible as specified, a missing resource, an action outside scope, the retry cap, or about 80% of budget spent with no path) is a valid outcome. Name the smallest step that would unblock it.
 - Never edit tests, criteria, measures, review records or other tasks. Never mark your own work passed.
+- Never count or log by hand what the system records (actions, measures, spend). Log events only.
 - Claim only what the artifact contains. An overclaim is a misreport. Admit a constraint break: the output is quarantined and nothing else happens.
 
 ## 6. Status and consequences
@@ -208,7 +214,8 @@ Every measure here is computed by the system from ground truth, never reported b
 - **Resources.** The share of each declared resource in use, and the idle amount. One resource is always the worker's own capacity (time, actions or budget per period): when it is near its limit, more output per unit of it is the opportunity, and idle resources elsewhere are symptoms. Otherwise an idle resource while a driver is short is an opportunity.
 - **Guardrails.** Measures with a side that must not be crossed. Aims stay inside them. A breach is put right first.
 - **Gap to the exemplar (PIP):** the ceiling divided by the swarm's performance.
+- **Change verdicts.** For each adopted change, the system tests its prediction with the chart rule above. It uses limits from before the change, over the predicted window counted from adoption. It also states the chance rate: how often the same test fires on that measure where nothing changed. A verdict near the chance rate is weak evidence. A miss is filed as a request to the designer to keep, revise or revert the change, with a reason. In the runs to date, prose predictions came true about as often as chance alone would give (15 of 38 against 11.9).
 
 ## 9. Single-agent mode
 
-Play each role in turn, each in a fresh context where possible, writing every record before switching. Never check work in the context that produced it.
+Play each role in turn, each in a fresh context where possible, writing every record before switching. Never check work in the context that produced it. For one agent on a long task, use the `obm-long-run` skill.

@@ -50,12 +50,13 @@ The skills stay complete without enforcement: on a platform with no hooks, every
 
 | Folder | Contents |
 | --- | --- |
-| [`skills/`](skills) | Five skills (designer, orchestrator, checker, auditor, diagnostician), each with a copy of the shared protocol |
+| [`skills/`](skills) | The role skills (designer, strategist, orchestrator, checker, auditor, diagnostician, controls owner, organizer), the single-agent `obm-long-run` skill, each with a copy of the shared protocol, and the protocol as its own skill |
 | [`framework/`](framework) | The [Behavior Engineering Model for AI Swarms](framework/behavior-engineering-model-for-ai-swarms.md) (the OBM rationale) and the [implementation layers](framework/implementation-layers.md) |
 | [`lab/`](lab) | The test harness: isolated headless agents with measured cost, the stop-gate and protected-paths hooks, fixtures and keys |
+| [`lab/longrun/`](lab/longrun) | The long-run kit: a step record of every tool call with behaviour cues, change verdicts judged by the system, and a build gate for skills a run makes for itself |
 | [`skill-tests/`](skill-tests) | One scenario per skill with planted problems and an answer key |
 | [`benchmark/`](benchmark) | An evaluation harness on [ImpossibleBench](https://arxiv.org/abs/2510.20270) |
-| [`results/`](results) | Every run to date |
+| [`results/`](results) | Every run to date, and [every run scored on the self-improvement chain](results/2026-11-27-behavior-analysis) |
 
 ## The five roles
 
@@ -67,6 +68,8 @@ The skills stay complete without enforcement: on a platform with no hooks, every
 | `obm-swarm-auditor` | The director: a pulse review of the system's charts every point, full audits at each quarter of the horizon (progress, experiments, direction, report-reality samples, probes, cost, the manager's decisions); about one keep-doing item to four fixes |
 | `obm-swarm-diagnostician` | Finds what is going wrong and why (pinpoint, what maintains it, cause in the environment). Writes no fix: the designer does |
 | `obm-swarm-strategist` | Decides what the system drives toward: the constraint now (the worker's capacity first), a stretch aim for each priority driver, how the capacity is split, and whether the last aims were met. The designer turns each redirect into `swarm/aims.md` at once |
+
+For **one agent on a long task**, `obm-long-run` takes the place of the role skills. It says what the system does so the agent doesn't, how to choose the next action, how to build a skill for itself through the build gate, and how to stop honestly.
 
 There is no producer skill. Workers follow the short rules for whoever does the work in the protocol, and the evidence about their work comes from the system's record and the checker's own checks, never from the worker's report about itself.
 
@@ -86,6 +89,7 @@ All state lives in files, and every record has a fixed format ([`skills/protocol
 | Stress-test calibration: SQLite's own conformance suite (sqllogictest) | One 8-minute shift scored 99.97% on 29,000 held-out queries for $0.34 |
 | [Prosus Vending Bench](https://github.com/ProsusAI/vending-bench), 30 days, four arms × 3 seeds (Haiku 5.5) | All runs completed. Means €2,086 to €2,225 from €1,500, with ±€400 noise: no separation. The 365-day run is next |
 | Prosus Vending Bench, 365 days, four arms × seed 1 | Baseline €8,510; protocols **€0** (the agent ended its turn on day 179 and the run scored zero); enforcement €17,578; both €10,855. The first long-horizon failure seen: a premature stop, in an arm without the stop gate. One seed; more running |
+| [Every run, scored on the self-improvement chain](results/2026-11-27-behavior-analysis) | Stocked slots predict every full-year score (r = 0.95, 17 runs). Gaps are found reliably. But changes come true about as often as chance (15 of 38 against 11.9), and whatever relies on the agent remembering decays: 0 reviewers started by agents in 22 runs, and logs stopped or went silent in 7 of 11. What the harness runs survives. Fifteen long runs were lost to the environment, one to the agent |
 
 Current models are already honest and capable on tasks that fit in one sitting, and on large tasks they already know well with an oracle to check against. The design claims to help where they break down: long runs, context resets, compounding errors, real budgets. That is what the next experiment has to create.
 
@@ -111,6 +115,14 @@ python analyze.py logs/tiny --out tiny
 ```
 
 ## Changelog: what the field tests changed
+
+**The long-run kit, 2026-11-27** (after [scoring every run](results/2026-11-27-behavior-analysis) on the twelve behaviours a self-improving long run needs). The scoring found that what the harness runs survives a year, and what relies on the agent remembering decays within weeks. So four jobs move from the agent to the system:
+
+- **The movement cycle is recorded by the system.** A hook writes one line per tool call ([`lab/longrun/steps.py`](lab/longrun)) and hands the agent a cue when a pattern starts. The patterns are an unchanged re-read, the same failure again, many steps with no state change, a write outside the workspace, and the log growing. The runner records steps for every arm by default and keeps them with the results.
+- **The system judges every change.** A method change ends with `Prediction: <measure> <up|down> within <N> points` on a charted measure. Engine v4 tests it with the signal rule, from adoption, with a chance rate, and files a miss back to the designer as a request to answer (protocol 4.5 and section 8).
+- **Skills a run builds for itself go through a gate**: gap evidence, build or skip, held-out tests with and without the skill, and an independent review answered ([`skill_gate.py`](lab/longrun/skill_gate.py)).
+- **New skill `obm-long-run`** for one agent on a long task: rank the next action by fixed rules (repair, constraint, freshness, diversity, authority, cost), write one line per event, never count what the system counts, and use four honest ways to stop.
+- **Protocol:** one line per event at one path; never log or count what the system records; the machine-readable prediction line; change verdicts in the charts.
 
 **v3: the Strategist, 2026-11-19** (after v2 seed 1: €11,852 against v1's €15,006 on the same seed). v2 is kept on the branch `skills-v2`.
 

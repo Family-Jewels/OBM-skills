@@ -110,6 +110,26 @@ assert any(e["event"] == "escalation" and e["kind"] == "config change" for e in 
 ev, st, mem, sw = run(100, dry={"organizer": "Config change: strategy_every = 9\nreason"})
 assert mem["config"]["strategy_every"] == 3 and any(e["event"] == "config_refused" for e in ev)
 
+# 8. The system judges each adopted method change from the charts; a miss, or a prediction it cannot judge, goes back to
+#    the designer as a request that must be answered. (Synthetic revenue repeats a weekly pattern, so nothing shifts.)
+ask_d = "Pulse {id}.\nFault: no\n\n## Requests\n- to: designer | key: restock-step | change how restocking is done\n"
+ev, st, mem, sw = run(120, dry={"pulse": ask_d, "method": "M {id}: batch the restock.\n\nPrediction: revenue up within 2 points\n"})
+reg = [e for e in ev if e["event"] == "prediction_registered"]
+ver = [e for e in ev if e["event"] == "change_verdict"]
+assert reg and ver and ver[0]["verdict"] == "no shift" and ver[0]["period"] >= reg[0]["period"] + 14, (reg, ver)
+assert any(r["key"].startswith("verdict-m-") and r["from"] == "system" for r in mem["ledger"]["reqs"]), mem["ledger"]["reqs"]
+ch = (sw / "charts.md").read_text()
+assert "Change verdicts" in ch and "no shift" in ch and "shifted as predicted against" in ch
+# A prediction the system cannot judge (no line, or a measure it does not chart) is returned; a restated one is judged.
+ev, st, mem, sw = run(120, dry={"pulse": ask_d, "method": ["M {id}: batch the restock. We expect fewer empty slots.\n",
+                                                           "M {id}: restated.\n\nPrediction: revenue up within 2 points\n"]})
+assert any(e["event"] == "prediction_problem" for e in ev)
+assert any(r["key"] == "prediction-m-001" for r in mem["ledger"]["reqs"])
+assert any(e["event"] == "prediction_restated" and e["id"] == "M-001" for e in ev), [e for e in ev if "predict" in e["event"]]
+assert any(e["event"] == "change_verdict" and e["id"] == "M-001" for e in ev)
+ev, st, mem, sw = run(60, dry={"pulse": ask_d, "method": "M {id}\n\nPrediction: empty_slots down within 2 points\n"})
+assert any(e["event"] == "prediction_problem" and "does not chart" in (e.get("problem") or "") for e in ev)
+
 # Unit checks.
 assert ledger.parse_requests("x\n## Requests\n- to: Controls | key: A B | do it\n- nonsense\n") == [{"to": "controls", "key": "a-b", "text": "do it"}]
 assert ledger.parse_dispositions("## Dispositions\n- REQ-002: declined | fixed by sim\n")["REQ-002"] == ("declined", "fixed by sim")

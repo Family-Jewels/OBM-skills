@@ -6,7 +6,11 @@ Every arm: the benchmark's briefing as system prompt, its 22 MCP business tools,
   native   : a read-only planning session (--permission-mode plan), then the same session resumed with /goal.
   obm      : the six OBM swarm skills installed; told to run the business as a one-agent OBM swarm.
   obm_enf  : obm plus a Stop hook that reads the simulator's own state and refuses to stop before the last day.
-usage: python -I run_arms2.py --arm obm_enf --seed 1 --days 365 --budget 40 --timeout 7000 --output DIR
+usage: python -I run_arms2.py --arm obm_enf --seed 1 --days 365 --budget 40 --timeout 7000 --output DIR [--steps observe|cue|off]
+
+--steps (every arm): a hook records every tool call to <out>/steps.jsonl (../longrun/steps_hook.py), so the movement cycle
+can be analysed after the run; result.json gets its behaviour summary. 'observe' (default) records only; 'cue' also hands
+the agent the system's step cues and writes swarm/step_health.md, so it is an intervention and an arm of its own.
 """
 import argparse, json, os, shutil, socket, subprocess, sys, tempfile, time, urllib.request, uuid
 from pathlib import Path
@@ -46,6 +50,7 @@ def main():
     ap.add_argument('--days', type=int, default=365); ap.add_argument('--budget', type=float, default=40)
     ap.add_argument('--timeout', type=int, default=7000); ap.add_argument('--output', type=Path, required=True)
     ap.add_argument('--model', default='claude-haiku-5-5'); ap.add_argument('--audit-every', type=int, default=50); ap.add_argument('--pulse-every', type=int, default=5)
+    ap.add_argument('--steps', choices=['off', 'observe', 'cue'], default='observe')
     a = ap.parse_args()
     out = a.output / f'{a.arm}-seed{a.seed}-{a.days}d'; out.mkdir(parents=True, exist_ok=False)
     ws = out / 'workspace'; ws.mkdir()
@@ -75,6 +80,14 @@ def main():
         mcp = json.dumps({'mcpServers': {'vending': {'type': 'http', 'url': f'http://127.0.0.1:{port}/mcp'}}})
         common = ['--model', a.model, '--output-format', 'stream-json', '--verbose', '--tools', TOOLS, '--strict-mcp-config',
                   '--mcp-config', mcp, '--allowedTools', 'mcp__vending', TOOLS, '--system-prompt', prompt]
+        steps_hook = None
+        if a.steps != 'off':  # the system's record of every tool call: the movement cycle, kept with the results
+            steps_cfg = statedir / 'steps.json'
+            steps_cfg.write_text(json.dumps({'steps_log': str(out / 'steps.jsonl'), 'workspace_roots': [str(ws)],
+                                             'own_logs': ['swarm/log/progress.md'], 'cues': a.steps == 'cue',
+                                             'health_md': str((ws / 'swarm' if a.steps == 'cue' else out) / 'step_health.md')}))
+            steps_hook = {'matcher': '.*', 'hooks': [{'type': 'command', 'timeout': 20,
+                          'command': f'python3 -I {HERE.parent / "longrun" / "steps_hook.py"} {steps_cfg}'}]}
         if a.arm in ('obm_enf', 'obm_cadence', 'native_cadence', 'obm_v2', 'obm_v3', 'obm_v4'):
             hook = {'hooks': {}} if a.arm == 'native_cadence' else {'hooks': {'Stop': [{'hooks': [{'type': 'command', 'timeout': 30,
                     'command': f'python3 -I {HERE / "vb_stop_gate2.py"} {statedir / "state.json"} {out / "gate.jsonl"} {a.days} 40'}]}]}}
@@ -106,7 +119,11 @@ def main():
                 if a.arm in ('obm_v2', 'obm_v3', 'obm_v4'):  # the worker's capacity, read from the simulator's clock just before each day ends
                     hook['hooks']['PreToolUse'] = [{'matcher': 'mcp__vending__wait_for_next_day', 'hooks': [{'type': 'command', 'timeout': 20,
                         'command': f'python3 -I /home/claude/obm-lab/cadence/adapters/vending_clock_hook.py {statedir / "state.json"} {statedir / "clock.jsonl"}'}]}]
+            if steps_hook:
+                hook['hooks'].setdefault('PostToolUse', []).append(steps_hook)
             common += ['--settings', json.dumps(hook)]
+        elif steps_hook:
+            common += ['--settings', json.dumps({'hooks': {'PostToolUse': [steps_hook]}})]
         left = a.budget
         if a.arm in ('obm_cadence', 'obm_v2', 'obm_v3', 'obm_v4'):
             design = ("Use the obm-swarm-designer skill to design the work system for operating this business for the whole simulation. "
@@ -257,6 +274,12 @@ def main():
            'subagents_started': sum(l.count('"name":"Agent"') for l in stream.read_text().splitlines()) if stream.exists() else 0,
            'skills_invoked': sum(l.count('"name":"Skill"') for l in stream.read_text().splitlines()) if stream.exists() else 0,
            'workspace_files': sorted(str(p.relative_to(ws)) for p in ws.rglob('*') if p.is_file())[:50]}
+    if (out / 'steps.jsonl').exists():  # behaviour measures from the system's step record
+        try:
+            sys.path.insert(0, str(HERE.parent / 'longrun')); import steps as _steps
+            rec['steps'] = _steps.summarize(_steps.load(out / 'steps.jsonl'), {'workspace_roots': [str(ws)], 'own_logs': ['swarm/log/progress.md']})
+        except Exception as e:
+            rec['steps'] = {'error': repr(e)}
     (out / 'result.json').write_text(json.dumps(rec, indent=1)); print(json.dumps(rec))
 
 if __name__ == '__main__':
