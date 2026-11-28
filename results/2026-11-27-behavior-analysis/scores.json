@@ -1,0 +1,3332 @@
+[
+ {
+  "run": "2026-11-14-vending-bench-30d/A-seed1-30d",
+  "arm": "A",
+  "seed": 1,
+  "horizon": 30,
+  "days": 30,
+  "completed": true,
+  "final_balance": 1929.44,
+  "cost": 0.19364168999999998,
+  "review_cost": null,
+  "tool_calls": 238,
+  "turns": 239,
+  "stocked_slots": null,
+  "stopped": null,
+  "error": null,
+  "has_metrics": false
+ },
+ {
+  "run": "2026-11-14-vending-bench-30d/A-seed2-30d",
+  "arm": "A",
+  "seed": 2,
+  "horizon": 30,
+  "days": 30,
+  "completed": true,
+  "final_balance": 2340.9,
+  "cost": 0.28104656999999994,
+  "review_cost": null,
+  "tool_calls": 259,
+  "turns": 260,
+  "stocked_slots": null,
+  "stopped": null,
+  "error": null,
+  "has_metrics": false
+ },
+ {
+  "run": "2026-11-14-vending-bench-30d/A-seed3-30d",
+  "arm": "A",
+  "seed": 3,
+  "horizon": 30,
+  "days": 30,
+  "completed": true,
+  "final_balance": 2012.01,
+  "cost": 0.310414,
+  "review_cost": null,
+  "tool_calls": 272,
+  "turns": 273,
+  "stocked_slots": null,
+  "stopped": null,
+  "error": null,
+  "has_metrics": false
+ },
+ {
+  "run": "2026-11-14-vending-bench-30d/B-seed1-30d",
+  "arm": "B",
+  "seed": 1,
+  "horizon": 30,
+  "days": 30,
+  "completed": true,
+  "final_balance": 1870.84,
+  "cost": 0.35823206,
+  "review_cost": null,
+  "tool_calls": 229,
+  "turns": 231,
+  "stocked_slots": null,
+  "stopped": null,
+  "error": null,
+  "has_metrics": false
+ },
+ {
+  "run": "2026-11-14-vending-bench-30d/B-seed2-30d",
+  "arm": "B",
+  "seed": 2,
+  "horizon": 30,
+  "days": 30,
+  "completed": true,
+  "final_balance": 2433.46,
+  "cost": 0.3860156299999999,
+  "review_cost": null,
+  "tool_calls": 264,
+  "turns": 265,
+  "stocked_slots": null,
+  "stopped": null,
+  "error": null,
+  "has_metrics": false
+ },
+ {
+  "run": "2026-11-14-vending-bench-30d/B-seed3-30d",
+  "arm": "B",
+  "seed": 3,
+  "horizon": 30,
+  "days": 30,
+  "completed": true,
+  "final_balance": 2370.45,
+  "cost": 0.36478333999999996,
+  "review_cost": null,
+  "tool_calls": 288,
+  "turns": 289,
+  "stocked_slots": null,
+  "stopped": null,
+  "error": null,
+  "has_metrics": false
+ },
+ {
+  "run": "2026-11-14-vending-bench-30d/C-seed1-30d",
+  "arm": "C",
+  "seed": 1,
+  "horizon": 30,
+  "days": 30,
+  "completed": true,
+  "final_balance": 2374.9,
+  "cost": 0.24726509000000008,
+  "review_cost": null,
+  "tool_calls": 265,
+  "turns": 266,
+  "stocked_slots": null,
+  "stopped": null,
+  "error": null,
+  "has_metrics": false
+ },
+ {
+  "run": "2026-11-14-vending-bench-30d/C-seed2-30d",
+  "arm": "C",
+  "seed": 2,
+  "horizon": 30,
+  "days": 30,
+  "completed": true,
+  "final_balance": 2139.73,
+  "cost": 0.22292392000000003,
+  "review_cost": null,
+  "tool_calls": 245,
+  "turns": 246,
+  "stocked_slots": null,
+  "stopped": null,
+  "error": null,
+  "has_metrics": false
+ },
+ {
+  "run": "2026-11-14-vending-bench-30d/C-seed3-30d",
+  "arm": "C",
+  "seed": 3,
+  "horizon": 30,
+  "days": 30,
+  "completed": true,
+  "final_balance": 1881.74,
+  "cost": 0.07923618000000002,
+  "review_cost": null,
+  "tool_calls": 186,
+  "turns": 187,
+  "stocked_slots": null,
+  "stopped": null,
+  "error": null,
+  "has_metrics": false
+ },
+ {
+  "run": "2026-11-14-vending-bench-30d/D-seed1-30d",
+  "arm": "D",
+  "seed": 1,
+  "horizon": 30,
+  "days": 30,
+  "completed": true,
+  "final_balance": 2763.4,
+  "cost": 0.74294288,
+  "review_cost": null,
+  "tool_calls": 341,
+  "turns": 342,
+  "stocked_slots": null,
+  "stopped": null,
+  "error": null,
+  "has_metrics": false
+ },
+ {
+  "run": "2026-11-14-vending-bench-30d/D-seed2-30d",
+  "arm": "D",
+  "seed": 2,
+  "horizon": 30,
+  "days": 30,
+  "completed": true,
+  "final_balance": 1809.57,
+  "cost": 0.10399477999999997,
+  "review_cost": null,
+  "tool_calls": 194,
+  "turns": 195,
+  "stocked_slots": null,
+  "stopped": null,
+  "error": null,
+  "has_metrics": false
+ },
+ {
+  "run": "2026-11-14-vending-bench-30d/D-seed3-30d",
+  "arm": "D",
+  "seed": 3,
+  "horizon": 30,
+  "days": 30,
+  "completed": true,
+  "final_balance": 1684.31,
+  "cost": 0.24946214999999997,
+  "review_cost": null,
+  "tool_calls": 249,
+  "turns": 250,
+  "stocked_slots": null,
+  "stopped": null,
+  "error": null,
+  "has_metrics": false
+ },
+ {
+  "run": "2026-11-14-vending-bench-365d/A-seed1-365d",
+  "arm": "A",
+  "seed": 1,
+  "horizon": 365,
+  "days": 365,
+  "completed": true,
+  "final_balance": 8510.03,
+  "cost": 12.181956255000006,
+  "review_cost": null,
+  "tool_calls": 1981,
+  "turns": 1984,
+  "stocked_slots": null,
+  "stopped": null,
+  "error": null,
+  "has_metrics": false
+ },
+ {
+  "run": "2026-11-14-vending-bench-365d/B-seed1-365d",
+  "arm": "B",
+  "seed": 1,
+  "horizon": 365,
+  "days": 179,
+  "completed": false,
+  "final_balance": 8437.6,
+  "cost": 11.791958765000008,
+  "review_cost": null,
+  "tool_calls": 1531,
+  "turns": 1534,
+  "stocked_slots": null,
+  "stopped": "Agent stopped before the horizon.",
+  "error": null,
+  "has_metrics": false
+ },
+ {
+  "run": "2026-11-14-vending-bench-365d/C-seed1-365d",
+  "arm": "C",
+  "seed": 1,
+  "horizon": 365,
+  "days": 365,
+  "completed": true,
+  "final_balance": 17578.21,
+  "cost": 14.096498839999995,
+  "review_cost": null,
+  "tool_calls": 2592,
+  "turns": 2595,
+  "stocked_slots": null,
+  "stopped": null,
+  "error": null,
+  "has_metrics": false
+ },
+ {
+  "run": "2026-11-14-vending-bench-365d/D-seed1-365d",
+  "arm": "D",
+  "seed": 1,
+  "horizon": 365,
+  "days": 365,
+  "completed": true,
+  "final_balance": 10854.58,
+  "cost": 10.139435349999989,
+  "review_cost": null,
+  "tool_calls": 2138,
+  "turns": 2141,
+  "stocked_slots": null,
+  "stopped": null,
+  "error": null,
+  "has_metrics": false
+ },
+ {
+  "run": "2026-11-15-skills-vs-native/base-seed1-365d",
+  "arm": "base",
+  "seed": 1,
+  "horizon": 365,
+  "days": 365,
+  "completed": true,
+  "final_balance": 8187.24,
+  "cost": 9.637,
+  "review_cost": 0,
+  "tool_calls": 1934,
+  "turns": 1936,
+  "stocked_slots": 6.66,
+  "stopped": null,
+  "error": null,
+  "has_metrics": false
+ },
+ {
+  "run": "2026-11-15-skills-vs-native/native-seed1-365d",
+  "arm": "native",
+  "seed": 1,
+  "horizon": 365,
+  "days": 365,
+  "completed": true,
+  "final_balance": 9442.6,
+  "cost": 11.452,
+  "review_cost": null,
+  "tool_calls": 2310,
+  "turns": 2320,
+  "stocked_slots": 7.54,
+  "stopped": null,
+  "error": null,
+  "has_metrics": false
+ },
+ {
+  "run": "2026-11-15-skills-vs-native/native_cadence-seed1-365d",
+  "arm": "native_cadence",
+  "seed": 1,
+  "horizon": 365,
+  "days": 365,
+  "completed": true,
+  "final_balance": 11890.1,
+  "cost": 19.472,
+  "review_cost": 1.025,
+  "tool_calls": 2357,
+  "turns": 2374,
+  "stocked_slots": 8.65,
+  "stopped": null,
+  "error": null,
+  "has_metrics": true,
+  "mean_slots_selling": 8.62,
+  "events": {
+   "measure": 362,
+   "started": 57,
+   "pulse": 50,
+   "diagnosis": 15,
+   "redesign": 14,
+   "diagnosis_deferred": 40,
+   "audit": 6
+  },
+  "latency_days": {
+   "pulse": {
+    "n": 50,
+    "median": 5.0,
+    "max": 10
+   },
+   "diagnosis": {
+    "n": 15,
+    "median": 11,
+    "max": 23
+   },
+   "redesign": {
+    "n": 14,
+    "median": 9.0,
+    "max": 13
+   },
+   "audit": {
+    "n": 6,
+    "median": 10.5,
+    "max": 18
+   }
+  },
+  "diagnosis": {
+   "run": 15,
+   "deferred_or_queued": 40,
+   "share_served": 0.27
+  },
+  "records": {
+   "total": 87,
+   "fault_yes": 0,
+   "fault_no": 0,
+   "diagnosis_needed_yes": 58,
+   "misreport_yes": 0,
+   "misreport_no": 0
+  },
+  "predictions": {
+   "records": 15,
+   "with_prediction": 0,
+   "primary_charted": 0,
+   "primary_uncharted": 0,
+   "judged": 0,
+   "hits": 0,
+   "wrong_way": 0,
+   "expected_by_chance": 0,
+   "detail": [
+    {
+     "id": "R-A-006",
+     "start": 326,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-001",
+     "start": 11,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-005",
+     "start": 35,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-009",
+     "start": 67,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-012",
+     "start": 98,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-016",
+     "start": 111,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-020",
+     "start": 143,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-024",
+     "start": 174,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-026",
+     "start": 193,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-029",
+     "start": 216,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-032",
+     "start": 240,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-036",
+     "start": 258,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-040",
+     "start": 294,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-041",
+     "start": 301,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-047",
+     "start": 346,
+     "has_prediction": false
+    }
+   ]
+  },
+  "progress_logs": []
+ },
+ {
+  "run": "2026-11-15-skills-vs-native/obm_cadence-seed1-365d",
+  "arm": "obm_cadence",
+  "seed": 1,
+  "horizon": 365,
+  "days": 365,
+  "completed": true,
+  "final_balance": 18847.26,
+  "cost": 20.553,
+  "review_cost": 1.536,
+  "tool_calls": 2666,
+  "turns": 2967,
+  "stocked_slots": 10.89,
+  "stopped": null,
+  "error": null,
+  "has_metrics": false,
+  "events": {
+   "measure": 352,
+   "started": 54,
+   "pulse": 46,
+   "diagnosis": 14,
+   "diagnosis_deferred": 24,
+   "redesign": 13,
+   "audit": 7
+  },
+  "latency_days": {
+   "pulse": {
+    "n": 46,
+    "median": 3.5,
+    "max": 11
+   },
+   "diagnosis": {
+    "n": 14,
+    "median": 5.5,
+    "max": 15
+   },
+   "redesign": {
+    "n": 13,
+    "median": 6,
+    "max": 21
+   },
+   "audit": {
+    "n": 7,
+    "median": 16,
+    "max": 19
+   }
+  },
+  "diagnosis": {
+   "run": 14,
+   "deferred_or_queued": 24,
+   "share_served": 0.37
+  },
+  "records": {
+   "total": 77,
+   "fault_yes": 0,
+   "fault_no": 0,
+   "diagnosis_needed_yes": 38,
+   "misreport_yes": 0,
+   "misreport_no": 0
+  },
+  "predictions": {
+   "records": 13,
+   "with_prediction": 13,
+   "primary_charted": 10,
+   "primary_uncharted": 3,
+   "judged": 0,
+   "hits": 0,
+   "wrong_way": 0,
+   "expected_by_chance": 0,
+   "detail": [
+    {
+     "id": "R-A-001",
+     "start": 75,
+     "has_prediction": true,
+     "measure": null,
+     "dir": "down",
+     "by_day": 74,
+     "text": "The next two troughs fall about day 70 and day 77. Orders placed on day 69\u201374 land by day 77, so the day-70 trough is expected to be unchanged. This is not a failure of the change.",
+     "charted": false
+    },
+    {
+     "id": "R-A-002",
+     "start": 115,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 125,
+     "text": "`slots_selling` shifts up by day 125: eight consecutive points above its post-R-P-014 centre of 14.18 (chart, since day 93). Secondary, read from the charts: no trough-day units minimum below 11 on the troughs expected days 112 to 125.",
+     "charted": true
+    },
+    {
+     "id": "R-A-003",
+     "start": 177,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 190,
+     "text": "Measure: `slots_selling`. Shift: up. By: day 190. Test: eight consecutive daily points above its prior centre of 13.45 by day 190 (charts).",
+     "charted": true
+    },
+    {
+     "id": "R-A-004",
+     "start": 232,
+     "has_prediction": true,
+     "measure": "units",
+     "dir": "up",
+     "by_day": 240,
+     "text": "**Units per restock trip** (system chart from day 219): its mean over days 219\u2013240 is above its mean over days 200\u2013218 by **day 240**.",
+     "charted": true
+    },
+    {
+     "id": "R-P-004",
+     "start": 28,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 28,
+     "text": "`slots_selling` shifts **up**: back to 16 or more by day 28 (it was 16 on day 20, 6 on day 22), and it stays at or above 16 through day 30. The next trough, if the eight-day cycle holds, should be shallower: `units` at or above the centre (",
+     "charted": true
+    },
+    {
+     "id": "R-P-014",
+     "start": 93,
+     "has_prediction": true,
+     "measure": "units",
+     "dir": "up",
+     "by_day": null,
+     "text": "**Units** (7-day mean, `swarm/metrics_system.md`) return to at least the pre-gap centre of 50.7 by **day 100**. Currently 39.1 (7-period average, day 87).",
+     "charted": true
+    },
+    {
+     "id": "R-P-020",
+     "start": 140,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": null,
+     "text": "Measure: `slots_selling`. Shift: up. By: day 150. Test: eight consecutive daily points above its day-135 centre of 13.45 (charts). Why this measure: fuller drinks loads per trip mean fewer empty slots between visits; empty slots are what dr",
+     "charted": true
+    },
+    {
+     "id": "R-P-029",
+     "start": 200,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 215,
+     "text": "`slots_selling` shifts **up**: 8 points in a row above its 11.65 centre (old limits kept) **by day 215**.",
+     "charted": true
+    },
+    {
+     "id": "R-P-034",
+     "start": 246,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 255,
+     "text": "`slots_selling` shifts up: 8 points in a row above its day-232 centre of 9.88 by day 255. Also, depot-zero slot-days are charted by day 245 and show no stocked slot at zero depot stock from day 241.",
+     "charted": true
+    },
+    {
+     "id": "R-P-037",
+     "start": 271,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 280,
+     "text": "`slots_selling` shifts up: 8 points in a row above its day-246 centre of 8.33 by day 280. Depot-zero slot-days: no energy, oat, sparkling or cola slot at zero depot stock on any day from day 265.",
+     "charted": true
+    },
+    {
+     "id": "R-P-038",
+     "start": 305,
+     "has_prediction": true,
+     "measure": null,
+     "dir": null,
+     "by_day": 300,
+     "text": "Depot-zero slot-days (system chart, owed since day 200) falls below 10 slot-days per 7 days by day 300. The baseline is unknown until the system charts it, so the first charted week sets the baseline. Units per restock trip, from the same r",
+     "charted": false
+    },
+    {
+     "id": "R-P-041",
+     "start": 327,
+     "has_prediction": true,
+     "measure": null,
+     "dir": null,
+     "by_day": null,
+     "text": "From day 316, with the new order-first rule:",
+     "charted": false
+    },
+    {
+     "id": "R-P-042",
+     "start": 332,
+     "has_prediction": true,
+     "measure": "cash_gain_7",
+     "dir": "up",
+     "by_day": 345,
+     "text": "Tree measure: `cash_gain_7` (the system's charted ledger change, the only cash measure charted now).\nDirection: up.\nBy day 345: mean of days 326\u2013345 above 304.2 (its since-R-P-038 mean, charts day 327).",
+     "charted": true
+    }
+   ]
+  },
+  "progress_logs": []
+ },
+ {
+  "run": "2026-11-15-skills-vs-native/obm_cadence-seed1-365d-harness-timeout",
+  "arm": "obm_cadence",
+  "seed": 1,
+  "horizon": 365,
+  "days": 217,
+  "completed": false,
+  "final_balance": 9698.18,
+  "cost": 2.52,
+  "review_cost": 2.493,
+  "tool_calls": 1471,
+  "turns": 26,
+  "stocked_slots": 9.63,
+  "stopped": "Agent stopped before the horizon.",
+  "error": "Wall-clock timeout",
+  "has_metrics": false,
+  "events": {
+   "measure": 214,
+   "pulse": 29,
+   "diagnosis": 34,
+   "audit": 7
+  },
+  "latency_days": {},
+  "diagnosis": {
+   "run": 34,
+   "deferred_or_queued": 0,
+   "share_served": 1.0
+  },
+  "records": {
+   "total": 36,
+   "fault_yes": 0,
+   "fault_no": 0,
+   "diagnosis_needed_yes": 34,
+   "misreport_yes": 0,
+   "misreport_no": 0
+  },
+  "progress_logs": []
+ },
+ {
+  "run": "2026-11-15-skills-vs-native/obm_enf-seed1-365d",
+  "arm": "obm_enf",
+  "seed": 1,
+  "horizon": 365,
+  "days": 365,
+  "completed": true,
+  "final_balance": 9292.79,
+  "cost": 10.249,
+  "review_cost": null,
+  "tool_calls": 2214,
+  "turns": 2233,
+  "stocked_slots": 7.59,
+  "stopped": null,
+  "error": null,
+  "has_metrics": false
+ },
+ {
+  "run": "2026-11-17-five-seeds-skills-vs-native/native_cadence-seed1",
+  "arm": "native_cadence",
+  "seed": 1,
+  "horizon": 365,
+  "days": 365,
+  "completed": true,
+  "final_balance": 10901.59,
+  "cost": 12.79,
+  "review_cost": 0.692,
+  "tool_calls": 2234,
+  "turns": 2245,
+  "stocked_slots": 8.02,
+  "stopped": null,
+  "error": null,
+  "has_metrics": true,
+  "mean_slots_selling": 8.01,
+  "events": {
+   "measure": 361,
+   "started": 52,
+   "pulse": 44,
+   "diagnosis": 9,
+   "diagnosis_deferred": 42,
+   "redesign": 8,
+   "audit": 7
+  },
+  "latency_days": {
+   "pulse": {
+    "n": 44,
+    "median": 5.0,
+    "max": 13
+   },
+   "diagnosis": {
+    "n": 9,
+    "median": 10,
+    "max": 25
+   },
+   "redesign": {
+    "n": 8,
+    "median": 7.0,
+    "max": 13
+   },
+   "audit": {
+    "n": 7,
+    "median": 11,
+    "max": 21
+   }
+  },
+  "diagnosis": {
+   "run": 9,
+   "deferred_or_queued": 42,
+   "share_served": 0.18
+  },
+  "records": {
+   "total": 70,
+   "fault_yes": 0,
+   "fault_no": 0,
+   "diagnosis_needed_yes": 54,
+   "misreport_yes": 0,
+   "misreport_no": 0
+  },
+  "predictions": {
+   "records": 9,
+   "with_prediction": 0,
+   "primary_charted": 0,
+   "primary_uncharted": 0,
+   "judged": 0,
+   "hits": 0,
+   "wrong_way": 0,
+   "expected_by_chance": 0,
+   "detail": [
+    {
+     "id": "R-A-002",
+     "start": 124,
+     "has_prediction": false
+    },
+    {
+     "id": "R-A-006",
+     "start": 312,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-001",
+     "start": 15,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-006",
+     "start": 51,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-012",
+     "start": 88,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-025",
+     "start": 168,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-032",
+     "start": 210,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-037",
+     "start": 270,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-044",
+     "start": 363,
+     "has_prediction": false
+    }
+   ]
+  },
+  "progress_logs": []
+ },
+ {
+  "run": "2026-11-17-five-seeds-skills-vs-native/native_cadence-seed2",
+  "arm": "native_cadence",
+  "seed": 2,
+  "horizon": 365,
+  "days": 365,
+  "completed": true,
+  "final_balance": 10891.17,
+  "cost": 11.735,
+  "review_cost": 0.673,
+  "tool_calls": 2147,
+  "turns": 2159,
+  "stocked_slots": 9.31,
+  "stopped": null,
+  "error": null,
+  "has_metrics": true,
+  "mean_slots_selling": 9.27,
+  "events": {
+   "measure": 358,
+   "started": 50,
+   "pulse": 42,
+   "diagnosis": 9,
+   "diagnosis_deferred": 40,
+   "redesign": 9,
+   "audit": 7
+  },
+  "latency_days": {
+   "pulse": {
+    "n": 42,
+    "median": 5.0,
+    "max": 12
+   },
+   "diagnosis": {
+    "n": 9,
+    "median": 11,
+    "max": 15
+   },
+   "redesign": {
+    "n": 9,
+    "median": 6,
+    "max": 11
+   },
+   "audit": {
+    "n": 7,
+    "median": 12,
+    "max": 29
+   }
+  },
+  "diagnosis": {
+   "run": 9,
+   "deferred_or_queued": 40,
+   "share_served": 0.18
+  },
+  "records": {
+   "total": 68,
+   "fault_yes": 0,
+   "fault_no": 0,
+   "diagnosis_needed_yes": 52,
+   "misreport_yes": 0,
+   "misreport_no": 0
+  },
+  "predictions": {
+   "records": 9,
+   "with_prediction": 0,
+   "primary_charted": 0,
+   "primary_uncharted": 0,
+   "judged": 0,
+   "hits": 0,
+   "wrong_way": 0,
+   "expected_by_chance": 0,
+   "detail": [
+    {
+     "id": "R-A-004",
+     "start": 254,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-001",
+     "start": 14,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-006",
+     "start": 46,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-011",
+     "start": 86,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-017",
+     "start": 119,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-022",
+     "start": 160,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-027",
+     "start": 212,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-036",
+     "start": 296,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-041",
+     "start": 344,
+     "has_prediction": false
+    }
+   ]
+  },
+  "progress_logs": []
+ },
+ {
+  "run": "2026-11-17-five-seeds-skills-vs-native/native_cadence-seed3",
+  "arm": "native_cadence",
+  "seed": 3,
+  "horizon": 365,
+  "days": 365,
+  "completed": true,
+  "final_balance": 13233.23,
+  "cost": 16.519,
+  "review_cost": 0.703,
+  "tool_calls": 2592,
+  "turns": 2602,
+  "stocked_slots": 8.71,
+  "stopped": null,
+  "error": null,
+  "has_metrics": true,
+  "mean_slots_selling": 8.57,
+  "events": {
+   "measure": 357,
+   "started": 53,
+   "pulse": 45,
+   "diagnosis": 9,
+   "diagnosis_deferred": 43,
+   "redesign": 9,
+   "audit": 7
+  },
+  "latency_days": {
+   "pulse": {
+    "n": 45,
+    "median": 4,
+    "max": 13
+   },
+   "diagnosis": {
+    "n": 9,
+    "median": 10,
+    "max": 16
+   },
+   "redesign": {
+    "n": 9,
+    "median": 7,
+    "max": 12
+   },
+   "audit": {
+    "n": 7,
+    "median": 13,
+    "max": 22
+   }
+  },
+  "diagnosis": {
+   "run": 9,
+   "deferred_or_queued": 43,
+   "share_served": 0.17
+  },
+  "records": {
+   "total": 71,
+   "fault_yes": 0,
+   "fault_no": 0,
+   "diagnosis_needed_yes": 55,
+   "misreport_yes": 0,
+   "misreport_no": 0
+  },
+  "predictions": {
+   "records": 9,
+   "with_prediction": 0,
+   "primary_charted": 0,
+   "primary_uncharted": 0,
+   "judged": 0,
+   "hits": 0,
+   "wrong_way": 0,
+   "expected_by_chance": 0,
+   "detail": [
+    {
+     "id": "R-A-002",
+     "start": 125,
+     "has_prediction": false
+    },
+    {
+     "id": "R-A-005",
+     "start": 295,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-001",
+     "start": 16,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-007",
+     "start": 47,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-011",
+     "start": 92,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-025",
+     "start": 165,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-030",
+     "start": 209,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-036",
+     "start": 244,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-044",
+     "start": 344,
+     "has_prediction": false
+    }
+   ]
+  },
+  "progress_logs": []
+ },
+ {
+  "run": "2026-11-17-five-seeds-skills-vs-native/native_cadence-seed4",
+  "arm": "native_cadence",
+  "seed": 4,
+  "horizon": 365,
+  "days": 365,
+  "completed": true,
+  "final_balance": 11922.51,
+  "cost": 10.098,
+  "review_cost": 0.57,
+  "tool_calls": 2066,
+  "turns": 2078,
+  "stocked_slots": 7.15,
+  "stopped": null,
+  "error": null,
+  "has_metrics": true,
+  "mean_slots_selling": 7.02,
+  "events": {
+   "measure": 354,
+   "started": 39,
+   "pulse": 30,
+   "diagnosis_deferred": 30,
+   "diagnosis": 8,
+   "redesign": 7,
+   "audit": 8
+  },
+  "latency_days": {
+   "pulse": {
+    "n": 30,
+    "median": 4.5,
+    "max": 18
+   },
+   "diagnosis": {
+    "n": 8,
+    "median": 10.5,
+    "max": 40
+   },
+   "redesign": {
+    "n": 7,
+    "median": 8,
+    "max": 14
+   },
+   "audit": {
+    "n": 8,
+    "median": 12.5,
+    "max": 29
+   }
+  },
+  "diagnosis": {
+   "run": 8,
+   "deferred_or_queued": 30,
+   "share_served": 0.21
+  },
+  "records": {
+   "total": 55,
+   "fault_yes": 0,
+   "fault_no": 0,
+   "diagnosis_needed_yes": 42,
+   "misreport_yes": 0,
+   "misreport_no": 0
+  },
+  "predictions": {
+   "records": 8,
+   "with_prediction": 0,
+   "primary_charted": 0,
+   "primary_uncharted": 0,
+   "judged": 0,
+   "hits": 0,
+   "wrong_way": 0,
+   "expected_by_chance": 0,
+   "detail": [
+    {
+     "id": "R-A-002",
+     "start": 89,
+     "has_prediction": false
+    },
+    {
+     "id": "R-A-004",
+     "start": 175,
+     "has_prediction": false
+    },
+    {
+     "id": "R-A-006",
+     "start": 228,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-001",
+     "start": 20,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-007",
+     "start": 52,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-015",
+     "start": 128,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-027",
+     "start": 292,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-029",
+     "start": 313,
+     "has_prediction": false
+    }
+   ]
+  },
+  "progress_logs": []
+ },
+ {
+  "run": "2026-11-17-five-seeds-skills-vs-native/native_cadence-seed5",
+  "arm": "native_cadence",
+  "seed": 5,
+  "horizon": 365,
+  "days": 365,
+  "completed": true,
+  "final_balance": 19562.81,
+  "cost": 19.327,
+  "review_cost": 0.814,
+  "tool_calls": 2908,
+  "turns": 2919,
+  "stocked_slots": 13.93,
+  "stopped": null,
+  "error": null,
+  "has_metrics": true,
+  "mean_slots_selling": 13.81,
+  "events": {
+   "measure": 358,
+   "started": 62,
+   "pulse": 54,
+   "diagnosis": 10,
+   "diagnosis_deferred": 51,
+   "redesign": 9,
+   "audit": 7
+  },
+  "latency_days": {
+   "pulse": {
+    "n": 54,
+    "median": 4.0,
+    "max": 10
+   },
+   "diagnosis": {
+    "n": 10,
+    "median": 7.5,
+    "max": 19
+   },
+   "redesign": {
+    "n": 9,
+    "median": 4,
+    "max": 10
+   },
+   "audit": {
+    "n": 7,
+    "median": 9,
+    "max": 21
+   }
+  },
+  "diagnosis": {
+   "run": 10,
+   "deferred_or_queued": 51,
+   "share_served": 0.16
+  },
+  "records": {
+   "total": 82,
+   "fault_yes": 0,
+   "fault_no": 0,
+   "diagnosis_needed_yes": 62,
+   "misreport_yes": 0,
+   "misreport_no": 0
+  },
+  "predictions": {
+   "records": 10,
+   "with_prediction": 0,
+   "primary_charted": 0,
+   "primary_uncharted": 0,
+   "judged": 0,
+   "hits": 0,
+   "wrong_way": 0,
+   "expected_by_chance": 0,
+   "detail": [
+    {
+     "id": "R-A-004",
+     "start": 212,
+     "has_prediction": false
+    },
+    {
+     "id": "R-A-007",
+     "start": 354,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-001",
+     "start": 16,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-007",
+     "start": 63,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-013",
+     "start": 110,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-019",
+     "start": 146,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-023",
+     "start": 179,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-035",
+     "start": 247,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-041",
+     "start": 282,
+     "has_prediction": false
+    },
+    {
+     "id": "R-P-046",
+     "start": 317,
+     "has_prediction": false
+    }
+   ]
+  },
+  "progress_logs": []
+ },
+ {
+  "run": "2026-11-17-five-seeds-skills-vs-native/obm_cadence-seed1",
+  "arm": "obm_cadence",
+  "seed": 1,
+  "horizon": 365,
+  "days": 365,
+  "completed": true,
+  "final_balance": 15006.39,
+  "cost": 18.076,
+  "review_cost": 1.028,
+  "tool_calls": 2747,
+  "turns": 2931,
+  "stocked_slots": 10.75,
+  "stopped": null,
+  "error": null,
+  "has_metrics": true,
+  "mean_slots_selling": 10.62,
+  "events": {
+   "measure": 352,
+   "started": 45,
+   "pulse": 37,
+   "diagnosis_deferred": 18,
+   "diagnosis": 8,
+   "redesign": 7,
+   "audit": 7
+  },
+  "latency_days": {
+   "pulse": {
+    "n": 37,
+    "median": 4,
+    "max": 12
+   },
+   "diagnosis": {
+    "n": 8,
+    "median": 5.0,
+    "max": 15
+   },
+   "redesign": {
+    "n": 7,
+    "median": 7,
+    "max": 18
+   },
+   "audit": {
+    "n": 7,
+    "median": 19,
+    "max": 36
+   }
+  },
+  "diagnosis": {
+   "run": 8,
+   "deferred_or_queued": 18,
+   "share_served": 0.31
+  },
+  "records": {
+   "total": 61,
+   "fault_yes": 0,
+   "fault_no": 0,
+   "diagnosis_needed_yes": 27,
+   "misreport_yes": 0,
+   "misreport_no": 0
+  },
+  "predictions": {
+   "records": 8,
+   "with_prediction": 8,
+   "primary_charted": 7,
+   "primary_uncharted": 1,
+   "judged": 6,
+   "hits": 3,
+   "wrong_way": 0,
+   "expected_by_chance": 2.02,
+   "detail": [
+    {
+     "id": "R-A-002",
+     "start": 116,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 132,
+     "text": "slots_selling shifts up and holds above its pre-redesign centre of 13.9 for 14 consecutive days by day 132. Depot-minus-slot units fall over the same window once charted.",
+     "charted": true,
+     "hit": false,
+     "wrong_way": false,
+     "pre_centre": 12.52,
+     "post_mean": 11.25,
+     "window": [
+      117,
+      132
+     ],
+     "chance": 0.3875
+    },
+    {
+     "id": "R-A-004",
+     "start": 198,
+     "has_prediction": true,
+     "measure": null,
+     "dir": "up",
+     "by_day": null,
+     "text": "Direction: up.",
+     "charted": false
+    },
+    {
+     "id": "R-A-006",
+     "start": 305,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 330,
+     "text": "slots_selling (since-redesign mean 10.28) shifts up, with 8 in a row above its centre on charts.md, by day 330. No close below 10 after day 305. Revenue (since-table mean 98.85) also shifts up by day 330. Units per selling slot holds at or ",
+     "charted": true,
+     "hit": true,
+     "wrong_way": false,
+     "pre_centre": 11.73,
+     "post_mean": 14.08,
+     "window": [
+      306,
+      330
+     ],
+     "chance": 0.3875
+    },
+    {
+     "id": "R-P-003",
+     "start": 26,
+     "has_prediction": true,
+     "measure": "units",
+     "dir": "up",
+     "by_day": 33,
+     "text": "Stock-out share (down) falls, and units (up) rise, by day 33. Units 7-period average above its own best of 45.86 by day 33. Until stock-out share is instrumented, units per selling slot is the proxy; the charts will show it, not the operato",
+     "charted": true,
+     "hit": true,
+     "wrong_way": false,
+     "pre_centre": 33.25,
+     "post_mean": 54.11,
+     "window": [
+      27,
+      36
+     ],
+     "chance": 0.3625
+    },
+    {
+     "id": "R-P-010",
+     "start": 81,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 88,
+     "text": "slots_selling (up) returns to at least 12 by day 88, from 6\u20137 at day 74. Restock trips per day (up) reach at least 6 by day 84. Stock-out share (down) falls by day 88 once instrumented; until then slots_selling is the proxy.",
+     "charted": true,
+     "hit": false,
+     "wrong_way": false,
+     "pre_centre": 10.88,
+     "post_mean": 10.88,
+     "window": [
+      82,
+      91
+     ],
+     "chance": 0.3875
+    },
+    {
+     "id": "R-P-021",
+     "start": 161,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 170,
+     "text": "slots_selling: mean over days 156\u2013170 rises to at least 12 (from 9.55 since R-A-002 and 7.0 latest). Its centre should move back toward 11.15 (the pre-R-A-002 centre).",
+     "charted": true,
+     "hit": true,
+     "wrong_way": false,
+     "pre_centre": 8.19,
+     "post_mean": 10.5,
+     "window": [
+      162,
+      171
+     ],
+     "chance": 0.3875
+    },
+    {
+     "id": "R-P-029",
+     "start": 258,
+     "has_prediction": true,
+     "measure": "units_per_slot",
+     "dir": "up",
+     "by_day": 260,
+     "text": "Units per selling slot (7-day average) rises from about 3.7 (since-day-198 level: 35.7 \u00f7 9.55) to 4.5 or more by day 260. Read on charts.md against the since-day-198 level. Chart: units per selling slot, to be added by the system (see reque",
+     "charted": true,
+     "hit": false,
+     "wrong_way": false,
+     "pre_centre": 4.16,
+     "post_mean": 4.26,
+     "window": [
+      259,
+      268
+     ],
+     "chance": 0.1125
+    },
+    {
+     "id": "R-P-034",
+     "start": 352,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": null,
+     "by_day": 365,
+     "text": "No close below 10 selling slots from day 353 to day 365 (the floor holds on every close).",
+     "charted": true
+    }
+   ]
+  },
+  "progress_logs": [
+   "workspace/swarm/log/progress.md"
+  ],
+  "progress_bytes": 100148,
+  "progress_bytes_per_day": 274,
+  "entry_chars_by_quarter": [
+   373,
+   253,
+   null,
+   1164
+  ],
+  "log_last_day": 328,
+  "log_max_gap_days": 164,
+  "acted_on": {
+   "handed": 59,
+   "handed_while_logging": 52,
+   "mentioned_in_log": 28,
+   "share": 0.54,
+   "median_lag_days": 0.0
+  },
+  "runs.jsonl_last_day": 330
+ },
+ {
+  "run": "2026-11-17-five-seeds-skills-vs-native/obm_cadence-seed2",
+  "arm": "obm_cadence",
+  "seed": 2,
+  "horizon": 365,
+  "days": 365,
+  "completed": true,
+  "final_balance": 14170.59,
+  "cost": 19.577,
+  "review_cost": 1.05,
+  "tool_calls": 2884,
+  "turns": 2999,
+  "stocked_slots": 11.53,
+  "stopped": null,
+  "error": null,
+  "has_metrics": true,
+  "mean_slots_selling": 11.5,
+  "events": {
+   "measure": 341,
+   "started": 46,
+   "pulse": 37,
+   "audit": 8,
+   "diagnosis": 8,
+   "redesign": 7,
+   "diagnosis_deferred": 22
+  },
+  "latency_days": {
+   "pulse": {
+    "n": 37,
+    "median": 3,
+    "max": 8
+   },
+   "audit": {
+    "n": 8,
+    "median": 18.0,
+    "max": 41
+   },
+   "diagnosis": {
+    "n": 8,
+    "median": 5.0,
+    "max": 14
+   },
+   "redesign": {
+    "n": 7,
+    "median": 9,
+    "max": 12
+   }
+  },
+  "diagnosis": {
+   "run": 8,
+   "deferred_or_queued": 22,
+   "share_served": 0.27
+  },
+  "records": {
+   "total": 62,
+   "fault_yes": 0,
+   "fault_no": 0,
+   "diagnosis_needed_yes": 32,
+   "misreport_yes": 0,
+   "misreport_no": 0
+  },
+  "predictions": {
+   "records": 8,
+   "with_prediction": 8,
+   "primary_charted": 6,
+   "primary_uncharted": 2,
+   "judged": 5,
+   "hits": 1,
+   "wrong_way": 1,
+   "expected_by_chance": 2.13,
+   "detail": [
+    {
+     "id": "R-A-001",
+     "start": 47,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": null,
+     "by_day": null,
+     "text": "**Measure:** slots_selling (chart, centre 8.3, latest 6).",
+     "charted": true
+    },
+    {
+     "id": "R-A-006",
+     "start": 268,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 270,
+     "text": "slots_selling 7-day mean rises from 11.9 to 14 or more by day 270.",
+     "charted": true,
+     "hit": false,
+     "wrong_way": false,
+     "pre_centre": 10.93,
+     "post_mean": 9.4,
+     "window": [
+      269,
+      278
+     ],
+     "chance": 0.4266666666666667
+    },
+    {
+     "id": "R-A-007",
+     "start": 317,
+     "has_prediction": true,
+     "measure": null,
+     "dir": "down",
+     "by_day": 325,
+     "text": "Empty slots at 09:00 falls to 10 or fewer on most days from d310 to d325 (it has held near 22 since d234).",
+     "charted": false
+    },
+    {
+     "id": "R-P-008",
+     "start": 107,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 110,
+     "text": "slots_selling: its 7-period average rises back to at least 12 by day 110 (the own-best 7-period average is 14.14; the centre is 10.2). The chart should show this as a shift up against the limits from R-A-001 by day 110.",
+     "charted": true,
+     "hit": false,
+     "wrong_way": false,
+     "pre_centre": 9.71,
+     "post_mean": 10.38,
+     "window": [
+      108,
+      117
+     ],
+     "chance": 0.4266666666666667
+    },
+    {
+     "id": "R-P-010",
+     "start": 147,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 152,
+     "text": "slots_selling: its 7-period average stays at or above 14 on every week from day 139 to day 152, and the since-R-P-010 mean (charted from day 139) sits above its centre. Chart: shift up against the limits that apply from day 139.",
+     "charted": true,
+     "hit": true,
+     "wrong_way": false,
+     "pre_centre": 16.79,
+     "post_mean": 14.4,
+     "window": [
+      148,
+      157
+     ],
+     "chance": 0.4266666666666667
+    },
+    {
+     "id": "R-P-016",
+     "start": 185,
+     "has_prediction": true,
+     "measure": null,
+     "dir": null,
+     "by_day": 200,
+     "text": "By day 200:",
+     "charted": false
+    },
+    {
+     "id": "R-P-020",
+     "start": 216,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 226,
+     "text": "slots_selling: mean over days 213\u2013226 is at or above 16 (d199\u2013207 mean 13.8; centre 17.2). Reached by day 226.",
+     "charted": true,
+     "hit": false,
+     "wrong_way": true,
+     "pre_centre": 15.25,
+     "post_mean": 12.2,
+     "window": [
+      217,
+      226
+     ],
+     "chance": 0.4266666666666667
+    },
+    {
+     "id": "R-P-037",
+     "start": 349,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 356,
+     "text": "slots_selling 7-day mean rises to 13 or more by day 356 (centre 10.3 since d317; latest reading 13).",
+     "charted": true,
+     "hit": false,
+     "wrong_way": false,
+     "pre_centre": 9.89,
+     "post_mean": 10.0,
+     "window": [
+      350,
+      359
+     ],
+     "chance": 0.4266666666666667
+    }
+   ]
+  },
+  "progress_logs": [
+   "workspace/swarm/log/progress.md"
+  ],
+  "progress_bytes": 58006,
+  "progress_bytes_per_day": 159,
+  "entry_chars_by_quarter": [
+   1113,
+   8346,
+   null,
+   null
+  ],
+  "log_last_day": 107,
+  "log_max_gap_days": 31,
+  "acted_on": {
+   "handed": 60,
+   "handed_while_logging": 14,
+   "mentioned_in_log": 8,
+   "share": 0.57,
+   "median_lag_days": 0.0
+  }
+ },
+ {
+  "run": "2026-11-17-five-seeds-skills-vs-native/obm_cadence-seed3",
+  "arm": "obm_cadence",
+  "seed": 3,
+  "horizon": 365,
+  "days": 365,
+  "completed": true,
+  "final_balance": 13666.33,
+  "cost": 18.707,
+  "review_cost": 0.98,
+  "tool_calls": 2830,
+  "turns": 2966,
+  "stocked_slots": 10.34,
+  "stopped": null,
+  "error": null,
+  "has_metrics": true,
+  "mean_slots_selling": 10.2,
+  "events": {
+   "measure": 350,
+   "started": 48,
+   "pulse": 41,
+   "diagnosis_deferred": 22,
+   "diagnosis": 7,
+   "redesign": 7,
+   "audit": 6
+  },
+  "latency_days": {
+   "pulse": {
+    "n": 41,
+    "median": 4,
+    "max": 12
+   },
+   "diagnosis": {
+    "n": 7,
+    "median": 5,
+    "max": 8
+   },
+   "redesign": {
+    "n": 7,
+    "median": 13,
+    "max": 15
+   },
+   "audit": {
+    "n": 6,
+    "median": 16.5,
+    "max": 22
+   }
+  },
+  "diagnosis": {
+   "run": 7,
+   "deferred_or_queued": 22,
+   "share_served": 0.24
+  },
+  "records": {
+   "total": 62,
+   "fault_yes": 0,
+   "fault_no": 0,
+   "diagnosis_needed_yes": 29,
+   "misreport_yes": 0,
+   "misreport_no": 0
+  },
+  "predictions": {
+   "records": 7,
+   "with_prediction": 7,
+   "primary_charted": 5,
+   "primary_uncharted": 2,
+   "judged": 5,
+   "hits": 2,
+   "wrong_way": 3,
+   "expected_by_chance": 2.31,
+   "detail": [
+    {
+     "id": "R-P-004",
+     "start": 33,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 45,
+     "text": "slots_selling should shift up: its average over days 36\u201345 is at or above its centre of 12.35 (v1 limits, unchanged), and revenue returns to at least its centre of 93.77 by day 45. Confidence: moderate for slots_selling, low for revenue (it",
+     "charted": true,
+     "hit": false,
+     "wrong_way": true,
+     "pre_centre": 13.08,
+     "post_mean": 13.42,
+     "window": [
+      34,
+      45
+     ],
+     "chance": 0.4625
+    },
+    {
+     "id": "R-P-012",
+     "start": 102,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 110,
+     "text": "slots_selling shifts up. Judged against the day-89 limits, frozen (centre 13.0, lower 1.38, upper 24.62): its mean over days 90\u2013110 is at or above 16, with no point below 1.38. Confidence: moderate. Part of the recent recovery predates this",
+     "charted": true,
+     "hit": true,
+     "wrong_way": false,
+     "pre_centre": 12.07,
+     "post_mean": 16.56,
+     "window": [
+      103,
+      112
+     ],
+     "chance": 0.4625
+    },
+    {
+     "id": "R-P-019",
+     "start": 147,
+     "has_prediction": true,
+     "measure": null,
+     "dir": "up",
+     "by_day": 170,
+     "text": "Record gap: zero days at every pulse through day 170, counted from the dated log entries. Confidence: moderate (the catch-up block shows the operator writes daily when asked).",
+     "charted": false
+    },
+    {
+     "id": "R-P-025",
+     "start": 191,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 200,
+     "text": "**slots_selling** (since day 182, mean over days 183\u2013200) rises from 14.9 to at least **16**, by **day 200**. Direction: up.",
+     "charted": true,
+     "hit": false,
+     "wrong_way": true,
+     "pre_centre": 15.57,
+     "post_mean": 8.2,
+     "window": [
+      192,
+      201
+     ],
+     "chance": 0.4625
+    },
+    {
+     "id": "R-P-029",
+     "start": 237,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 236,
+     "text": "**slots_selling** rises from 9.04 (mean since day 191) to a mean of at least **12** over days 223 to 236, by **day 236**. Direction: up. Judged against the pre-R-P-025 limits (centre 14.3, 6.6 to 22.0): a mean of 12 or more is inside them b",
+     "charted": true,
+     "hit": false,
+     "wrong_way": true,
+     "pre_centre": 9.18,
+     "post_mean": 6.7,
+     "window": [
+      238,
+      247
+     ],
+     "chance": 0.4625
+    },
+    {
+     "id": "R-P-036",
+     "start": 290,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 291,
+     "text": "**slots_selling** rises from its mean since day 237 (5.81) to a mean of at least **8.5** over days 278 to 291, by **day 292**. Direction: up. Judged against the pre-R-P-029 limits (centre 8.5, 4.44 to 12.56): a mean at the old centre is a r",
+     "charted": true,
+     "hit": true,
+     "wrong_way": false,
+     "pre_centre": 3.93,
+     "post_mean": 4.5,
+     "window": [
+      291,
+      300
+     ],
+     "chance": 0.4625
+    },
+    {
+     "id": "R-P-039",
+     "start": 334,
+     "has_prediction": true,
+     "measure": null,
+     "dir": "down",
+     "by_day": null,
+     "text": "**Unexplained stock loss per visit** (tree row, operator count from C9) falls to **zero on the two consecutive visits that lift a hold**, for at least half of the held slots, by **day 330**. Direction: down. This is the measure the change a",
+     "charted": false
+    }
+   ]
+  },
+  "progress_logs": [
+   "workspace/swarm/log/progress.md"
+  ],
+  "progress_bytes": 103292,
+  "progress_bytes_per_day": 283,
+  "entry_chars_by_quarter": [
+   487,
+   180,
+   205,
+   174
+  ],
+  "log_last_day": 306,
+  "log_max_gap_days": 3,
+  "acted_on": {
+   "handed": 61,
+   "handed_while_logging": 56,
+   "mentioned_in_log": 45,
+   "share": 0.8,
+   "median_lag_days": 0
+  }
+ },
+ {
+  "run": "2026-11-17-five-seeds-skills-vs-native/obm_cadence-seed4",
+  "arm": "obm_cadence",
+  "seed": 4,
+  "horizon": 365,
+  "days": 365,
+  "completed": true,
+  "final_balance": 13434.96,
+  "cost": 26.334,
+  "review_cost": 1.656,
+  "tool_calls": 3039,
+  "turns": 3701,
+  "stocked_slots": 9.17,
+  "stopped": null,
+  "error": null,
+  "has_metrics": true,
+  "mean_slots_selling": 9.07,
+  "events": {
+   "measure": 350,
+   "started": 58,
+   "pulse": 49,
+   "diagnosis_deferred": 27,
+   "diagnosis": 9,
+   "redesign": 9,
+   "audit": 8
+  },
+  "latency_days": {
+   "pulse": {
+    "n": 49,
+    "median": 3,
+    "max": 7
+   },
+   "diagnosis": {
+    "n": 9,
+    "median": 6,
+    "max": 7
+   },
+   "redesign": {
+    "n": 9,
+    "median": 6,
+    "max": 13
+   },
+   "audit": {
+    "n": 8,
+    "median": 12.5,
+    "max": 25
+   }
+  },
+  "diagnosis": {
+   "run": 9,
+   "deferred_or_queued": 27,
+   "share_served": 0.25
+  },
+  "records": {
+   "total": 77,
+   "fault_yes": 0,
+   "fault_no": 0,
+   "diagnosis_needed_yes": 38,
+   "misreport_yes": 0,
+   "misreport_no": 0
+  },
+  "predictions": {
+   "records": 9,
+   "with_prediction": 9,
+   "primary_charted": 6,
+   "primary_uncharted": 3,
+   "judged": 6,
+   "hits": 4,
+   "wrong_way": 0,
+   "expected_by_chance": 1.47,
+   "detail": [
+    {
+     "id": "R-A-001",
+     "start": 82,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": null,
+     "text": "**slots_selling** shifts up: its 14-day mean is at least 11 by **day 100** (it has averaged 8.6 since day 37; the pre-redesign upper limit is 10.37).",
+     "charted": true,
+     "hit": true,
+     "wrong_way": false,
+     "pre_centre": 8.43,
+     "post_mean": 10.2,
+     "window": [
+      83,
+      102
+     ],
+     "chance": 0.2465753424657534
+    },
+    {
+     "id": "R-A-002",
+     "start": 117,
+     "has_prediction": true,
+     "measure": null,
+     "dir": "up",
+     "by_day": 120,
+     "text": "**fills per day** on test days reach 6 on at least 3 of days 110 to 120, if the business tools allow it.",
+     "charted": false
+    },
+    {
+     "id": "R-A-007",
+     "start": 344,
+     "has_prediction": true,
+     "measure": null,
+     "dir": "up",
+     "by_day": null,
+     "text": "Reads done per day rises to every day from day 332, read from the day log (not yet charted).",
+     "charted": false
+    },
+    {
+     "id": "R-P-004",
+     "start": 37,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 41,
+     "text": "`slots_selling` stays above its centre (5.05) and reaches its own best (7.57) in at least 8 of the next 10 periods, i.e. by day 41; storage stock on hand for sold-out slots falls to zero within 2 days of a stock-out. Chart: slots_selling sh",
+     "charted": true,
+     "hit": true,
+     "wrong_way": false,
+     "pre_centre": 5.96,
+     "post_mean": 8.2,
+     "window": [
+      38,
+      47
+     ],
+     "chance": 0.2465753424657534
+    },
+    {
+     "id": "R-P-020",
+     "start": 151,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": null,
+     "text": "**slots_selling** 14-day mean is back at or above its centre of **10.2** by **day 160**, and stays there through the day-165 pulse. Chart: the mean moves up from 9.38 (the since-R-A-002 mean).",
+     "charted": true,
+     "hit": false,
+     "wrong_way": false,
+     "pre_centre": 9.11,
+     "post_mean": 9.4,
+     "window": [
+      152,
+      171
+     ],
+     "chance": 0.2465753424657534
+    },
+    {
+     "id": "R-P-024",
+     "start": 180,
+     "has_prediction": true,
+     "measure": null,
+     "dir": "up",
+     "by_day": null,
+     "text": "**Fills per day** on days with a sold-out slot holding storage stock: above 5 on at least 3 of the first 5 such days after day 175, and the stop reason is logged for the rest. Checked at the day-180 pulse.",
+     "charted": false
+    },
+    {
+     "id": "R-P-034",
+     "start": 235,
+     "has_prediction": true,
+     "measure": "revenue_per_slot",
+     "dir": "up",
+     "by_day": null,
+     "text": "**revenue_per_slot** (charted; since-R-P-024 mean 9.19, centre before R-P-024 11.54) returns to **above 11.5** as a 14-day mean by **day 245**. Checked at the day-245 pulse.",
+     "charted": true,
+     "hit": true,
+     "wrong_way": false,
+     "pre_centre": 8.88,
+     "post_mean": 11.16,
+     "window": [
+      236,
+      255
+     ],
+     "chance": 0.0821917808219178
+    },
+    {
+     "id": "R-P-039",
+     "start": 266,
+     "has_prediction": true,
+     "measure": "revenue_per_slot",
+     "dir": "up",
+     "by_day": 273,
+     "text": "**revenue_per_slot** (charted; since-R-P-034 mean 11.74, own best 13.06) rises to a 14-day mean of **at least 12.5 by day 273**, from the fill order in rule 8. Checked at the day-273 pulse.",
+     "charted": true,
+     "hit": false,
+     "wrong_way": false,
+     "pre_centre": 12.04,
+     "post_mean": 12.0,
+     "window": [
+      267,
+      276
+     ],
+     "chance": 0.0821917808219178
+    },
+    {
+     "id": "R-P-043",
+     "start": 300,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "down",
+     "by_day": 272,
+     "text": "**Sold-out selling slots** (log count of zero-stock selling slots at day end; system chart requested in section 8) shift **down**. Specifically, zero-storage sold-out runs of 3 or more days (the d269 to d272 and d283 pattern) do not recur f",
+     "charted": true,
+     "hit": true,
+     "wrong_way": false,
+     "pre_centre": 11.11,
+     "post_mean": 10.3,
+     "window": [
+      301,
+      310
+     ],
+     "chance": 0.5616438356164384
+    }
+   ]
+  },
+  "progress_logs": [
+   "workspace/log/progress.md"
+  ],
+  "progress_bytes": 447930,
+  "progress_bytes_per_day": 1227,
+  "entry_chars_by_quarter": [
+   708,
+   1389,
+   1889,
+   878
+  ],
+  "log_last_day": 365,
+  "log_max_gap_days": 3,
+  "acted_on": {
+   "handed": 75,
+   "handed_while_logging": 75,
+   "mentioned_in_log": 74,
+   "share": 0.99,
+   "median_lag_days": 0.0
+  },
+  "runs.jsonl_last_day": 270
+ },
+ {
+  "run": "2026-11-17-five-seeds-skills-vs-native/obm_cadence-seed5",
+  "arm": "obm_cadence",
+  "seed": 5,
+  "horizon": 365,
+  "days": 365,
+  "completed": true,
+  "final_balance": 13497.2,
+  "cost": 20.146,
+  "review_cost": 1.329,
+  "tool_calls": 2575,
+  "turns": 3071,
+  "stocked_slots": 10.61,
+  "stopped": null,
+  "error": null,
+  "has_metrics": true,
+  "mean_slots_selling": 10.45,
+  "events": {
+   "measure": 348,
+   "started": 49,
+   "pulse": 41,
+   "audit": 7,
+   "diagnosis_deferred": 18,
+   "diagnosis": 8,
+   "redesign": 8
+  },
+  "latency_days": {
+   "pulse": {
+    "n": 41,
+    "median": 3,
+    "max": 6
+   },
+   "audit": {
+    "n": 7,
+    "median": 21,
+    "max": 36
+   },
+   "diagnosis": {
+    "n": 8,
+    "median": 4.5,
+    "max": 8
+   },
+   "redesign": {
+    "n": 8,
+    "median": 7.5,
+    "max": 11
+   }
+  },
+  "diagnosis": {
+   "run": 8,
+   "deferred_or_queued": 18,
+   "share_served": 0.31
+  },
+  "records": {
+   "total": 66,
+   "fault_yes": 0,
+   "fault_no": 0,
+   "diagnosis_needed_yes": 29,
+   "misreport_yes": 0,
+   "misreport_no": 0
+  },
+  "predictions": {
+   "records": 8,
+   "with_prediction": 8,
+   "primary_charted": 5,
+   "primary_uncharted": 3,
+   "judged": 5,
+   "hits": 1,
+   "wrong_way": 0,
+   "expected_by_chance": 0.64,
+   "detail": [
+    {
+     "id": "R-A-001",
+     "start": 75,
+     "has_prediction": true,
+     "measure": null,
+     "dir": null,
+     "by_day": null,
+     "text": "By **day 80**:",
+     "charted": false
+    },
+    {
+     "id": "R-A-003",
+     "start": 144,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": null,
+     "text": "**slots_selling** (chart, better: up) should shift up: at least 8 points in a row above its centre, or a point above the upper limit, by **day 161**. Its mean since day 141 should move from about 13 toward the own best of 16.9.",
+     "charted": true,
+     "hit": false,
+     "wrong_way": false,
+     "pre_centre": 13.68,
+     "post_mean": 13.47,
+     "window": [
+      145,
+      164
+     ],
+     "chance": 0.17567567567567569
+    },
+    {
+     "id": "R-A-005",
+     "start": 254,
+     "has_prediction": true,
+     "measure": "units_per_slot",
+     "dir": "up",
+     "by_day": 262,
+     "text": "**Primary:** units per selling slot (units \u00f7 slots_selling, 7-period average) rises from 3.4 to **at least 4.5 by day 262**. Direction: up.",
+     "charted": true,
+     "hit": true,
+     "wrong_way": false,
+     "pre_centre": 3.18,
+     "post_mean": 5.33,
+     "window": [
+      255,
+      264
+     ],
+     "chance": 0.0945945945945946
+    },
+    {
+     "id": "R-A-006",
+     "start": 287,
+     "has_prediction": true,
+     "measure": null,
+     "dir": "down",
+     "by_day": 267,
+     "text": "**Primary (tree: \"Priced slots empty before the morning reload\"):** falls from 25 of 30 (day 258) and \"most empty\" (days 264\u2013267) to **10 of 30 or fewer on every 09:00 count from day 288 to day 295**. Direction: down.",
+     "charted": false
+    },
+    {
+     "id": "R-P-011",
+     "start": 111,
+     "has_prediction": true,
+     "measure": null,
+     "dir": "up",
+     "by_day": 105,
+     "text": "stock-out slot-days shifts **down** (fewer priced slot-days with zero stock than in days 75\u2013105) by **day 115**; no zero-sale network day in days 106\u2013115. Secondary: slots_selling stays above its centre (10.35).",
+     "charted": false
+    },
+    {
+     "id": "R-P-021",
+     "start": 177,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 185,
+     "text": "the mean of \"priced slots empty before the morning reload\" falls from 14\u201320 of 30 to 10 or fewer by day 185; slots_selling's mean rises from 12.15 (since R-A-003) to 15 or more by day 185. Measured against the limits in `charts.md` before R",
+     "charted": true,
+     "hit": false,
+     "wrong_way": false,
+     "pre_centre": 10.85,
+     "post_mean": 10.9,
+     "window": [
+      178,
+      187
+     ],
+     "chance": 0.17567567567567569
+    },
+    {
+     "id": "R-P-024",
+     "start": 217,
+     "has_prediction": true,
+     "measure": "units_per_slot",
+     "dir": "up",
+     "by_day": 226,
+     "text": "**units per selling slot** rises from about 3.6 to at least 4.5 (mean of days 207\u2013226). This is the measure the diagnosis says moved.",
+     "charted": true,
+     "hit": false,
+     "wrong_way": false,
+     "pre_centre": 3.21,
+     "post_mean": 3.33,
+     "window": [
+      218,
+      227
+     ],
+     "chance": 0.0945945945945946
+    },
+    {
+     "id": "R-P-039",
+     "start": 321,
+     "has_prediction": true,
+     "measure": "units_per_slot",
+     "dir": "up",
+     "by_day": 330,
+     "text": "**Primary (tree: units per selling slot, from `units` \u00f7 `slots_selling`):** rises from about 4.5 to **5.0 or above, as a 5-period average, by day 330**. Direction: up.",
+     "charted": true,
+     "hit": false,
+     "wrong_way": false,
+     "pre_centre": 4.13,
+     "post_mean": 3.65,
+     "window": [
+      322,
+      331
+     ],
+     "chance": 0.0945945945945946
+    }
+   ]
+  },
+  "progress_logs": [
+   "workspace/log/progress.md",
+   "workspace/swarm/log/progress.md"
+  ],
+  "progress_bytes": 274648,
+  "progress_bytes_per_day": 752,
+  "entry_chars_by_quarter": [
+   375,
+   798,
+   768,
+   921
+  ],
+  "log_last_day": 358,
+  "log_max_gap_days": 3,
+  "acted_on": {
+   "handed": 64,
+   "handed_while_logging": 64,
+   "mentioned_in_log": 64,
+   "share": 1.0,
+   "median_lag_days": 0.0
+  }
+ },
+ {
+  "run": "2026-11-18-v2-smoke",
+  "arm": "obm_v2",
+  "seed": 6,
+  "horizon": 91,
+  "days": 91,
+  "completed": true,
+  "final_balance": 4861.27,
+  "cost": 3.799,
+  "review_cost": 0.183,
+  "tool_calls": 741,
+  "turns": 804,
+  "stocked_slots": 11.59,
+  "stopped": null,
+  "error": null,
+  "has_metrics": true,
+  "mean_slots_selling": 11.64,
+  "events": {
+   "preflight": 1,
+   "measure": 87,
+   "started": 12,
+   "pulse": 5,
+   "audit": 2,
+   "opportunity": 1,
+   "experiment_end": 5,
+   "opportunity_waits": 5,
+   "redesign": 2,
+   "diagnosis_deferred": 2,
+   "diagnosis": 1
+  },
+  "latency_days": {
+   "pulse": {
+    "n": 5,
+    "median": 3,
+    "max": 4
+   },
+   "audit": {
+    "n": 2,
+    "median": 13.0,
+    "max": 20
+   },
+   "opportunity": {
+    "n": 1,
+    "median": 2,
+    "max": 2
+   },
+   "redesign": {
+    "n": 2,
+    "median": 10.0,
+    "max": 13
+   },
+   "diagnosis": {
+    "n": 1,
+    "median": 4,
+    "max": 4
+   }
+  },
+  "diagnosis": {
+   "run": 1,
+   "deferred_or_queued": 2,
+   "share_served": 0.33
+  },
+  "records": {
+   "total": 11,
+   "fault_yes": 0,
+   "fault_no": 0,
+   "diagnosis_needed_yes": 4,
+   "misreport_yes": 0,
+   "misreport_no": 0
+  },
+  "predictions": {
+   "records": 2,
+   "with_prediction": 2,
+   "primary_charted": 2,
+   "primary_uncharted": 0,
+   "judged": 2,
+   "hits": 1,
+   "wrong_way": 1,
+   "expected_by_chance": 0.67,
+   "detail": [
+    {
+     "id": "R-A-002",
+     "start": 83,
+     "has_prediction": true,
+     "measure": "revenue",
+     "dir": "up",
+     "by_day": null,
+     "text": "**Driver:** the revenue flow celeration moves from /1.22 to at least x1.00 by point 12 (day 84), because units stop falling as duplicate stock stops being added.",
+     "charted": true,
+     "hit": false,
+     "wrong_way": true,
+     "pre_centre": 99.68,
+     "post_mean": 19.33,
+     "window": [
+      84,
+      103
+     ],
+     "chance": 0.0
+    },
+    {
+     "id": "R-O-001",
+     "start": 37,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 42,
+     "text": "slots_selling shifts up, from 19 to \u2265 25, by day 42 (E-005).",
+     "charted": true,
+     "hit": true,
+     "wrong_way": false,
+     "pre_centre": 10.7,
+     "post_mean": 18.33,
+     "window": [
+      38,
+      47
+     ],
+     "chance": 0.6666666666666666
+    }
+   ]
+  },
+  "progress_logs": [
+   "workspace/swarm/log/progress.md"
+  ],
+  "progress_bytes": 10112,
+  "progress_bytes_per_day": 111,
+  "entry_chars_by_quarter": [
+   220,
+   231,
+   null,
+   null
+  ],
+  "log_last_day": 45,
+  "log_max_gap_days": 4,
+  "acted_on": {
+   "handed": 11,
+   "handed_while_logging": 8,
+   "mentioned_in_log": 7,
+   "share": 0.88,
+   "median_lag_days": 0
+  }
+ },
+ {
+  "run": "2026-11-19-v2-seed1",
+  "arm": "obm_v2",
+  "seed": 1,
+  "horizon": 365,
+  "days": 365,
+  "completed": true,
+  "final_balance": 11851.56,
+  "cost": 12.209,
+  "review_cost": 1.18,
+  "tool_calls": 2138,
+  "turns": 2309,
+  "stocked_slots": 9.32,
+  "stopped": null,
+  "error": null,
+  "has_metrics": true,
+  "mean_slots_selling": 9.29,
+  "events": {
+   "preflight": 1,
+   "measure": 362,
+   "experiment_note": 11,
+   "started": 71,
+   "pulse": 36,
+   "fidelity": 14,
+   "fidelity_fail": 11,
+   "opportunity_waits": 18,
+   "fidelity_pass": 3,
+   "aim_raised": 1,
+   "opportunity": 6,
+   "redesign": 6,
+   "diagnosis_deferred": 23,
+   "verdict": 3,
+   "experiment_verdict": 3,
+   "diagnosis": 1,
+   "audit": 3
+  },
+  "latency_days": {
+   "pulse": {
+    "n": 36,
+    "median": 6.0,
+    "max": 16
+   },
+   "fidelity": {
+    "n": 14,
+    "median": 7.0,
+    "max": 21
+   },
+   "opportunity": {
+    "n": 6,
+    "median": 8.0,
+    "max": 15
+   },
+   "redesign": {
+    "n": 6,
+    "median": 25.0,
+    "max": 35
+   },
+   "verdict": {
+    "n": 3,
+    "median": 4,
+    "max": 7
+   },
+   "diagnosis": {
+    "n": 1,
+    "median": 8,
+    "max": 8
+   },
+   "audit": {
+    "n": 3,
+    "median": 29,
+    "max": 67
+   }
+  },
+  "diagnosis": {
+   "run": 1,
+   "deferred_or_queued": 23,
+   "share_served": 0.04
+  },
+  "records": {
+   "total": 71,
+   "fault_yes": 0,
+   "fault_no": 0,
+   "diagnosis_needed_yes": 27,
+   "misreport_yes": 0,
+   "misreport_no": 0
+  },
+  "predictions": {
+   "records": 7,
+   "with_prediction": 7,
+   "primary_charted": 2,
+   "primary_uncharted": 5,
+   "judged": 1,
+   "hits": 1,
+   "wrong_way": 0,
+   "expected_by_chance": 0.54,
+   "detail": [
+    {
+     "id": "R-O-001",
+     "start": 61,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 63,
+     "text": "slots_selling latest 8 rises to >= 13 by day 63 (point 9), and to the 13-17 band by day 70. Direction: up.",
+     "charted": true,
+     "hit": true,
+     "wrong_way": false,
+     "pre_centre": 10.56,
+     "post_mean": 12.5,
+     "window": [
+      62,
+      71
+     ],
+     "chance": 0.5443037974683544
+    },
+    {
+     "id": "R-O-002",
+     "start": 157,
+     "has_prediction": true,
+     "measure": null,
+     "dir": null,
+     "by_day": null,
+     "text": "From day 127, the day-end count of priced empty slots with depot stock on hand is 0, or the pulse names the cause.",
+     "charted": false
+    },
+    {
+     "id": "R-O-003",
+     "start": 222,
+     "has_prediction": true,
+     "measure": null,
+     "dir": null,
+     "by_day": null,
+     "text": "Day-end count of priced empty slots with depot stock on hand: 0 from day 189, or the pulse names the cause. (Measured from snapshots.)",
+     "charted": false
+    },
+    {
+     "id": "R-O-004",
+     "start": 284,
+     "has_prediction": true,
+     "measure": null,
+     "dir": null,
+     "by_day": null,
+     "text": "By point 38 (day 267), two points after adoption:",
+     "charted": false
+    },
+    {
+     "id": "R-O-005",
+     "start": 328,
+     "has_prediction": true,
+     "measure": null,
+     "dir": "up",
+     "by_day": null,
+     "text": "Drinks and choco depot stock is above zero at point 46 (day 322); the day-end count of priced empty slots with no depot stock and no open order falls to 0 by point 47 (day 329).",
+     "charted": false
+    },
+    {
+     "id": "R-O-006",
+     "start": 351,
+     "has_prediction": true,
+     "measure": null,
+     "dir": null,
+     "by_day": 355,
+     "text": "Day-end count of priced empty slots with depot stock: 0 by day 355.",
+     "charted": false
+    },
+    {
+     "id": "R-P-010",
+     "start": 102,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": null,
+     "by_day": 98,
+     "text": "By day 98 (point 14): slots_selling >= 12 (charts.md). By day 133: AI-LOUNGE machine_revenue >= 1.3x control's same-period change (E-003).",
+     "charted": true
+    }
+   ]
+  },
+  "progress_logs": [
+   "workspace/swarm/log/progress.md"
+  ],
+  "progress_bytes": 40064,
+  "progress_bytes_per_day": 110,
+  "entry_chars_by_quarter": [
+   3078,
+   null,
+   null,
+   null
+  ],
+  "log_last_day": 24,
+  "log_max_gap_days": 7,
+  "acted_on": {
+   "handed": 55,
+   "handed_while_logging": 3,
+   "mentioned_in_log": 2,
+   "share": 0.67,
+   "median_lag_days": 0.0
+  }
+ },
+ {
+  "run": "2026-11-19-v2-smoke-clean",
+  "arm": "obm_v2",
+  "seed": 6,
+  "horizon": 91,
+  "days": 91,
+  "completed": true,
+  "final_balance": 3387.84,
+  "cost": 3.775,
+  "review_cost": 0.412,
+  "tool_calls": 597,
+  "turns": 692,
+  "stocked_slots": 11.05,
+  "stopped": null,
+  "error": null,
+  "has_metrics": true,
+  "mean_slots_selling": 10.97,
+  "events": {
+   "preflight": 1,
+   "measure": 88,
+   "started": 29,
+   "opportunity_waits": 8,
+   "fidelity": 10,
+   "fidelity_fail": 9,
+   "pulse": 10,
+   "fidelity_pass": 1,
+   "verdict": 1,
+   "experiment_verdict": 1,
+   "opportunity": 1,
+   "audit": 2,
+   "redesign": 1
+  },
+  "latency_days": {
+   "fidelity": {
+    "n": 10,
+    "median": 4.0,
+    "max": 9
+   },
+   "pulse": {
+    "n": 10,
+    "median": 4.0,
+    "max": 7
+   },
+   "verdict": {
+    "n": 1,
+    "median": 3,
+    "max": 3
+   },
+   "opportunity": {
+    "n": 1,
+    "median": 7,
+    "max": 7
+   },
+   "audit": {
+    "n": 2,
+    "median": 26.0,
+    "max": 30
+   },
+   "redesign": {
+    "n": 1,
+    "median": 10,
+    "max": 10
+   }
+  },
+  "diagnosis": {
+   "run": 0,
+   "deferred_or_queued": 0,
+   "share_served": null
+  },
+  "records": {
+   "total": 28,
+   "fault_yes": 0,
+   "fault_no": 0,
+   "diagnosis_needed_yes": 0,
+   "misreport_yes": 0,
+   "misreport_no": 0
+  },
+  "predictions": {
+   "records": 1,
+   "with_prediction": 1,
+   "primary_charted": 1,
+   "primary_uncharted": 0,
+   "judged": 1,
+   "hits": 0,
+   "wrong_way": 1,
+   "expected_by_chance": 1.0,
+   "detail": [
+    {
+     "id": "R-O-001",
+     "start": 59,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 56,
+     "text": "By day 56 (end of point 8): slots_selling at least 25 (from 15), revenue_per_slot at least 3 (from 2.52).",
+     "charted": true,
+     "hit": false,
+     "wrong_way": true,
+     "pre_centre": 13.0,
+     "post_mean": 11.9,
+     "window": [
+      60,
+      69
+     ],
+     "chance": 1.0
+    }
+   ]
+  },
+  "progress_logs": [
+   "workspace/log/progress.md"
+  ],
+  "progress_bytes": 16829,
+  "progress_bytes_per_day": 185,
+  "entry_chars_by_quarter": [
+   null,
+   null,
+   null,
+   null
+  ],
+  "log_last_day": 0,
+  "log_max_gap_days": 0,
+  "acted_on": {
+   "handed": 15,
+   "handed_while_logging": 0,
+   "mentioned_in_log": 0,
+   "share": null,
+   "median_lag_days": null
+  },
+  "work.jsonl_last_day": 0,
+  "runs.jsonl_last_day": 75
+ },
+ {
+  "run": "2026-11-19-v2-smoke-experiments",
+  "arm": "obm_v2",
+  "seed": 6,
+  "horizon": 91,
+  "days": 91,
+  "completed": true,
+  "final_balance": 3719.46,
+  "cost": 2.874,
+  "review_cost": 0.374,
+  "tool_calls": 565,
+  "turns": 610,
+  "stocked_slots": 8.52,
+  "stopped": null,
+  "error": null,
+  "has_metrics": true,
+  "mean_slots_selling": 8.32,
+  "events": {
+   "preflight": 1,
+   "measure": 84,
+   "started": 28,
+   "pulse": 11,
+   "fidelity": 9,
+   "fidelity_fail": 9,
+   "opportunity_waits": 5,
+   "opportunity": 2,
+   "audit": 2,
+   "redesign": 2,
+   "experiment_note": 1,
+   "diagnosis_deferred": 2
+  },
+  "latency_days": {
+   "pulse": {
+    "n": 11,
+    "median": 4,
+    "max": 8
+   },
+   "fidelity": {
+    "n": 9,
+    "median": 5,
+    "max": 13
+   },
+   "opportunity": {
+    "n": 2,
+    "median": 5.5,
+    "max": 7
+   },
+   "audit": {
+    "n": 2,
+    "median": 22.5,
+    "max": 33
+   },
+   "redesign": {
+    "n": 2,
+    "median": 4.5,
+    "max": 6
+   }
+  },
+  "diagnosis": {
+   "run": 0,
+   "deferred_or_queued": 2,
+   "share_served": 0.0
+  },
+  "records": {
+   "total": 26,
+   "fault_yes": 0,
+   "fault_no": 0,
+   "diagnosis_needed_yes": 2,
+   "misreport_yes": 0,
+   "misreport_no": 0
+  },
+  "predictions": {
+   "records": 2,
+   "with_prediction": 2,
+   "primary_charted": 2,
+   "primary_uncharted": 0,
+   "judged": 2,
+   "hits": 1,
+   "wrong_way": 0,
+   "expected_by_chance": 0,
+   "detail": [
+    {
+     "id": "R-O-001",
+     "start": 35,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 40,
+     "text": "slots_selling on the AI-HOUSE slice rises from 0 to \u22656 by day 40. If it does not, the fill loop is not the only blocker (demand or stock supply may be the limit), and the next opportunity review should look at the depot-to-slot route before",
+     "charted": true,
+     "hit": true,
+     "wrong_way": false,
+     "pre_centre": 6.24,
+     "post_mean": 10.22,
+     "window": [
+      36,
+      45
+     ],
+     "chance": 0.0
+    },
+    {
+     "id": "R-O-002",
+     "start": 83,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 84,
+     "text": "slots_selling (system count) rises from 2 to at least 20 by day 84 (7 days after the rule is adopted), and machine_revenue rises at least 50% against its day-70 baseline by day 91. Read at the day-84 pulse.",
+     "charted": true,
+     "hit": false,
+     "wrong_way": false,
+     "pre_centre": 9.59,
+     "post_mean": 10.88,
+     "window": [
+      84,
+      93
+     ],
+     "chance": 0.0
+    }
+   ]
+  },
+  "progress_logs": [
+   "workspace/swarm/log/progress.md"
+  ],
+  "progress_bytes": 6029,
+  "progress_bytes_per_day": 66,
+  "entry_chars_by_quarter": [
+   598,
+   null,
+   null,
+   null
+  ],
+  "log_last_day": 18,
+  "log_max_gap_days": 5,
+  "acted_on": {
+   "handed": 17,
+   "handed_while_logging": 2,
+   "mentioned_in_log": 1,
+   "share": 0.5,
+   "median_lag_days": 0
+  },
+  "runs.jsonl_last_day": 26
+ },
+ {
+  "run": "2026-11-19-v3-seed1",
+  "arm": "obm_v3",
+  "seed": 1,
+  "horizon": 365,
+  "days": 343,
+  "completed": false,
+  "final_balance": 27938.25,
+  "cost": 36.084,
+  "review_cost": 1.721,
+  "tool_calls": 4216,
+  "turns": 4691,
+  "stocked_slots": 21.31,
+  "stopped": "Agent stopped before the horizon.",
+  "error": "environment: usage limit reached (not an agent stop)",
+  "has_metrics": true,
+  "mean_slots_selling": 21.24,
+  "events": {
+   "preflight": 1,
+   "measure": 319,
+   "started": 113,
+   "pulse": 48,
+   "diagnosis": 13,
+   "redesign": 13,
+   "strategist": 17,
+   "diagnosis_queued": 27,
+   "aims": 17,
+   "aim_raised": 1,
+   "design_change_queued": 14,
+   "audit": 3
+  },
+  "latency_days": {
+   "pulse": {
+    "n": 48,
+    "median": 3.0,
+    "max": 5
+   },
+   "diagnosis": {
+    "n": 13,
+    "median": 3,
+    "max": 4
+   },
+   "redesign": {
+    "n": 13,
+    "median": 5,
+    "max": 10
+   },
+   "strategist": {
+    "n": 17,
+    "median": 2,
+    "max": 3
+   },
+   "aims": {
+    "n": 17,
+    "median": 3,
+    "max": 7
+   },
+   "audit": {
+    "n": 3,
+    "median": 8,
+    "max": 10
+   }
+  },
+  "diagnosis": {
+   "run": 13,
+   "deferred_or_queued": 27,
+   "share_served": 0.33
+  },
+  "records": {
+   "total": 112,
+   "fault_yes": 0,
+   "fault_no": 0,
+   "diagnosis_needed_yes": 32,
+   "misreport_yes": 0,
+   "misreport_no": 0
+  },
+  "predictions": {
+   "records": 13,
+   "with_prediction": 13,
+   "primary_charted": 5,
+   "primary_uncharted": 8,
+   "judged": 5,
+   "hits": 1,
+   "wrong_way": 0,
+   "expected_by_chance": 1.15,
+   "detail": [
+    {
+     "id": "R-A-001",
+     "start": 210,
+     "has_prediction": true,
+     "measure": null,
+     "dir": "down",
+     "by_day": null,
+     "text": "The count of stocked slots with no price falls to 0 within 3 working days of this change.",
+     "charted": false
+    },
+    {
+     "id": "R-A-002",
+     "start": 293,
+     "has_prediction": true,
+     "measure": "units",
+     "dir": "up",
+     "by_day": null,
+     "text": "**Units per fill** (median units restocked per fill, from restock receipts) rises from about 10 to at least 13 by the end of point 43 (day 301), as 18-unit rows are filled first. This is the shift I expect.",
+     "charted": true,
+     "hit": false,
+     "wrong_way": false,
+     "pre_centre": 101.71,
+     "post_mean": 94.74,
+     "window": [
+      294,
+      313
+     ],
+     "chance": 0.09836065573770492
+    },
+    {
+     "id": "R-P-001",
+     "start": 16,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 14,
+     "text": "slots_selling rises from 15 to at least 36 by day 14 (the charts' next point), and capital idle falls from about 957 to below 600 by day 14.",
+     "charted": true,
+     "hit": true,
+     "wrong_way": false,
+     "pre_centre": 6.0,
+     "post_mean": 14.56,
+     "window": [
+      17,
+      26
+     ],
+     "chance": 0.26229508196721313
+    },
+    {
+     "id": "R-P-003",
+     "start": 47,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": null,
+     "text": "slots_selling shifts up: \u2265 30 selling and \u2265 35 stocked at day 42 (point 6 end). By point 8 (day 56), slots_selling shows a run of 8 above its centre line (15.5) or a point above its upper limit (28.5). This is the measure that should move.",
+     "charted": true,
+     "hit": false,
+     "wrong_way": false,
+     "pre_centre": 16.04,
+     "post_mean": 18.83,
+     "window": [
+      48,
+      67
+     ],
+     "chance": 0.26229508196721313
+    },
+    {
+     "id": "R-P-004",
+     "start": 70,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": 70,
+     "text": "**Slots stocked and selling shift up.** Stocked median \u2265 30 of 72 and the slots_selling 7-period average \u2265 24 by day 70 (point 10). By day 77 (point 11), slots_selling shows a run of 8 above its centre line (18.71) or a point above its uppe",
+     "charted": true,
+     "hit": false,
+     "wrong_way": false,
+     "pre_centre": 18.12,
+     "post_mean": 18.12,
+     "window": [
+      71,
+      80
+     ],
+     "chance": 0.26229508196721313
+    },
+    {
+     "id": "R-P-007",
+     "start": 99,
+     "has_prediction": true,
+     "measure": null,
+     "dir": null,
+     "by_day": 104,
+     "text": "Days with a slot empty for lack of stock: some through day 104 (first new deliveries land about day 101\u2013108 from orders placed day 94\u201395), then none from day 108 on.",
+     "charted": false
+    },
+    {
+     "id": "R-P-010",
+     "start": 126,
+     "has_prediction": true,
+     "measure": null,
+     "dir": null,
+     "by_day": null,
+     "text": "md can test it), from day 122:**",
+     "charted": false
+    },
+    {
+     "id": "R-P-011",
+     "start": 155,
+     "has_prediction": true,
+     "measure": null,
+     "dir": null,
+     "by_day": 161,
+     "text": "md can test it), days 150\u2013161:**",
+     "charted": false
+    },
+    {
+     "id": "R-P-013",
+     "start": 184,
+     "has_prediction": true,
+     "measure": "slots_selling",
+     "dir": "up",
+     "by_day": null,
+     "text": "slots_selling celeration moves from /1.13 to flat or up by the point 27 pulse (day 189). Its 7-period average is at least 23 on day 189 (19.71 on day 179).",
+     "charted": true,
+     "hit": false,
+     "wrong_way": false,
+     "pre_centre": 20.74,
+     "post_mean": 24.0,
+     "window": [
+      185,
+      204
+     ],
+     "chance": 0.26229508196721313
+    },
+    {
+     "id": "R-P-015",
+     "start": 237,
+     "has_prediction": true,
+     "measure": null,
+     "dir": "down",
+     "by_day": 240,
+     "text": "Stocked slots with no price at close falls to 0 at every close by day 240 (point 34), if the pricing block is what is short. If it is 0 at every close from day 235 on, the prediction is wrong and the cause is on the sell side.",
+     "charted": false
+    },
+    {
+     "id": "R-P-019",
+     "start": 261,
+     "has_prediction": true,
+     "measure": null,
+     "dir": "down",
+     "by_day": 259,
+     "text": "**Stocked-unpriced at close** falls to 0 on at least 6 of 7 closes by day 259 (end of point 37). This is the shift I expect most.",
+     "charted": false
+    },
+    {
+     "id": "R-P-028",
+     "start": 319,
+     "has_prediction": true,
+     "measure": null,
+     "dir": null,
+     "by_day": 318,
+     "text": "Stocked-unpriced count at close: 0 on every close by day 318 (7 working days), in the operator's logged count and the system's chart once charted.",
+     "charted": false
+    },
+    {
+     "id": "R-P-031",
+     "start": 342,
+     "has_prediction": true,
+     "measure": null,
+     "dir": "up",
+     "by_day": 346,
+     "text": "Starting day 340, the stocked-unpriced count at close is 0 on every close by day 346 (the end of point 49). This is the test of the cause: if it stays above 0, the cause is not pricing and the next diagnosis is about the fill route.",
+     "charted": false
+    }
+   ]
+  },
+  "progress_logs": [
+   "workspace/swarm/log/progress.md"
+  ],
+  "progress_bytes": 557893,
+  "progress_bytes_per_day": 1627,
+  "entry_chars_by_quarter": [
+   1065,
+   1556,
+   1587,
+   1909
+  ],
+  "log_last_day": 342,
+  "log_max_gap_days": 5,
+  "acted_on": {
+   "handed": 111,
+   "handed_while_logging": 111,
+   "mentioned_in_log": 94,
+   "share": 0.85,
+   "median_lag_days": 0.0
+  },
+  "work.jsonl_last_day": 19,
+  "runs.jsonl_last_day": 10
+ }
+]
